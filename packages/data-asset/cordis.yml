@@ -1,0 +1,12 @@
+- insert:
+
+  - id: data-masking
+    name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-masking/src/index.ts'
+  - id: data-cleaning
+    name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-cleaning/src/index.ts'
+  - id: data-inventory
+    name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-inventory/src/index.ts'
+  - id: data-packaging
+    name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-packaging/src/index.ts'
+  - id: data-asset-orchestration
+    name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-asset-orchestration/src/index.ts'
