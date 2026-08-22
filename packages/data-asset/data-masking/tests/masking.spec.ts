@@ -1,8 +1,8 @@
-import type { SensitivePatterns } from '@deepseek-ai/dsh-data-asset-shared'
-import { defaultBusinessRules } from '@deepseek-ai/dsh-data-asset-shared'
+import type { SensitivePatterns } from '@liuhange/dsh-data-asset-shared'
+import { defaultBusinessRules } from '@liuhange/dsh-data-asset-shared'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { MaskingStrategyExecutor } from '@deepseek-ai/dsh-data-masking/src/maskingStrategyExecutor.ts'
-import { SensitiveFieldScanner } from '@deepseek-ai/dsh-data-masking/src/sensitiveFieldScanner.ts'
+import { MaskingStrategyExecutor } from '../src/maskingStrategyExecutor.js'
+import { SensitiveFieldScanner } from '../src/sensitiveFieldScanner.js'
 
 const patterns: SensitivePatterns = defaultBusinessRules.sensitivePatterns
 

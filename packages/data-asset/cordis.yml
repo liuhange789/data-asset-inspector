@@ -8,5 +8,13 @@
     name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-inventory/src/index.ts'
   - id: data-packaging
     name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-packaging/src/index.ts'
+  - id: data-sensitivity-classification
+    name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-sensitivity-classification/src/index.ts'
+  - id: data-lineage
+    name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-lineage/src/index.ts'
   - id: data-asset-orchestration
     name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-asset-orchestration/src/index.ts'
+  - id: data-quality-scoring
+    name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-quality-scoring/src/index.ts'
+  - id: data-visualization
+    name: 'file:///D:/新建文件夹/DeepSeek-Harness/packages/data-asset/data-visualization/src/index.ts'

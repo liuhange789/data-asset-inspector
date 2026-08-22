@@ -1,5 +1,13 @@
 export * from './types.js'
 export { defaultBusinessRules } from './defaultBusinessRules.js'
+export {
+  defaultQualityScoringConfig,
+  defaultLineageConfig,
+  defaultAdvancedMaskingConfig,
+  defaultVisualizationConfig,
+  defaultSensitivityClassificationConfig,
+  defaultIncrementalSchedulingConfig,
+} from './defaultBusinessRules.js'
 export { BusinessRulesLoader } from './businessRulesLoader.js'
 export { FileFormatAdapter } from './fileFormatAdapter.js'
 export type { FileReadResult } from './fileFormatAdapter.js'

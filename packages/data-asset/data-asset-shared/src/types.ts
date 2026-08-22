@@ -99,6 +99,12 @@ export interface BusinessRulesConfig {
   cleaningRules: CleaningRules
   compliance: ComplianceConfig
   packaging: PackagingRules
+  qualityScoring?: QualityScoringConfig
+  lineage?: LineageConfig
+  advancedMasking?: AdvancedMaskingConfig
+  visualization?: VisualizationConfig
+  sensitivityClassification?: SensitivityClassificationConfig
+  incrementalScheduling?: IncrementalSchedulingConfig
 }
 
 export interface SensitiveField {
@@ -162,4 +168,164 @@ export interface OrchestrationResult {
 export interface BusinessRulesLoadResult {
   config: BusinessRulesConfig
   status: ConfigStatus
+}
+
+export interface QualityScoringWeights {
+  completeness: number
+  accuracy: number
+  consistency: number
+  timeliness: number
+}
+
+export interface QualityScoringThresholds {
+  completeness: number
+  accuracy: number
+  consistency: number
+  timeliness: number
+}
+
+export interface CompletenessConfig {
+  missingMarkers: string[]
+}
+
+export interface FormatRule {
+  fieldName: string
+  pattern: string
+  weight: number
+}
+
+export interface DomainRule {
+  fieldName: string
+  min?: number
+  max?: number
+  allowedValues?: unknown[]
+  weight: number
+}
+
+export interface AccuracyConfig {
+  formatRules: FormatRule[]
+  domainRules: DomainRule[]
+}
+
+export interface CrossFieldRule {
+  name: string
+  fields: string[]
+  constraint: string
+  value?: unknown
+}
+
+export interface ConsistencyConfig {
+  crossFieldRules: CrossFieldRule[]
+}
+
+export interface TimelinessConfig {
+  timestampField: string
+  freshnessThresholdHours: number
+}
+
+export interface QualityScoringConfig {
+  weights: QualityScoringWeights
+  thresholds: QualityScoringThresholds
+  completeness: CompletenessConfig
+  accuracy: AccuracyConfig
+  consistency: ConsistencyConfig
+  timeliness: TimelinessConfig
+}
+
+export interface LineageConfig {
+  enabled: boolean
+  storagePath: string
+  hashAlgorithm: string
+}
+
+export interface FpeConfig {
+  key: string
+  radix: number
+}
+
+export interface KAnonymityConfig {
+  kValue: number
+  quasiIdentifiers: string[]
+}
+
+export interface DifferentialPrivacyConfig {
+  epsilon: number
+  totalBudget: number
+  sensitivity: number
+}
+
+export interface HashMaskingConfig {
+  algorithm: string
+  salt: string
+}
+
+export interface AdvancedMaskingConfig {
+  defaultAlgorithm: string
+  fieldAlgorithms: Record<string, { algorithm: string }>
+  fpe: FpeConfig
+  kAnonymity: KAnonymityConfig
+  differentialPrivacy: DifferentialPrivacyConfig
+  hash: HashMaskingConfig
+}
+
+export interface ChartConfig {
+  enabled: boolean
+  title: string
+}
+
+export interface VisualizationLayoutConfig {
+  columns: number
+  responsive: boolean
+}
+
+export interface ColorSchemeConfig {
+  primary: string
+  secondary: string
+  success: string
+  warning: string
+  danger: string
+  background: string
+  text: string
+}
+
+export interface InteractionsConfig {
+  expandCollapse: boolean
+  chartSwitch: boolean
+  tooltip: boolean
+}
+
+export interface VisualizationConfig {
+  charts: Record<string, ChartConfig>
+  layout: VisualizationLayoutConfig
+  colorScheme: ColorSchemeConfig
+  interactions: InteractionsConfig
+  templateVersion: string
+}
+
+export interface FieldNameRule {
+  name: string
+  pattern: string
+  level: string
+}
+
+export interface FieldValueRule {
+  name: string
+  pattern: string
+  level: string
+}
+
+export interface SensitivityClassificationConfig {
+  fieldNameRules: FieldNameRule[]
+  fieldValueRules: FieldValueRule[]
+  levelMapping: Record<string, string>
+  defaultLevel: string
+}
+
+export interface IncrementalSchedulingConfig {
+  incrementalMode: boolean
+  cronExpression: string
+  hashAlgorithm: string
+  watchDirectory: string
+  stateFilePath: string
+  lockTimeout: number
 }

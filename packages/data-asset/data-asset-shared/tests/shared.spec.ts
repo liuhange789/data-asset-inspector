@@ -3,18 +3,18 @@ import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { AuditLogger } from '@deepseek-ai/dsh-data-asset-shared/src/auditLogger.ts'
-import { BusinessRulesLoader } from '@deepseek-ai/dsh-data-asset-shared/src/businessRulesLoader.ts'
-import { defaultBusinessRules } from '@deepseek-ai/dsh-data-asset-shared/src/defaultBusinessRules.ts'
-import { FileFormatAdapter } from '@deepseek-ai/dsh-data-asset-shared/src/fileFormatAdapter.ts'
-import { PathValidator } from '@deepseek-ai/dsh-data-asset-shared/src/pathValidator.ts'
-import { ReportGenerator } from '@deepseek-ai/dsh-data-asset-shared/src/reportGenerator.ts'
+import { AuditLogger } from '../src/auditLogger.js'
+import { BusinessRulesLoader } from '../src/businessRulesLoader.js'
+import { defaultBusinessRules } from '../src/defaultBusinessRules.js'
+import { FileFormatAdapter } from '../src/fileFormatAdapter.js'
+import { PathValidator } from '../src/pathValidator.js'
+import { ReportGenerator } from '../src/reportGenerator.js'
 import type {
   AssetItem,
   BusinessRulesConfig,
   ProductManual,
   SensitiveField,
-} from '@deepseek-ai/dsh-data-asset-shared'
+} from '@liuhange/dsh-data-asset-shared'
 
 let tempDir: string
 

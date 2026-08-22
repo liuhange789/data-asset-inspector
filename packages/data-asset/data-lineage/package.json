@@ -1,0 +1,39 @@
+﻿{
+    "name":  "@liuhange/dsh-data-lineage",
+    "description":  "Data lineage tracking plugin: trace data flow from source to product with hash chaining and Mermaid visualization",
+    "version":  "2.0.0",
+    "publishConfig":  {
+                          "access":  "public"
+                      },
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/liuhange789/data-asset-inspector.git",
+                       "directory":  "packages/data-asset/data-lineage"
+                   },
+    "type":  "module",
+    "main":  "lib/index.js",
+    "types":  "lib/types/index.d.ts",
+    "exports":  {
+                    ".":  {
+                              "types":  "./lib/types/index.d.ts",
+                              "default":  "./lib/index.js"
+                          },
+                    "./invariant":  {
+                                        "types":  "./lib/types/invariant.d.ts",
+                                        "default":  "./lib/invariant.js"
+                                    },
+                    "./src/*":  "./src/*",
+                    "./package.json":  "./package.json"
+                },
+    "files":  [
+                  "lib/index.js",
+                  "lib/invariant.js",
+                  "lib/types/**/*.d.ts"
+              ],
+    "license":  "MIT",
+    "peerDependencies":  {
+                             "@deepseek-ai/cordis":  "^0.1.0",
+                             "@deepseek-ai/dsh-tools":  "^0.1.0",
+                             "@liuhange/dsh-data-asset-shared":  "^2.0.0"
+                         }
+}

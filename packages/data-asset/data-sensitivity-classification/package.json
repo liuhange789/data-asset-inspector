@@ -1,0 +1,39 @@
+﻿{
+    "name":  "@liuhange/dsh-data-sensitivity-classification",
+    "description":  "Data sensitivity classification plugin: auto-identify sensitivity levels (Public/Internal/Confidential/Secret) and recommend masking strategies",
+    "version":  "2.0.0",
+    "publishConfig":  {
+                          "access":  "public"
+                      },
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/liuhange789/data-asset-inspector.git",
+                       "directory":  "packages/data-asset/data-sensitivity-classification"
+                   },
+    "type":  "module",
+    "main":  "lib/index.js",
+    "types":  "lib/types/index.d.ts",
+    "exports":  {
+                    ".":  {
+                              "types":  "./lib/types/index.d.ts",
+                              "default":  "./lib/index.js"
+                          },
+                    "./invariant":  {
+                                        "types":  "./lib/types/invariant.d.ts",
+                                        "default":  "./lib/invariant.js"
+                                    },
+                    "./src/*":  "./src/*",
+                    "./package.json":  "./package.json"
+                },
+    "files":  [
+                  "lib/index.js",
+                  "lib/invariant.js",
+                  "lib/types/**/*.d.ts"
+              ],
+    "license":  "MIT",
+    "peerDependencies":  {
+                             "@deepseek-ai/cordis":  "^0.1.0",
+                             "@deepseek-ai/dsh-tools":  "^0.1.0",
+                             "@liuhange/dsh-data-asset-shared":  "^2.0.0"
+                         }
+}

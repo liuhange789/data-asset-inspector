@@ -1,5 +1,133 @@
 import type { BusinessRulesConfig } from './types.js'
 
+export const defaultQualityScoringConfig = {
+  weights: {
+    completeness: 0.25,
+    accuracy: 0.25,
+    consistency: 0.25,
+    timeliness: 0.25,
+  },
+  thresholds: {
+    completeness: 60,
+    accuracy: 60,
+    consistency: 60,
+    timeliness: 60,
+  },
+  completeness: {
+    missingMarkers: ['null', 'undefined', 'N/A', '', 'NULL', 'NaN'],
+  },
+  accuracy: {
+    formatRules: [
+      { fieldName: 'phone', pattern: '1[3-9]\\d{9}', weight: 0.5 },
+      { fieldName: 'email', pattern: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', weight: 0.5 },
+    ],
+    domainRules: [
+      { fieldName: 'age', min: 0, max: 150, weight: 0.5 },
+      { fieldName: 'score', min: 0, max: 100, weight: 0.5 },
+    ],
+  },
+  consistency: {
+    crossFieldRules: [
+      { name: 'endDateAfterStartDate', fields: ['startDate', 'endDate'], constraint: 'after' },
+    ],
+  },
+  timeliness: {
+    timestampField: 'updatedAt',
+    freshnessThresholdHours: 720,
+  },
+}
+
+export const defaultLineageConfig = {
+  enabled: false,
+  storagePath: 'lineage',
+  hashAlgorithm: 'SHA-256',
+}
+
+export const defaultAdvancedMaskingConfig = {
+  defaultAlgorithm: 'hash',
+  fieldAlgorithms: {},
+  fpe: {
+    key: '',
+    radix: 10,
+  },
+  kAnonymity: {
+    kValue: 2,
+    quasiIdentifiers: ['zipCode', 'age', 'gender'],
+  },
+  differentialPrivacy: {
+    epsilon: 1.0,
+    totalBudget: 5.0,
+    sensitivity: 1.0,
+  },
+  hash: {
+    algorithm: 'SHA-256',
+    salt: '',
+  },
+}
+
+export const defaultVisualizationConfig = {
+  charts: {
+    bar: { enabled: true, title: '脱敏统计' },
+    comparison: { enabled: true, title: '清洗前后对比' },
+    pie: { enabled: true, title: '数据资产分布' },
+    radar: { enabled: true, title: '质量评分' },
+    flowchart: { enabled: true, title: '血缘追踪' },
+  },
+  layout: {
+    columns: 2,
+    responsive: true,
+  },
+  colorScheme: {
+    primary: '#4A90D9',
+    secondary: '#F5A623',
+    success: '#7ED321',
+    warning: '#F8E71C',
+    danger: '#D0021B',
+    background: '#F5F5F5',
+    text: '#333333',
+  },
+  interactions: {
+    expandCollapse: true,
+    chartSwitch: true,
+    tooltip: true,
+  },
+  templateVersion: '1.0',
+}
+
+export const defaultSensitivityClassificationConfig = {
+  fieldNameRules: [
+    { name: 'idCard', pattern: 'id_?card|身份证|identity', level: 'Secret' },
+    { name: 'phone', pattern: 'phone|手机|mobile|tel', level: 'Confidential' },
+    { name: 'email', pattern: 'email|邮箱|mail', level: 'Confidential' },
+    { name: 'bankCard', pattern: 'bank_?card|银行卡|account', level: 'Secret' },
+    { name: 'address', pattern: 'address|地址|addr', level: 'Internal' },
+    { name: 'name', pattern: '^name$|姓名|username', level: 'Internal' },
+    { name: 'public', pattern: 'status|type|category|label|tag|level', level: 'Public' },
+  ],
+  fieldValueRules: [
+    { name: 'idCardValue', pattern: '[1-9]\\d{5}(18|19|20)?\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{3}[\\dXx]', level: 'Secret' },
+    { name: 'phoneValue', pattern: '1[3-9]\\d{9}', level: 'Confidential' },
+    { name: 'emailValue', pattern: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', level: 'Confidential' },
+    { name: 'bankCardValue', pattern: '[1-9]\\d{15,18}', level: 'Secret' },
+  ],
+  levelMapping: {
+    Public: 'none',
+    Internal: 'partial',
+    Confidential: 'full',
+    Secret: 'encrypt',
+  },
+  defaultLevel: 'Internal',
+}
+
+export const defaultIncrementalSchedulingConfig = {
+  incrementalMode: false,
+  cronExpression: '0 2 * * *',
+  hashAlgorithm: 'SHA-256',
+  watchDirectory: 'input',
+  stateFilePath: 'state/incremental-state.json',
+  lockTimeout: 3600,
+}
+
 export const defaultBusinessRules: BusinessRulesConfig = {
   version: '1.0',
   lastUpdated: '2026-08-17',

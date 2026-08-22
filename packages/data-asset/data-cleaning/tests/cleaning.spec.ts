@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { AnomalyDetector } from '@deepseek-ai/dsh-data-cleaning/src/anomalyDetector.ts'
-import { DuplicateRemover } from '@deepseek-ai/dsh-data-cleaning/src/duplicateRemover.ts'
-import { FormatStandardizer } from '@deepseek-ai/dsh-data-cleaning/src/formatStandardizer.ts'
+import { AnomalyDetector } from '../src/anomalyDetector.js'
+import { DuplicateRemover } from '../src/duplicateRemover.js'
+import { FormatStandardizer } from '../src/formatStandardizer.js'
 
 describe('DuplicateRemover', () => {
   let remover: DuplicateRemover

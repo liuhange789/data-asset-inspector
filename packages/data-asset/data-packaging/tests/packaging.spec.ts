@@ -3,11 +3,11 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { defaultBusinessRules } from '@deepseek-ai/dsh-data-asset-shared'
-import type { PackagingRules } from '@deepseek-ai/dsh-data-asset-shared'
-import { ComplianceGenerator } from '@deepseek-ai/dsh-data-packaging/src/complianceGenerator.ts'
-import { ManualGenerator } from '@deepseek-ai/dsh-data-packaging/src/manualGenerator.ts'
-import { SampleExtractor } from '@deepseek-ai/dsh-data-packaging/src/sampleExtractor.ts'
+import { defaultBusinessRules } from '@liuhange/dsh-data-asset-shared'
+import type { PackagingRules } from '@liuhange/dsh-data-asset-shared'
+import { ComplianceGenerator } from '../src/complianceGenerator.js'
+import { ManualGenerator } from '../src/manualGenerator.js'
+import { SampleExtractor } from '../src/sampleExtractor.js'
 
 const packagingRules: PackagingRules = defaultBusinessRules.packaging
 

@@ -3,11 +3,11 @@ import { mkdtemp, rm, writeFile, mkdir } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { defaultBusinessRules } from '@deepseek-ai/dsh-data-asset-shared'
-import type { ValueAssessmentRules } from '@deepseek-ai/dsh-data-asset-shared'
-import { AssetListGenerator } from '@deepseek-ai/dsh-data-inventory/src/assetListGenerator.ts'
-import { DirectoryScanner } from '@deepseek-ai/dsh-data-inventory/src/directoryScanner.ts'
-import { ValueAssessor } from '@deepseek-ai/dsh-data-inventory/src/valueAssessor.ts'
+import { defaultBusinessRules } from '@liuhange/dsh-data-asset-shared'
+import type { ValueAssessmentRules } from '@liuhange/dsh-data-asset-shared'
+import { AssetListGenerator } from '../src/assetListGenerator.js'
+import { DirectoryScanner } from '../src/directoryScanner.js'
+import { ValueAssessor } from '../src/valueAssessor.js'
 
 const valueRules: ValueAssessmentRules = defaultBusinessRules.valueAssessment
 

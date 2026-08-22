@@ -1,9 +1,9 @@
 import { join, dirname, basename, extname } from 'node:path'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { DependencyPropagator } from '@deepseek-ai/dsh-data-asset-orchestration/src/dependencyPropagator.ts'
-import { OrchestrationExecutor } from '@deepseek-ai/dsh-data-asset-orchestration/src/orchestrationExecutor.ts'
-import { ReportAggregator } from '@deepseek-ai/dsh-data-asset-orchestration/src/reportAggregator.ts'
-import { SequentialExecutor } from '@deepseek-ai/dsh-data-asset-orchestration/src/sequentialExecutor.ts'
+import { DependencyPropagator } from '../src/dependencyPropagator.js'
+import { OrchestrationExecutor } from '../src/orchestrationExecutor.js'
+import { ReportAggregator } from '../src/reportAggregator.js'
+import { SequentialExecutor } from '../src/sequentialExecutor.js'
 
 describe('DependencyPropagator', () => {
   let propagator: DependencyPropagator
