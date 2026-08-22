@@ -1,7 +1,7 @@
-﻿{
+{
     "name":  "@liuhange/dsh-data-lineage",
     "description":  "Data lineage tracking plugin: trace data flow from source to product with hash chaining and Mermaid visualization",
-    "version":  "2.0.0",
+    "version": "2.0.1",
     "publishConfig":  {
                           "access":  "public"
                       },

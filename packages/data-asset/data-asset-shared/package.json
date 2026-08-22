@@ -1,7 +1,7 @@
-﻿{
+{
     "name":  "@liuhange/dsh-data-asset-shared",
     "description":  "Shared infrastructure for data assetization plugins: business rules loader, file format adapter, report generator, path validator, audit logger",
-    "version":  "2.0.0",
+    "version": "2.0.1",
     "publishConfig":  {
                           "access":  "public"
                       },

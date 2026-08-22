@@ -1,7 +1,7 @@
-﻿{
+{
     "name":  "@liuhange/dsh-data-quality-scoring",
     "description":  "Data quality scoring plugin: multi-dimensional scoring (completeness/accuracy/consistency/timeliness) with weighted total and improvement suggestions",
-    "version":  "2.0.0",
+    "version": "2.0.1",
     "publishConfig":  {
                           "access":  "public"
                       },

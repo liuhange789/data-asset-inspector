@@ -1,7 +1,7 @@
-﻿{
+{
     "name":  "@liuhange/dsh-data-asset-orchestration",
     "description":  "Data asset orchestration skill: sequential execution of masking, cleaning, inventory, packaging",
-    "version":  "2.0.0",
+    "version": "2.0.1",
     "publishConfig":  {
                           "access":  "public"
                       },
