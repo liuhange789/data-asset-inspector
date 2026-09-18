@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+lib/
+dist/
+tsconfig.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test coverage
+coverage/
+
+# Temporary files
+*.tmp
+*.bak

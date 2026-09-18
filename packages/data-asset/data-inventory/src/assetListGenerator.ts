@@ -1,8 +1,8 @@
-import type { AssetItem, DataFile } from '@deepseek-ai/dsh-data-asset-shared'
+﻿import type { AssetItem, DataFile } from '@liuhange/dsh-data-asset-shared'
 import type { ValueAssessor, ValueAssessResult } from './valueAssessor.js'
 
 export class AssetListGenerator {
-  generate(files: DataFile[], valueAssessor: ValueAssessor, valueRules: import('@deepseek-ai/dsh-data-asset-shared').ValueAssessmentRules): AssetItem[] {
+  generate(files: DataFile[], valueAssessor: ValueAssessor, valueRules: import('@liuhange/dsh-data-asset-shared').ValueAssessmentRules): AssetItem[] {
     return files.map((file) => {
       const assessment: ValueAssessResult = valueAssessor.assess(file.fileName, valueRules)
       return {

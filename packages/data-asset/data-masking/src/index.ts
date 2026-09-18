@@ -8,6 +8,7 @@ import {
   ReportGenerator,
   PathValidator,
   AuditLogger,
+  RegistrationNavigationEnhancer,
 } from '@liuhange/dsh-data-asset-shared'
 import type { MaskingStrategy, SensitiveFieldType } from '@liuhange/dsh-data-asset-shared'
 import { SensitiveFieldScanner } from './sensitiveFieldScanner.js'
@@ -28,6 +29,7 @@ export function apply(ctx: Context) {
   const scanner = new SensitiveFieldScanner()
   const strategyExecutor = new MaskingStrategyExecutor()
   const advancedExecutor = new AdvancedMaskingExecutor()
+  const navEnhancer = new RegistrationNavigationEnhancer()
 
   ctx.tools.register(
     defineTool({
@@ -96,7 +98,7 @@ export function apply(ctx: Context) {
             result: 'SUCCESS',
           })
 
-          return `高级脱敏完成（算法: ${algorithm}）\n输入: ${fullPath}\n输出: ${outputPath}\n处理行数: ${maskedLines.length}`
+          return navEnhancer.enhance(`高级脱敏完成（算法: ${algorithm}）\n输入: ${fullPath}\n输出: ${outputPath}\n处理行数: ${maskedLines.length}`, 'data-masking', '')
         }
 
         const readResult = await formatAdapter.read(fullPath)
@@ -135,7 +137,7 @@ export function apply(ctx: Context) {
           result: 'SUCCESS',
         })
 
-        return report
+        return navEnhancer.enhance(report, 'data-masking', '')
       },
     }),
   )

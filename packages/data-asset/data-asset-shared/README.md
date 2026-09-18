@@ -1,4 +1,4 @@
-# @deepseek-ai/dsh-data-asset-shared
+﻿# @liuhange/dsh-data-asset-shared
 
 Shared infrastructure for data assetization plugins.
 
@@ -13,7 +13,7 @@ Shared infrastructure for data assetization plugins.
 ## Usage
 
 ```typescript
-import { BusinessRulesLoader, FileFormatAdapter, ReportGenerator, PathValidator, AuditLogger } from '@deepseek-ai/dsh-data-asset-shared'
+import { BusinessRulesLoader, FileFormatAdapter, ReportGenerator, PathValidator, AuditLogger } from '@liuhange/dsh-data-asset-shared'
 
 const loader = new BusinessRulesLoader()
 const { config, status } = loader.load()

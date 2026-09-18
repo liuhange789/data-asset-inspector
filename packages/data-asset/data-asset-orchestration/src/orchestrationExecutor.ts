@@ -1,5 +1,6 @@
-import { SequentialExecutor } from './sequentialExecutor.js'
-import type { OrchestrationResult } from '@deepseek-ai/dsh-data-asset-shared'
+﻿import { SequentialExecutor } from './sequentialExecutor.js'
+import type { OrchestrationResult } from '@liuhange/dsh-data-asset-shared'
+import { RegistrationNavigationEnhancer } from '@liuhange/dsh-data-asset-shared'
 
 export interface OrchestrationExecutorResult {
   success: boolean
@@ -8,6 +9,7 @@ export interface OrchestrationExecutorResult {
 
 export class OrchestrationExecutor {
   private readonly sequentialExecutor = new SequentialExecutor()
+  private readonly navEnhancer = new RegistrationNavigationEnhancer()
   private readonly fullFlowTimeoutMs = 180000
 
   plan(filePath: string, strategy: string, productName: string) {
@@ -19,13 +21,18 @@ export class OrchestrationExecutor {
     cleaningReport: string,
     inventoryReport: string,
     packagingManual: string,
+    dataType: string = '',
   ): OrchestrationExecutorResult {
-    return this.sequentialExecutor.aggregateResults(
+    const raw = this.sequentialExecutor.aggregateResults(
       maskingReport,
       cleaningReport,
       inventoryReport,
       packagingManual,
     )
+    return {
+      success: raw.success,
+      result: this.navEnhancer.enhanceAll(raw.result, dataType),
+    }
   }
 
   aggregateFailure(

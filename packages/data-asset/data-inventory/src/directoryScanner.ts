@@ -1,6 +1,6 @@
-import * as fs from 'fs'
+﻿import * as fs from 'fs'
 import * as path from 'path'
-import type { DataFile, DataFormat } from '@deepseek-ai/dsh-data-asset-shared'
+import type { DataFile, DataFormat } from '@liuhange/dsh-data-asset-shared'
 
 export interface DirectoryScanResult {
   files: DataFile[]

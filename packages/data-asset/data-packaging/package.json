@@ -1,9 +1,9 @@
 {
   "name": "@liuhange/dsh-data-packaging",
   "description": "Data packaging plugin: product manual generation, compliance statements, packaging",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "publishConfig": { "access": "public" },
-  "repository": { "type": "git", "url": "git+https://github.com/deepseek-ai/deepseek-harness.git", "directory": "packages/data-asset/data-packaging" },
+  "repository": { "type": "git", "url": "git+https://github.com/liuhange789/data-asset-inspector.git", "directory": "packages/data-asset/data-packaging" },
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -13,11 +13,17 @@
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
-  "files": ["lib/index.js", "lib/invariant.js", "lib/types/**/*.d.ts"],
+  "files": ["lib/**/*.js", "lib/types/**/*.d.ts"],
   "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc"
+  },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "^0.1.0",
-    "@deepseek-ai/dsh-tools": "^0.1.0",
-    "@liuhange/dsh-data-asset-shared": "^1.0.0"
-  }
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
+    "@liuhange/dsh-data-asset-shared": "^3.0.0"
+  },
+  "dsh": { "bundle": { "patch": true } }
 }

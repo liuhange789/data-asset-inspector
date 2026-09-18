@@ -1,7 +1,7 @@
-import * as fs from 'fs'
+﻿import * as fs from 'fs'
 import * as path from 'path'
-import type { ProductManual, PackagingRules, DataFormat } from '@deepseek-ai/dsh-data-asset-shared'
-import { ReportGenerator } from '@deepseek-ai/dsh-data-asset-shared'
+import type { ProductManual, PackagingRules, DataFormat } from '@liuhange/dsh-data-asset-shared'
+import { ReportGenerator } from '@liuhange/dsh-data-asset-shared'
 import { SampleExtractor } from './sampleExtractor.js'
 import { ComplianceGenerator } from './complianceGenerator.js'
 

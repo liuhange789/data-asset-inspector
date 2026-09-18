@@ -1,0 +1,55 @@
+{
+  "ruleVersion": "1.0",
+  "agencies": [
+    {
+      "id": "beijing",
+      "name": "北京国际大数据交易所",
+      "location": "北京",
+      "specialties": ["医疗", "健康", "生物"],
+      "contact": "北京国际大数据交易所官网",
+      "basis": "医疗数据登记案例集中"
+    },
+    {
+      "id": "shanghai",
+      "name": "上海数据交易所",
+      "location": "上海",
+      "specialties": ["金融", "征信", "支付"],
+      "contact": "上海数据交易所官网",
+      "basis": "金融数据交易活跃度最高"
+    },
+    {
+      "id": "shenzhen",
+      "name": "深圳数据交易所",
+      "location": "深圳",
+      "specialties": ["交通", "物流", "地理"],
+      "contact": "深圳数据交易所官网",
+      "basis": "交通数据登记案例较多"
+    }
+  ],
+  "dataTypeMapping": {
+    "金融": "shanghai",
+    "征信": "shanghai",
+    "支付": "shanghai",
+    "医疗": "beijing",
+    "健康": "beijing",
+    "生物": "beijing",
+    "交通": "shenzhen",
+    "物流": "shenzhen",
+    "地理": "shenzhen"
+  },
+  "defaultRecommendation": {
+    "agency": null,
+    "basis": "根据数据属性匹配",
+    "message": "建议咨询专业机构"
+  },
+  "registrationFee": 5000,
+  "registrationSteps": [
+    "申请",
+    "受理",
+    "审查",
+    "公示",
+    "异议",
+    "存证",
+    "凭证"
+  ]
+}

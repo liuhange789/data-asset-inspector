@@ -1,4 +1,4 @@
-import type { Context } from '@deepseek-ai/cordis'
+﻿import type { Context } from '@deepseek-ai/cordis'
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -7,7 +7,8 @@ import {
   ReportGenerator,
   PathValidator,
   AuditLogger,
-} from '@deepseek-ai/dsh-data-asset-shared'
+  RegistrationNavigationEnhancer,
+} from '@liuhange/dsh-data-asset-shared'
 import { DirectoryScanner } from './directoryScanner.js'
 import { ValueAssessor } from './valueAssessor.js'
 import { AssetListGenerator } from './assetListGenerator.js'
@@ -23,6 +24,7 @@ export function apply(ctx: Context) {
   const directoryScanner = new DirectoryScanner()
   const valueAssessor = new ValueAssessor()
   const assetListGenerator = new AssetListGenerator()
+  const navEnhancer = new RegistrationNavigationEnhancer()
 
   ctx.tools.register(
     defineTool({
@@ -71,7 +73,7 @@ export function apply(ctx: Context) {
           result: 'SUCCESS',
         })
 
-        return report
+        return navEnhancer.enhance(report, 'data-inventory', '')
       },
     }),
   )

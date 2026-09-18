@@ -1,0 +1,16 @@
+packages:
+  - packages/data-asset/*
+
+allowBuilds:
+  esbuild: set this to true or false
+
+autoInstallPeers: false
+
+overrides:
+  '@deepseek-ai/schemastery': '^3.18.0'
+  '@deepseek-ai/cordis': '^4.0.0'
+
+peerDependencyRules:
+  allowedVersions:
+    '@deepseek-ai/schemastery': '^3.18.0'
+    '@deepseek-ai/cordis': '^4.0.0'

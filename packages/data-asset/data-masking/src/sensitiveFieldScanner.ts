@@ -1,4 +1,4 @@
-import type { SensitiveField, SensitiveFieldType, SensitivePatterns } from '@deepseek-ai/dsh-data-asset-shared'
+﻿import type { SensitiveField, SensitiveFieldType, SensitivePatterns } from '@liuhange/dsh-data-asset-shared'
 
 export interface ScanResult {
   fields: SensitiveField[]

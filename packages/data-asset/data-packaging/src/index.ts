@@ -1,4 +1,4 @@
-import type { Context } from '@deepseek-ai/cordis'
+﻿import type { Context } from '@deepseek-ai/cordis'
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -7,7 +7,8 @@ import {
   FileFormatAdapter,
   PathValidator,
   AuditLogger,
-} from '@deepseek-ai/dsh-data-asset-shared'
+  RegistrationNavigationEnhancer,
+} from '@liuhange/dsh-data-asset-shared'
 import { ManualGenerator } from './manualGenerator.js'
 
 export const name = 'data-packaging'
@@ -19,6 +20,7 @@ export function apply(ctx: Context) {
   const pathValidator = new PathValidator()
   const auditLogger = new AuditLogger()
   const manualGenerator = new ManualGenerator()
+  const navEnhancer = new RegistrationNavigationEnhancer()
 
   ctx.tools.register(
     defineTool({
@@ -89,7 +91,7 @@ export function apply(ctx: Context) {
           result: 'SUCCESS',
         })
 
-        return `
+        return navEnhancer.enhance(`
 【数据产品打包完成】
 - 产品名称：${productName}
 - 数据文件：${fullPath}
@@ -98,9 +100,9 @@ export function apply(ctx: Context) {
 
 【下一步建议】
 1. 将数据文件与说明书一并提交数据交易所
-2. 完成数据产权登记（依据国数综政策〔2026〕35号）
+2. 完成数据产权登记（依据国家数据局政策〔2026〕35号）
 3. 出具合规声明后即可挂牌交易
-        `
+        `, 'data-packaging', '')
       },
     }),
   )

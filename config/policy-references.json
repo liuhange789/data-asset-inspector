@@ -1,0 +1,161 @@
+{
+  "configVersion": "1.0",
+  "policyReferences": [
+    {
+      "stage": "INVENTORY",
+      "stageLabel": "盘点",
+      "documents": [
+        {
+          "name": "中华人民共和国数据安全法",
+          "docNumber": "主席令第八十四号",
+          "coreRequirement": "数据分类分级保护"
+        },
+        {
+          "name": "数据产权登记工作指引（试行）",
+          "docNumber": "国数综政策〔2026〕35号",
+          "coreRequirement": "数据产权三权分置"
+        }
+      ]
+    },
+    {
+      "stage": "CLEANING",
+      "stageLabel": "清洗",
+      "documents": [
+        {
+          "name": "企业数据资源相关会计处理暂行规定",
+          "docNumber": "财会〔2023〕11号",
+          "coreRequirement": "数据资源入表条件"
+        },
+        {
+          "name": "数据资产评估指导意见",
+          "docNumber": "中评协〔2023〕17号",
+          "coreRequirement": "六维质量评价标准"
+        }
+      ]
+    },
+    {
+      "stage": "MASKING",
+      "stageLabel": "脱敏",
+      "documents": [
+        {
+          "name": "中华人民共和国个人信息保护法",
+          "docNumber": "主席令第九十一号",
+          "coreRequirement": "匿名化后不再属于个人信息"
+        },
+        {
+          "name": "关于完善数据流通安全治理的实施方案",
+          "docNumber": "发改数据〔2025〕18号",
+          "coreRequirement": "脱敏后可按一般数据流通"
+        }
+      ]
+    },
+    {
+      "stage": "PACKAGING",
+      "stageLabel": "包装",
+      "documents": [
+        {
+          "name": "数据产权登记工作指引（试行）",
+          "docNumber": "国数综政策〔2026〕35号",
+          "coreRequirement": "登记凭证可用于入表、融资、入股"
+        }
+      ]
+    },
+    {
+      "stage": "PRECHECK",
+      "stageLabel": "登记预检",
+      "documents": [
+        {
+          "name": "数据产权登记工作指引（试行）",
+          "docNumber": "国数综政策〔2026〕35号",
+          "coreRequirement": "不予登记情形"
+        }
+      ]
+    },
+    {
+      "stage": "DOC_GENERATION",
+      "stageLabel": "材料生成",
+      "documents": [
+        {
+          "name": "数据产权登记工作指引（试行）",
+          "docNumber": "国数综政策〔2026〕35号",
+          "coreRequirement": "7步登记流程审查重点"
+        }
+      ]
+    },
+    {
+      "stage": "AGENCY_MATCHING",
+      "stageLabel": "机构匹配",
+      "documents": [
+        {
+          "name": "数据产权登记工作指引（试行）",
+          "docNumber": "国数综政策〔2026〕35号",
+          "coreRequirement": "登记机构名录"
+        }
+      ]
+    },
+    {
+      "stage": "INVENTORY_SCAN",
+      "stageLabel": "资产扫描",
+      "documents": [
+        {
+          "name": "企业数据资源相关会计处理暂行规定",
+          "docNumber": "财会〔2023〕11号",
+          "coreRequirement": "数据资源需满足企业合法拥有或控制、预期会给企业带来经济利益的条件，才能确认为无形资产或存货"
+        }
+      ]
+    },
+    {
+      "stage": "QUALITY_SCORE",
+      "stageLabel": "质量评分",
+      "documents": [
+        {
+          "name": "信息技术 数据质量评价指标",
+          "docNumber": "GB/T 36344-2018",
+          "coreRequirement": "数据质量评价指标框架，含规范性、完整性、准确性、一致性、时效性、可访问性六维"
+        }
+      ]
+    },
+    {
+      "stage": "VALUATION",
+      "stageLabel": "估值辅助",
+      "documents": [
+        {
+          "name": "关于加强数据资产管理的指导意见",
+          "docNumber": "财资〔2023〕141号",
+          "coreRequirement": "推进数据资产全过程管理以及合规化、标准化、增值化，支持数据资产赋能增值"
+        },
+        {
+          "name": "企业数据资源相关会计处理暂行规定",
+          "docNumber": "财会〔2023〕11号",
+          "coreRequirement": "外购数据资源的成本包括购买价款、相关税费以及直接归属于使该项无形资产达到预定用途所发生的加工支出"
+        },
+        {
+          "name": "关于严格执行企业会计准则切实做好企业2025年年报工作的通知",
+          "docNumber": "财会〔2025〕33号",
+          "coreRequirement": "不得将以评估等方式得出的金额直接作为入账和调账的依据；强化减值测试和披露"
+        }
+      ]
+    },
+    {
+      "stage": "COMPLIANCE_CHECK",
+      "stageLabel": "合规审查",
+      "documents": [
+        {
+          "name": "中华人民共和国数据安全法",
+          "docNumber": "主席令第八十四号",
+          "coreRequirement": "开展数据处理活动应当遵守法律法规，履行数据安全保护义务，不得危害国家安全和公共利益"
+        },
+        {
+          "name": "中华人民共和国个人信息保护法",
+          "docNumber": "主席令第九十一号",
+          "coreRequirement": "处理个人信息应当遵循合法、正当、必要原则，取得个人同意或符合法定情形"
+        },
+        {
+          "name": "数据资产全过程管理试点方案",
+          "docNumber": "财资〔2024〕167号",
+          "coreRequirement": "围绕数据资产台账编制、登记、授权运营、收益分配、交易流通等重点环节开展试点"
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import type { PackagingRules } from '@deepseek-ai/dsh-data-asset-shared'
+﻿import type { PackagingRules } from '@liuhange/dsh-data-asset-shared'
 
 export class ComplianceGenerator {
   generate(packagingRules: PackagingRules): string[] {

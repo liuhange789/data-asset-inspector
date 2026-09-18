@@ -1,4 +1,4 @@
-import type { OrchestrationResult } from '@deepseek-ai/dsh-data-asset-shared'
+﻿import type { OrchestrationResult } from '@liuhange/dsh-data-asset-shared'
 
 export class ReportAggregator {
   aggregate(

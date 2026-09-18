@@ -1,13 +1,13 @@
 {
     "name":  "@liuhange/dsh-data-masking",
     "description":  "Data masking plugin: sensitive field identification and graded masking (FULL/PARTIAL/GENERALIZE)",
-    "version": "2.0.1",
+    "version": "3.0.0",
     "publishConfig":  {
                           "access":  "public"
                       },
     "repository":  {
                        "type":  "git",
-                       "url":  "git+https://github.com/deepseek-ai/deepseek-harness.git",
+                       "url":  "git+https://github.com/liuhange789/data-asset-inspector.git",
                        "directory":  "packages/data-asset/data-masking"
                    },
     "type":  "module",
@@ -26,14 +26,18 @@
                     "./package.json":  "./package.json"
                 },
     "files":  [
-                  "lib/index.js",
-                  "lib/invariant.js",
-                  "lib/types/**/*.d.ts"
+                  "lib/**/*.js", "lib/types/**/*.d.ts"
               ],
     "license":  "MIT",
+    "scripts": {
+      "typecheck": "tsc --noEmit",
+      "test": "vitest run",
+      "build": "tsc"
+    },
     "peerDependencies":  {
-                             "@deepseek-ai/cordis":  "^0.1.0",
-                             "@deepseek-ai/dsh-tools":  "^0.1.0",
-                             "@liuhange/dsh-data-asset-shared":  "^2.0.0"
-                         }
+                             "@deepseek-ai/cordis": "^4.0.0",
+                             "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
+                             "@liuhange/dsh-data-asset-shared":  "^3.0.0"
+                         },
+    "dsh":  { "bundle":  { "patch": true } }
 }

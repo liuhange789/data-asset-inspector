@@ -31,9 +31,14 @@
                   "lib/types/**/*.d.ts"
               ],
     "license":  "MIT",
+    "scripts": {
+      "typecheck": "tsc --noEmit",
+      "test": "vitest run",
+      "build": "tsc"
+    },
     "peerDependencies":  {
-                             "@deepseek-ai/cordis":  "^0.1.0",
-                             "@deepseek-ai/dsh-tools":  "^0.1.0",
+                             "@deepseek-ai/cordis": "^4.0.0",
+                             "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
                              "@liuhange/dsh-data-asset-shared":  "^2.0.0"
                          }
 }

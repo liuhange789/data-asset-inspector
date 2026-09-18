@@ -1,4 +1,4 @@
-import { FileFormatAdapter } from '@deepseek-ai/dsh-data-asset-shared'
+﻿import { FileFormatAdapter } from '@liuhange/dsh-data-asset-shared'
 
 export class SampleExtractor {
   private readonly formatAdapter = new FileFormatAdapter()

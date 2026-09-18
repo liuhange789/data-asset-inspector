@@ -1,4 +1,4 @@
-import type { ValueAssessmentRules } from '@deepseek-ai/dsh-data-asset-shared'
+﻿import type { ValueAssessmentRules } from '@liuhange/dsh-data-asset-shared'
 
 export interface ValueAssessResult {
   stars: number

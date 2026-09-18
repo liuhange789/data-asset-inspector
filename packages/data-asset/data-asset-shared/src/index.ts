@@ -9,6 +9,7 @@ export {
   defaultIncrementalSchedulingConfig,
 } from './defaultBusinessRules.js'
 export { BusinessRulesLoader } from './businessRulesLoader.js'
+export { loadJsonConfig } from './configLoader.js'
 export { FileFormatAdapter } from './fileFormatAdapter.js'
 export type { FileReadResult } from './fileFormatAdapter.js'
 export { ReportGenerator } from './reportGenerator.js'
@@ -21,3 +22,9 @@ export type {
 export { PathValidator } from './pathValidator.js'
 export { AuditLogger } from './auditLogger.js'
 export type { AuditLogParams } from './auditLogger.js'
+export { PolicyReferenceResolver } from './policyReferenceResolver.js'
+export { RegistrationNavigationEnhancer } from './registrationNavigationEnhancer.js'
+export {
+  defaultRegistrationConfig,
+  defaultPolicyReferences,
+} from './defaultBusinessRules.js'

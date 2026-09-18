@@ -1,4 +1,4 @@
-import type { BusinessRulesConfig } from './types.js'
+import type { BusinessRulesConfig, RegistrationConfig, PolicyReference } from './types.js'
 
 export const defaultQualityScoringConfig = {
   weights: {
@@ -128,6 +128,109 @@ export const defaultIncrementalSchedulingConfig = {
   lockTimeout: 3600,
 }
 
+export const defaultRegistrationConfig: RegistrationConfig = {
+  ruleVersion: '1.0',
+  agencies: [
+    {
+      id: 'beijing',
+      name: '北京国际大数据交易所',
+      location: '北京',
+      specialties: ['医疗', '健康', '生物'],
+      contact: '北京国际大数据交易所官网',
+      basis: '医疗数据登记案例集中',
+    },
+    {
+      id: 'shanghai',
+      name: '上海数据交易所',
+      location: '上海',
+      specialties: ['金融', '征信', '支付'],
+      contact: '上海数据交易所官网',
+      basis: '金融数据交易活跃度最高',
+    },
+    {
+      id: 'shenzhen',
+      name: '深圳数据交易所',
+      location: '深圳',
+      specialties: ['交通', '物流', '地理'],
+      contact: '深圳数据交易所官网',
+      basis: '交通数据登记案例较多',
+    },
+  ],
+  dataTypeMapping: {
+    '金融': 'shanghai',
+    '征信': 'shanghai',
+    '支付': 'shanghai',
+    '医疗': 'beijing',
+    '健康': 'beijing',
+    '生物': 'beijing',
+    '交通': 'shenzhen',
+    '物流': 'shenzhen',
+    '地理': 'shenzhen',
+  },
+  defaultRecommendation: {
+    agency: null,
+    basis: '根据数据属性匹配',
+    message: '建议咨询专业机构',
+  },
+  registrationFee: 5000,
+  registrationSteps: ['申请', '受理', '审查', '公示', '异议', '存证', '凭证'],
+}
+
+export const defaultPolicyReferences: PolicyReference[] = [
+  {
+    stage: 'INVENTORY',
+    stageLabel: '盘点',
+    documents: [
+      { name: '中华人民共和国数据安全法', docNumber: '主席令第八十四号', coreRequirement: '数据分类分级保护' },
+      { name: '数据产权登记工作指引（试行）', docNumber: '国数综政策〔2026〕35号', coreRequirement: '数据产权三权分置' },
+    ],
+  },
+  {
+    stage: 'CLEANING',
+    stageLabel: '清洗',
+    documents: [
+      { name: '企业数据资源相关会计处理暂行规定', docNumber: '财会〔2023〕11号', coreRequirement: '数据资源入表条件' },
+      { name: '数据资产评估指导意见', docNumber: '中评协〔2023〕17号', coreRequirement: '六维质量评价标准' },
+    ],
+  },
+  {
+    stage: 'MASKING',
+    stageLabel: '脱敏',
+    documents: [
+      { name: '中华人民共和国个人信息保护法', docNumber: '主席令第九十一号', coreRequirement: '匿名化后不再属于个人信息' },
+      { name: '关于完善数据流通安全治理的实施方案', docNumber: '发改数据〔2025〕18号', coreRequirement: '脱敏后可按一般数据流通' },
+    ],
+  },
+  {
+    stage: 'PACKAGING',
+    stageLabel: '包装',
+    documents: [
+      { name: '数据产权登记工作指引（试行）', docNumber: '国数综政策〔2026〕35号', coreRequirement: '登记凭证可用于入表、融资、入股' },
+    ],
+  },
+  {
+    stage: 'PRECHECK',
+    stageLabel: '登记预检',
+    documents: [
+      { name: '数据产权登记工作指引（试行）', docNumber: '国数综政策〔2026〕35号', coreRequirement: '不予登记情形' },
+    ],
+  },
+  {
+    stage: 'DOC_GENERATION',
+    stageLabel: '材料生成',
+    documents: [
+      { name: '数据产权登记工作指引（试行）', docNumber: '国数综政策〔2026〕35号', coreRequirement: '7步登记流程审查重点' },
+    ],
+  },
+  {
+    stage: 'AGENCY_MATCHING',
+    stageLabel: '机构匹配',
+    documents: [
+      { name: '数据产权登记工作指引（试行）', docNumber: '国数综政策〔2026〕35号', coreRequirement: '登记机构名录' },
+    ],
+  },
+]
+
 export const defaultBusinessRules: BusinessRulesConfig = {
   version: '1.0',
   lastUpdated: '2026-08-17',
@@ -225,4 +328,6 @@ export const defaultBusinessRules: BusinessRulesConfig = {
     defaultDescription: '适用于数据分析、模型训练、行业研究等场景',
     version: 'V1.0',
   },
+  registration: defaultRegistrationConfig,
+  policyReferences: defaultPolicyReferences,
 }

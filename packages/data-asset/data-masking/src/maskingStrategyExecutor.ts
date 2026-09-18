@@ -1,4 +1,4 @@
-import type { MaskingStrategy, SensitiveFieldType } from '@deepseek-ai/dsh-data-asset-shared'
+﻿import type { MaskingStrategy, SensitiveFieldType } from '@liuhange/dsh-data-asset-shared'
 
 export class MaskingStrategyExecutor {
   execute(value: string, _type: SensitiveFieldType, strategy: MaskingStrategy): string {

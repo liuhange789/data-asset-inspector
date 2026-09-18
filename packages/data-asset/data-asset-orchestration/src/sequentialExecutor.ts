@@ -1,6 +1,6 @@
-import { DependencyPropagator } from './dependencyPropagator.js'
+﻿import { DependencyPropagator } from './dependencyPropagator.js'
 import { ReportAggregator } from './reportAggregator.js'
-import type { OrchestrationResult } from '@deepseek-ai/dsh-data-asset-shared'
+import type { OrchestrationResult } from '@liuhange/dsh-data-asset-shared'
 
 export interface SequentialExecutorResult {
   success: boolean

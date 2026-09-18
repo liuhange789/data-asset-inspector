@@ -84,7 +84,7 @@ export class BusinessRulesLoader {
     if (typeof version !== 'string') {
       return false
     }
-    return version.startsWith('1.')
+    return version.startsWith('1.') || version.startsWith('3.')
   }
 
   private hasRequiredNodes(config: BusinessRulesConfig): boolean {

@@ -1,11 +1,1 @@
-{
-  "extends": "../../../tsconfig.base.json",
-  "compilerOptions": { "rootDir": "src", "outDir": "lib/types" },
-  "include": ["src"],
-  "references": [
-    { "path": "../../../vendor/cordis" },
-    { "path": "../../core/tools" },
-    { "path": "../data-asset-shared" },
-    { "path": "../../runtime-diagnostics/invariants" }
-  ]
-}
+{  "extends": "../../../tsconfig.base.json",  "compilerOptions": { "rootDir": "src", "outDir": "lib", "declarationDir": "lib/types" },  "include": ["src"],  "references": [    { "path": "../data-asset-shared" }  ]}

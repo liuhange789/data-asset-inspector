@@ -105,6 +105,8 @@ export interface BusinessRulesConfig {
   visualization?: VisualizationConfig
   sensitivityClassification?: SensitivityClassificationConfig
   incrementalScheduling?: IncrementalSchedulingConfig
+  registration?: RegistrationConfig
+  policyReferences?: PolicyReference[]
 }
 
 export interface SensitiveField {
@@ -328,4 +330,112 @@ export interface IncrementalSchedulingConfig {
   watchDirectory: string
   stateFilePath: string
   lockTimeout: number
+}
+export type PolicyStage =
+  | 'INVENTORY'
+  | 'CLEANING'
+  | 'MASKING'
+  | 'PACKAGING'
+  | 'PRECHECK'
+  | 'DOC_GENERATION'
+  | 'AGENCY_MATCHING'
+
+export interface PolicyDocument {
+  name: string
+  docNumber: string
+  coreRequirement: string
+}
+
+export interface PolicyReference {
+  stage: PolicyStage
+  stageLabel: string
+  documents: PolicyDocument[]
+}
+
+export interface AgencyConfig {
+  id: string
+  name: string
+  location: string
+  specialties: string[]
+  contact: string
+  basis: string
+}
+
+export interface RegistrationConfig {
+  ruleVersion: string
+  agencies: AgencyConfig[]
+  dataTypeMapping: Record<string, string>
+  defaultRecommendation: {
+    agency: string | null
+    basis: string
+    message: string
+  }
+  registrationFee: number
+  registrationSteps: string[]
+}
+
+export interface NavigationField {
+  registrationNavigation: string
+  policyReferences: PolicyDocument[]
+}
+
+export type CheckName = 'NATIONAL_SECURITY' | 'SOURCE_COMPLIANCE' | 'OWNERSHIP_DISPUTE' | 'MATERIAL_AUTHENTICITY'
+export type CheckResult = 'PASS' | 'FAIL' | 'PENDING' | 'UNDETERMINED'
+export type PrecheckConclusion = 'CAN_REGISTER' | 'CANNOT_REGISTER' | 'PENDING_CONFIRMATION'
+
+export interface PrecheckCheckItem {
+  name: CheckName
+  label: string
+  result: CheckResult
+  detail: string
+}
+
+export interface PrecheckReport {
+  conclusion: PrecheckConclusion
+  checks: PrecheckCheckItem[]
+  failedItems: string[]
+  policyReferences: PolicyDocument[]
+  timestamp: string
+}
+
+export type RegistrationDocName = 'DATA_DESCRIPTION' | 'SOURCE_LEGALITY_STATEMENT' | 'OWNERSHIP_EXPLANATION'
+export type DocStatus = 'GENERATED' | 'FAILED' | 'PENDING_FIELDS'
+
+export interface RegistrationDoc {
+  name: RegistrationDocName
+  label: string
+  content: string
+  status: DocStatus
+  missingFields?: string[]
+}
+
+export interface RegistrationDocPackage {
+  docs: RegistrationDoc[]
+  packagePath: string
+  policyReferences: PolicyDocument[]
+  timestamp: string
+}
+
+export interface AgencyMatchResult {
+  agency: string | null
+  agencyName: string
+  basis: string
+  dataType: string
+  ruleVersion: string
+}
+
+export type StepStatus = 'COMPLETED' | 'CURRENT' | 'PENDING'
+
+export interface RegistrationStep {
+  name: string
+  status: StepStatus
+  description: string
+}
+
+export interface RegistrationProgress {
+  steps: RegistrationStep[]
+  currentStep: number
+  registrationId: string
+  agency: string
+  timestamp: string
 }
