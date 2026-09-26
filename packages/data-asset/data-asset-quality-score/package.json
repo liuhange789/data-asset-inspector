@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-quality-score",
-  "description": "Data quality scoring plugin: six-dimension quantitative scoring (normality + completeness + accuracy + consistency + timeliness + accessibility)",
-  "version": "3.1.1",
+  "description": "Data quality scoring plugin: six-dimension quantitative scoring (normality + completeness + accuracy + consistency + timeliness + accessibility) Also known as @deepseek-ai/dsh-data-asset-quality-score.",
+  "version": "3.1.3",
   "publishConfig": {
     "access": "public"
   },
@@ -40,5 +40,30 @@
     "bundle": {
       "patch": true
     }
-  }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
+    "quality-score",
+    "six-dimension-scoring",
+    "normality",
+    "completeness",
+    "accuracy",
+    "consistency",
+    "timeliness",
+    "accessibility",
+    "质量评分",
+    "六维评分",
+    "规范性",
+    "完整性",
+    "准确性",
+    "一致性",
+    "时效性",
+    "可访问性"
+  ],
+  "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

@@ -1,6 +1,13 @@
-# @deepseek-ai/dsh-data-masking
+# @liuhange/dsh-data-masking
 
 Data masking plugin for DeepSeek Harness. Identifies and masks sensitive fields (ID card, phone, bank card, email).
+
+
+## 安装
+
+```bash
+dsh plugin --profile web add @liuhange/dsh-data-masking
+```
 
 ## Tool: mask_sensitive_data
 

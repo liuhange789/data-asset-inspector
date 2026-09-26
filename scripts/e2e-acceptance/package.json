@@ -1,0 +1,21 @@
+{
+  "name": "@liuhange/dsh-e2e-acceptance",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "e2e": "node --enable-source-maps lib/run.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "typescript": "^5.7.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.0"
+  }
+}

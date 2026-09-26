@@ -2,6 +2,13 @@
 
 可视化报表插件：生成自包含 HTML 报表，含脱敏统计、清洗对比、资产分布、质量评分、血缘追踪五种交互式图表。
 
+
+## 安装
+
+```bash
+dsh plugin --profile web add @liuhange/dsh-data-visualization
+```
+
 ## Tool 接口
 
 ### `generate_visualization`

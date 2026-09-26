@@ -439,3 +439,23 @@ export interface RegistrationProgress {
   agency: string
   timestamp: string
 }
+export interface VerticalChainStepResult {
+  readonly tool: string
+  readonly status: 'pending' | 'running' | 'completed' | 'failed'
+  readonly output: string | null
+}
+
+export interface VerticalChainSuccessResult {
+  readonly trigger: string
+  readonly completed: readonly string[]
+  readonly steps: readonly VerticalChainStepResult[]
+  readonly completedAt: string
+}
+
+export interface VerticalChainFailureResult {
+  readonly trigger: string
+  readonly completed: readonly string[]
+  readonly failed: string
+  readonly error: string
+  readonly completedAt: string
+}

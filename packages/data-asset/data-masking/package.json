@@ -1,43 +1,67 @@
 {
-    "name":  "@liuhange/dsh-data-masking",
-    "description":  "Data masking plugin: sensitive field identification and graded masking (FULL/PARTIAL/GENERALIZE)",
-    "version": "3.0.0",
-    "publishConfig":  {
-                          "access":  "public"
-                      },
-    "repository":  {
-                       "type":  "git",
-                       "url":  "git+https://github.com/liuhange789/data-asset-inspector.git",
-                       "directory":  "packages/data-asset/data-masking"
-                   },
-    "type":  "module",
-    "main":  "lib/index.js",
-    "types":  "lib/types/index.d.ts",
-    "exports":  {
-                    ".":  {
-                              "types":  "./lib/types/index.d.ts",
-                              "default":  "./lib/index.js"
-                          },
-                    "./invariant":  {
-                                        "types":  "./lib/types/invariant.d.ts",
-                                        "default":  "./lib/invariant.js"
-                                    },
-                    "./src/*":  "./src/*",
-                    "./package.json":  "./package.json"
-                },
-    "files":  [
-                  "lib/**/*.js", "lib/types/**/*.d.ts"
-              ],
-    "license":  "MIT",
-    "scripts": {
-      "typecheck": "tsc --noEmit",
-      "test": "vitest run",
-      "build": "tsc"
+  "name": "@liuhange/dsh-data-masking",
+  "description": "Data masking plugin: sensitive field identification and graded masking (FULL/PARTIAL/GENERALIZE) Also known as @deepseek-ai/dsh-data-masking.",
+  "version": "3.0.2",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuhange789/data-asset-inspector.git",
+    "directory": "packages/data-asset/data-masking"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
     },
-    "peerDependencies":  {
-                             "@deepseek-ai/cordis": "^4.0.0",
-                             "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
-                             "@liuhange/dsh-data-asset-shared":  "^3.0.0"
-                         },
-    "dsh":  { "bundle":  { "patch": true } }
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/**/*.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
+    "@liuhange/dsh-data-asset-shared": "^3.0.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": true
+    }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
+    "data-masking",
+    "sensitive-field",
+    "masking-strategy",
+    "partial-masking",
+    "full-masking",
+    "数据脱敏",
+    "敏感字段",
+    "脱敏策略",
+    "部分脱敏",
+    "完全脱敏"
+  ],
+  "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

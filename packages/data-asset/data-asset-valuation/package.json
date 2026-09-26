@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-valuation",
-  "description": "Data asset valuation plugin: cost-based (replacement cost - depreciation) + income-based (DCF) dual model",
-  "version": "3.1.1",
+  "description": "Data asset valuation plugin: cost-based (replacement cost - depreciation) + income-based (DCF) dual model Also known as @deepseek-ai/dsh-data-asset-valuation.",
+  "version": "3.1.3",
   "publishConfig": {
     "access": "public"
   },
@@ -40,5 +40,24 @@
     "bundle": {
       "patch": true
     }
-  }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
+    "asset-valuation",
+    "cost-based",
+    "income-based",
+    "dcf",
+    "depreciation",
+    "资产估值",
+    "成本法",
+    "收益法",
+    "折现现金流",
+    "贬值折旧"
+  ],
+  "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

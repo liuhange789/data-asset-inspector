@@ -156,6 +156,91 @@
           "coreRequirement": "围绕数据资产台账编制、登记、授权运营、收益分配、交易流通等重点环节开展试点"
         }
       ]
+    },
+    {
+      "stage": "ATTESTATION",
+      "stageLabel": "鉴证",
+      "documents": [
+        {
+          "name": "数据质量鉴证评价方法",
+          "docNumber": "T/CIIA 060-2025",
+          "coreRequirement": "为数据资产入表、数据价值评估、数据融资增信、数据合规审计、数据产品定价等场景提供评价依据"
+        },
+        {
+          "name": "企业数据资源相关会计处理暂行规定",
+          "docNumber": "财会〔2023〕11号",
+          "coreRequirement": "外购数据资源的成本包括数据权属鉴证、质量评估、登记结算、安全管理等费用"
+        }
+      ]
+    },
+    {
+      "stage": "AI_DATASET_INSPECTION",
+      "stageLabel": "AI数据集检查",
+      "documents": [
+        {
+          "name": "关于推进行业高质量数据集建设行动的实施方案",
+          "docNumber": "国数发〔2026〕39号",
+          "coreRequirement": "部署强基扩容、标注攻坚、提质增效、应用赋能、管理服务、价值释放六大行动"
+        },
+        {
+          "name": "高质量数据集建设指南",
+          "docNumber": "T/TC609 005-2025",
+          "coreRequirement": "覆盖数据需求、规划、采集、预处理、标注、模型验证全生命周期"
+        }
+      ]
+    },
+    {
+      "stage": "GOV_DATA_INSPECTION",
+      "stageLabel": "政务数据巡检",
+      "documents": [
+        {
+          "name": "资产管理 数据资产分类与代码",
+          "docNumber": "GB/T 47949-2026",
+          "coreRequirement": "数据资产分为结构化、半结构化、非结构化三小类，16项具体细类"
+        },
+        {
+          "name": "资产管理 数据资产登记指南",
+          "docNumber": "GB/T 47950-2026",
+          "coreRequirement": "明确初始、变更和注销登记流程"
+        }
+      ]
+    },
+    {
+      "stage": "DATA_CIRCULATION_ASSESSMENT",
+      "stageLabel": "可流通性评估",
+      "documents": [
+        {
+          "name": "可信数据空间发展行动计划（2024—2028年）",
+          "docNumber": "国数资源〔2024〕119号",
+          "coreRequirement": "支持可信数据空间运营者构建接入认证体系、数据资源封装、目录维护等"
+        },
+        {
+          "name": "数据安全技术 数据交易服务安全要求",
+          "docNumber": "GB/T 37932-2025",
+          "coreRequirement": "规定数据交易参与方、交易平台、交易标的及交易过程的安全要求"
+        }
+      ]
+    },
+    {
+      "stage": "CITY_DATA_CLASSIFICATION",
+      "stageLabel": "城市数据分类",
+      "documents": [
+        {
+          "name": "资产管理 数据资产分类与代码",
+          "docNumber": "GB/T 47949-2026",
+          "coreRequirement": "数据资产分为结构化、半结构化、非结构化三小类，16项具体细类"
+        },
+        {
+          "name": "资产管理 数据资产登记指南",
+          "docNumber": "GB/T 47950-2026",
+          "coreRequirement": "明确初始、变更和注销登记流程"
+        },
+        {
+          "name": "基于AI的城市数据分类分级框架",
+          "docNumber": "ITU-T Y.4550（立项阶段）",
+          "coreRequirement": "AI赋能城市数据分类分级"
+        }
+      ]
     }
   ]
 }

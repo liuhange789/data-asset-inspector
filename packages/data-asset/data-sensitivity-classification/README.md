@@ -2,6 +2,13 @@
 
 数据敏感度自动分级插件：自动识别数据字段敏感度等级（公开/内部/机密/绝密），并推荐相应脱敏策略。
 
+
+## 安装
+
+```bash
+dsh plugin --profile web add @liuhange/dsh-data-sensitivity-classification
+```
+
 ## Tool 接口
 
 ### `classify_sensitivity`

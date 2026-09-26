@@ -67,6 +67,24 @@ importers:
         specifier: ^3.0.0
         version: 3.2.7(@types/node@22.20.1)
 
+  packages/data-asset/ai-dataset-inspector:
+    dependencies:
+      '@liuhange/dsh-data-asset-shared':
+        specifier: ^3.1.0
+        version: 3.1.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)
+
+  packages/data-asset/city-data-classifier:
+    dependencies:
+      '@liuhange/dsh-data-asset-shared':
+        specifier: ^3.1.0
+        version: 3.1.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)
+
+  packages/data-asset/data-asset-attestation:
+    dependencies:
+      '@liuhange/dsh-data-asset-shared':
+        specifier: ^3.1.0
+        version: 3.1.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)
+
   packages/data-asset/data-asset-compliance-check: {}
 
   packages/data-asset/data-asset-inventory-scan: {}
@@ -84,6 +102,12 @@ importers:
         version: 5.6.0
 
   packages/data-asset/data-asset-valuation: {}
+
+  packages/data-asset/data-circulation-assessor:
+    dependencies:
+      '@liuhange/dsh-data-asset-shared':
+        specifier: ^3.1.0
+        version: 3.1.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)
 
   packages/data-asset/data-cleaning: {}
 
@@ -103,9 +127,27 @@ importers:
 
   packages/data-asset/generate-registration-docs: {}
 
+  packages/data-asset/gov-data-inspector:
+    dependencies:
+      '@liuhange/dsh-data-asset-shared':
+        specifier: ^3.1.0
+        version: 3.1.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)
+
   packages/data-asset/match-registration-agency: {}
 
   packages/data-asset/registration-precheck: {}
+
+  packages/data-asset/visibility-doctor:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.1
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.7(@types/node@22.20.1)
 
 packages:
 
@@ -392,6 +434,13 @@ packages:
 
   '@jridgewell/sourcemap-codec@1.5.5':
     resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
+
+  '@liuhange/dsh-data-asset-shared@3.1.2':
+    resolution: {integrity: sha512-9w9804tgLp72gsZ+Mw07W6rbe7WbZ8ErIw6l3HCJ2IiiH6YBD+rAja0/0nSRqb5pv74ygu3fAQsjNG6+xI7Eug==}
+    peerDependencies:
+      '@deepseek-ai/cordis': ^4.0.0
+      '@deepseek-ai/dsh-tools': 0.0.1-rc.1
+      '@deepseek-ai/schemastery': ^3.18.0
 
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     resolution: {integrity: sha512-oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ==}
@@ -998,6 +1047,13 @@ snapshots:
     optional: true
 
   '@jridgewell/sourcemap-codec@1.5.5': {}
+
+  '@liuhange/dsh-data-asset-shared@3.1.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)':
+    dependencies:
+      '@deepseek-ai/cordis': 4.0.1
+      '@deepseek-ai/dsh-tools': 0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1)
+      '@deepseek-ai/schemastery': 3.18.1
+      csv-parse: 5.6.0
 
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     optional: true

@@ -1,44 +1,72 @@
 {
-    "name":  "@liuhange/dsh-data-visualization",
-    "description":  "Data visualization plugin: generate self-contained HTML reports with interactive charts (bar/comparison/pie/radar/flowchart)",
-    "version": "2.0.1",
-    "publishConfig":  {
-                          "access":  "public"
-                      },
-    "repository":  {
-                       "type":  "git",
-                       "url":  "git+https://github.com/liuhange789/data-asset-inspector.git",
-                       "directory":  "packages/data-asset/data-visualization"
-                   },
-    "type":  "module",
-    "main":  "lib/index.js",
-    "types":  "lib/types/index.d.ts",
-    "exports":  {
-                    ".":  {
-                              "types":  "./lib/types/index.d.ts",
-                              "default":  "./lib/index.js"
-                          },
-                    "./invariant":  {
-                                        "types":  "./lib/types/invariant.d.ts",
-                                        "default":  "./lib/invariant.js"
-                                    },
-                    "./src/*":  "./src/*",
-                    "./package.json":  "./package.json"
-                },
-    "files":  [
-                  "lib/index.js",
-                  "lib/invariant.js",
-                  "lib/types/**/*.d.ts"
-              ],
-    "license":  "MIT",
-    "scripts": {
-      "typecheck": "tsc --noEmit",
-      "test": "vitest run",
-      "build": "tsc"
+  "name": "@liuhange/dsh-data-visualization",
+  "description": "Data visualization plugin: generate self-contained HTML reports with interactive charts (bar/comparison/pie/radar/flowchart) Also known as @deepseek-ai/dsh-data-visualization.",
+  "version": "2.0.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuhange789/data-asset-inspector.git",
+    "directory": "packages/data-asset/data-visualization"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
     },
-    "peerDependencies":  {
-                             "@deepseek-ai/cordis": "^4.0.0",
-                             "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
-                             "@liuhange/dsh-data-asset-shared":  "^2.0.0"
-                         }
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
+    "@liuhange/dsh-data-asset-shared": "^2.0.0"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
+    "data-visualization",
+    "html-report",
+    "interactive-charts",
+    "bar-chart",
+    "pie-chart",
+    "radar-chart",
+    "flowchart",
+    "数据可视化",
+    "交互式图表",
+    "HTML报表",
+    "柱状图",
+    "饼图",
+    "雷达图",
+    "流程图"
+  ],
+  "homepage": "https://github.com/liuhange789/data-asset-inspector#readme",
+  "dsh": {
+    "bundle": {
+      "patch": true
+    }
+  }
 }

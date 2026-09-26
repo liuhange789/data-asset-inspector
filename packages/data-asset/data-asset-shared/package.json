@@ -1,53 +1,72 @@
 {
-    "name": "@liuhange/dsh-data-asset-shared",
-    "description": "Shared infrastructure for data assetization plugins: business rules loader, file format adapter, report generator, path validator, audit logger",
-    "version": "3.1.1",
-    "publishConfig": {
-        "access": "public"
+  "name": "@liuhange/dsh-data-asset-shared",
+  "description": "Shared infrastructure for data assetization plugins: business rules loader, file format adapter, report generator, path validator, audit logger Also known as @deepseek-ai/dsh-data-asset-shared.",
+  "version": "3.2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuhange789/data-asset-inspector.git",
+    "directory": "packages/data-asset/data-asset-shared"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/liuhange789/data-asset-inspector.git",
-        "directory": "packages/data-asset/data-asset-shared"
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
     },
-    "type": "module",
-    "main": "lib/index.js",
-    "types": "lib/types/index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./lib/types/index.d.ts",
-            "default": "./lib/index.js"
-        },
-        "./invariant": {
-            "types": "./lib/types/invariant.d.ts",
-            "default": "./lib/invariant.js"
-        },
-        "./src/*": "./src/*",
-        "./config/*": "./config/*",
-        "./package.json": "./package.json"
-    },
-    "files": [
-        "lib/**/*.js",
-        "lib/types/**/*.d.ts",
-        "config/**/*.json"
-    ],
-    "license": "MIT",
-    "scripts": {
-        "typecheck": "tsc --noEmit",
-        "test": "vitest run",
-        "build": "tsc"
-    },
-    "dependencies": {
-        "csv-parse": "^5.5.0"
-    },
-    "peerDependencies": {
-        "@deepseek-ai/cordis": "^4.0.0",
-        "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
-        "@deepseek-ai/schemastery": "^3.18.0"
-    },
-    "dsh": {
-        "bundle": {
-            "patch": true
-        }
+    "./src/*": "./src/*",
+    "./config/*": "./config/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/**/*.js",
+    "lib/types/**/*.d.ts",
+    "config/**/*.json"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
+    "@deepseek-ai/schemastery": "^3.18.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": true
     }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
+    "shared-infrastructure",
+    "business-rules",
+    "file-adapter",
+    "report-generator",
+    "path-validator",
+    "audit-logger",
+    "共享基础设施",
+    "业务规则",
+    "文件适配器",
+    "报告生成器"
+  ],
+  "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

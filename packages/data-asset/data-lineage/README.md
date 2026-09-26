@@ -2,6 +2,13 @@
 
 数据血缘追踪插件：追踪数据从源头到最终产品的流转路径，支持链式追溯和 Mermaid 可视化。
 
+
+## 安装
+
+```bash
+dsh plugin --profile web add @liuhange/dsh-data-lineage
+```
+
 ## Tool 接口
 
 ### `trace_data_lineage`

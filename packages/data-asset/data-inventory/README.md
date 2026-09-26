@@ -1,6 +1,13 @@
-# @deepseek-ai/dsh-data-inventory
+# @liuhange/dsh-data-inventory
 
 Data inventory plugin for DeepSeek Harness. Directory scanning, value assessment, asset list generation.
+
+
+## 安装
+
+```bash
+dsh plugin --profile web add @liuhange/dsh-data-inventory
+```
 
 ## Tool: inventory_data
 

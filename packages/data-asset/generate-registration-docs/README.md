@@ -2,6 +2,13 @@
 
 登记材料生成插件：根据体检报告自动生成国家登记系统所需的申请材料。
 
+
+## 安装
+
+```bash
+dsh plugin --profile web add @liuhange/dsh-generate-registration-docs
+```
+
 ## 功能说明
 
 生成三份登记申请材料：

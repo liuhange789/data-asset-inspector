@@ -2,6 +2,13 @@
 
 Shared infrastructure for data assetization plugins.
 
+
+## 安装
+
+```bash
+dsh plugin --profile web add @liuhange/dsh-data-asset-shared
+```
+
 ## Modules
 
 - **BusinessRulesLoader**: Loads `config/business-rules.json` with 5-level config degradation (CONFIG_LOADED / DEFAULT_MISSING / DEFAULT_PARSE / DEFAULT_VERSION / DEFAULT_PARTIAL)

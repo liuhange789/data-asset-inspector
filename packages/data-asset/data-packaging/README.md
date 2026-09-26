@@ -1,6 +1,13 @@
-# @deepseek-ai/dsh-data-packaging
+# @liuhange/dsh-data-packaging
 
 Data packaging plugin for DeepSeek Harness. Generates product manual with compliance statements.
+
+
+## 安装
+
+```bash
+dsh plugin --profile web add @liuhange/dsh-data-packaging
+```
 
 ## Tool: package_data_asset
 

@@ -2,6 +2,13 @@
 
 登记机构匹配插件：根据数据类型推荐登记机构。
 
+
+## 安装
+
+```bash
+dsh plugin --profile web add @liuhange/dsh-match-registration-agency
+```
+
 ## 功能说明
 
 全国仅3家登记机构：

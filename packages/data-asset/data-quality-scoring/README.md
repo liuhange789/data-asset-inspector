@@ -2,6 +2,13 @@
 
 数据质量评分插件：对数据完整性、准确性、一致性、时效性多维度评分，生成质量报告和改进建议。
 
+
+## 安装
+
+```bash
+dsh plugin --profile web add @liuhange/dsh-data-quality-scoring
+```
+
 ## Tool 接口
 
 ### `score_data_quality`

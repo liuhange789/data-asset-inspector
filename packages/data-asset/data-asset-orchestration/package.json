@@ -1,44 +1,96 @@
 {
-    "name":  "@liuhange/dsh-data-asset-orchestration",
-    "description":  "Data asset orchestration skill: sequential execution of masking, cleaning, inventory, packaging",
-    "version": "3.0.0",
-    "publishConfig":  {
-                          "access":  "public"
-                      },
-    "repository":  {
-                       "type":  "git",
-                       "url":  "git+https://github.com/liuhange789/data-asset-inspector.git",
-                       "directory":  "packages/data-asset/data-asset-orchestration"
-                   },
-    "type":  "module",
-    "main":  "lib/index.js",
-    "types":  "lib/types/index.d.ts",
-    "exports":  {
-                    ".":  {
-                              "types":  "./lib/types/index.d.ts",
-                              "default":  "./lib/index.js"
-                          },
-                    "./invariant":  {
-                                        "types":  "./lib/types/invariant.d.ts",
-                                        "default":  "./lib/invariant.js"
-                                    },
-                    "./src/*":  "./src/*",
-                    "./package.json":  "./package.json"
-                },
-    "files":  [
-                  "lib/**/*.js", "lib/types/**/*.d.ts"
-              ],
-    "license":  "MIT",
-    "scripts": {
-      "typecheck": "tsc --noEmit",
-      "test": "vitest run",
-      "build": "tsc"
+  "name": "@liuhange/dsh-data-asset-orchestration",
+  "description": "Data asset orchestration skill: sequential execution of masking, cleaning, inventory, packaging Also known as @deepseek-ai/dsh-data-asset-orchestration. Entry point of the @liuhange/dsh data-asset suite (19 packages) — see README for inventory-scan, quality-score, valuation, compliance-check, registration-helper, data-cleaning, data-lineage, data-masking and more.",
+  "version": "3.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuhange789/data-asset-inspector.git",
+    "directory": "packages/data-asset/data-asset-orchestration"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
     },
-    "peerDependencies":  {
-                             "@deepseek-ai/cordis": "^4.0.0",
-                             "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
-                             "@deepseek-ai/dsh-skill": "0.1.0-rc.7",
-                             "@liuhange/dsh-data-asset-shared":  "^3.0.0"
-                         },
-    "dsh":  { "bundle":  { "patch": true } }
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/**/*.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh-tools": "0.0.1-rc.1",
+    "@deepseek-ai/dsh-skill": "0.1.0-rc.7",
+    "@liuhange/dsh-data-asset-shared": "^3.2.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": true
+    }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
+    "data-governance",
+    "data-quality",
+    "data-lineage",
+    "data-masking",
+    "data-cleaning",
+    "data-inventory",
+    "data-valuation",
+    "data-compliance",
+    "data-registration",
+    "data-visualization",
+    "data-packaging",
+    "data-sensitivity",
+    "asset-valuation",
+    "compliance-check",
+    "quality-score",
+    "inventory-scan",
+    "registration-helper",
+    "visibility-doctor",
+    "liuhange",
+    "dsh",
+    "数据治理",
+    "数据质量",
+    "数据血缘",
+    "数据脱敏",
+    "数据清洗",
+    "数据目录",
+    "数据估值",
+    "数据合规",
+    "数据登记",
+    "数据可视化",
+    "数据封装",
+    "敏感度分类",
+    "资产估值",
+    "合规检查",
+    "质量评分",
+    "资产盘点",
+    "登记助手",
+    "曝光度诊断"
+  ],
+  "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

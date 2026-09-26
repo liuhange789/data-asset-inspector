@@ -3,19 +3,32 @@
   "lastUpdated": "2026-08-21",
   "valueAssessment": {
     "highValue": {
-      "keywords": ["供应链", "销售明细", "设备工况", "交易流水"],
+      "keywords": [
+        "供应链",
+        "销售明细",
+        "设备工况",
+        "交易流水"
+      ],
       "score": 5,
       "label": "★★★★★",
       "recommendation": "优先交易，建议入表"
     },
     "mediumValue": {
-      "keywords": ["用户行为", "产品数据", "行业报告"],
+      "keywords": [
+        "用户行为",
+        "产品数据",
+        "行业报告"
+      ],
       "score": 3,
       "label": "★★★",
       "recommendation": "脱敏后交易"
     },
     "lowValue": {
-      "keywords": ["日志", "备份", "临时"],
+      "keywords": [
+        "日志",
+        "备份",
+        "临时"
+      ],
       "score": 1,
       "label": "★",
       "recommendation": "评估处理成本"
@@ -47,15 +60,22 @@
   "maskingLevels": {
     "FULL": {
       "description": "完全匿名化",
-      "applyTo": ["idCard"]
+      "applyTo": [
+        "idCard"
+      ]
     },
     "PARTIAL": {
       "description": "假名化，保留前3后4",
-      "applyTo": ["phone", "bankCard"]
+      "applyTo": [
+        "phone",
+        "bankCard"
+      ]
     },
     "GENERALIZE": {
       "description": "泛化处理",
-      "applyTo": ["email"]
+      "applyTo": [
+        "email"
+      ]
     }
   },
   "cleaningRules": {
@@ -65,17 +85,46 @@
       "behavior": "mode_fill"
     },
     "qualityThreshold": {
-      "A": { "missingRate": 0.05, "errorRate": 0.01, "label": "优秀" },
-      "B": { "missingRate": 0.10, "errorRate": 0.03, "label": "良好" },
-      "C": { "missingRate": 0.20, "errorRate": 0.05, "label": "合格" },
-      "D": { "missingRate": 0.20, "errorRate": 0.05, "label": "不合格", "action": "不建议交易" }
+      "A": {
+        "missingRate": 0.05,
+        "errorRate": 0.01,
+        "label": "优秀"
+      },
+      "B": {
+        "missingRate": 0.1,
+        "errorRate": 0.03,
+        "label": "良好"
+      },
+      "C": {
+        "missingRate": 0.2,
+        "errorRate": 0.05,
+        "label": "合格"
+      },
+      "D": {
+        "missingRate": 0.2,
+        "errorRate": 0.05,
+        "label": "不合格",
+        "action": "不建议交易"
+      }
     }
   },
   "compliance": {
     "policies": [
-      { "name": "数据产权登记工作指引", "doc": "国数综政策〔2026〕35号", "check": "数据来源可登记" },
-      { "name": "数据流通安全治理", "doc": "发改数据〔2025〕18号", "check": "来源合法性" },
-      { "name": "数据脱敏工具标准", "doc": "YD/T 6225-2024", "check": "脱敏效果达标" }
+      {
+        "name": "数据产权登记工作指引",
+        "doc": "国数综政策〔2026〕35号",
+        "check": "数据来源可登记"
+      },
+      {
+        "name": "数据流通安全治理",
+        "doc": "发改数据〔2025〕18号",
+        "check": "来源合法性"
+      },
+      {
+        "name": "数据脱敏工具标准",
+        "doc": "YD/T 6225-2024",
+        "check": "脱敏效果达标"
+      }
     ]
   },
   "packaging": {
@@ -86,11 +135,26 @@
       "建议交易前完成数据产权登记"
     ],
     "pricingRules": [
-      { "valueLevel": "★★★★★", "suggestion": "根据数据质量、稀缺性和应用场景综合定价，建议高价交易" },
-      { "valueLevel": "★★★★", "suggestion": "根据数据质量和应用场景定价，建议中高价交易" },
-      { "valueLevel": "★★★", "suggestion": "根据数据质量和应用场景综合定价" },
-      { "valueLevel": "★★", "suggestion": "建议低价交易或内部使用" },
-      { "valueLevel": "★", "suggestion": "建议评估处理成本后决定是否交易" }
+      {
+        "valueLevel": "★★★★★",
+        "suggestion": "根据数据质量、稀缺性和应用场景综合定价，建议高价交易"
+      },
+      {
+        "valueLevel": "★★★★",
+        "suggestion": "根据数据质量和应用场景定价，建议中高价交易"
+      },
+      {
+        "valueLevel": "★★★",
+        "suggestion": "根据数据质量和应用场景综合定价"
+      },
+      {
+        "valueLevel": "★★",
+        "suggestion": "建议低价交易或内部使用"
+      },
+      {
+        "valueLevel": "★",
+        "suggestion": "建议评估处理成本后决定是否交易"
+      }
     ],
     "defaultDescription": "适用于数据分析、模型训练、行业研究等场景",
     "version": "V1.0"
@@ -109,22 +173,61 @@
       "timeliness": 60
     },
     "completeness": {
-      "missingMarkers": ["null", "undefined", "N/A", "", "NULL", "NaN"]
+      "missingMarkers": [
+        "null",
+        "undefined",
+        "N/A",
+        "",
+        "NULL",
+        "NaN"
+      ]
     },
     "accuracy": {
       "formatRules": [
-        { "fieldName": "phone", "pattern": "1[3-9]\\d{9}", "weight": 0.5 },
-        { "fieldName": "email", "pattern": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", "weight": 0.5 }
+        {
+          "fieldName": "phone",
+          "pattern": "1[3-9]\\d{9}",
+          "weight": 0.5
+        },
+        {
+          "fieldName": "email",
+          "pattern": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+          "weight": 0.5
+        }
       ],
       "domainRules": [
-        { "fieldName": "age", "min": 0, "max": 150, "weight": 0.5 },
-        { "fieldName": "score", "min": 0, "max": 100, "weight": 0.5 }
+        {
+          "fieldName": "age",
+          "min": 0,
+          "max": 150,
+          "weight": 0.5
+        },
+        {
+          "fieldName": "score",
+          "min": 0,
+          "max": 100,
+          "weight": 0.5
+        }
       ]
     },
     "consistency": {
       "crossFieldRules": [
-        { "name": "endDateAfterStartDate", "fields": ["startDate", "endDate"], "constraint": "after" },
-        { "name": "priceNonNegative", "fields": ["price"], "constraint": "greaterThan", "value": 0 }
+        {
+          "name": "endDateAfterStartDate",
+          "fields": [
+            "startDate",
+            "endDate"
+          ],
+          "constraint": "after"
+        },
+        {
+          "name": "priceNonNegative",
+          "fields": [
+            "price"
+          ],
+          "constraint": "greaterThan",
+          "value": 0
+        }
       ]
     },
     "timeliness": {
@@ -146,12 +249,16 @@
     },
     "kAnonymity": {
       "kValue": 2,
-      "quasiIdentifiers": ["zipCode", "age", "gender"]
+      "quasiIdentifiers": [
+        "zipCode",
+        "age",
+        "gender"
+      ]
     },
     "differentialPrivacy": {
-      "epsilon": 1.0,
-      "totalBudget": 5.0,
-      "sensitivity": 1.0
+      "epsilon": 1,
+      "totalBudget": 5,
+      "sensitivity": 1
     },
     "hash": {
       "algorithm": "SHA-256",
@@ -160,11 +267,26 @@
   },
   "visualization": {
     "charts": {
-      "bar": { "enabled": true, "title": "脱敏统计" },
-      "comparison": { "enabled": true, "title": "清洗前后对比" },
-      "pie": { "enabled": true, "title": "数据资产分布" },
-      "radar": { "enabled": true, "title": "质量评分" },
-      "flowchart": { "enabled": true, "title": "血缘追踪" }
+      "bar": {
+        "enabled": true,
+        "title": "脱敏统计"
+      },
+      "comparison": {
+        "enabled": true,
+        "title": "清洗前后对比"
+      },
+      "pie": {
+        "enabled": true,
+        "title": "数据资产分布"
+      },
+      "radar": {
+        "enabled": true,
+        "title": "质量评分"
+      },
+      "flowchart": {
+        "enabled": true,
+        "title": "血缘追踪"
+      }
     },
     "layout": {
       "columns": 2,
@@ -188,19 +310,63 @@
   },
   "sensitivityClassification": {
     "fieldNameRules": [
-      { "name": "idCard", "pattern": "id_?card|身份证|identity", "level": "Secret" },
-      { "name": "phone", "pattern": "phone|手机|mobile|tel", "level": "Confidential" },
-      { "name": "email", "pattern": "email|邮箱|mail", "level": "Confidential" },
-      { "name": "bankCard", "pattern": "bank_?card|银行卡|account", "level": "Secret" },
-      { "name": "address", "pattern": "address|地址|addr", "level": "Internal" },
-      { "name": "name", "pattern": "^name$|姓名|username", "level": "Internal" },
-      { "name": "public", "pattern": "status|type|category|label|tag|level", "level": "Public" }
+      {
+        "name": "idCard",
+        "pattern": "id_?card|身份证|identity",
+        "level": "Secret"
+      },
+      {
+        "name": "phone",
+        "pattern": "phone|手机|mobile|tel",
+        "level": "Confidential"
+      },
+      {
+        "name": "email",
+        "pattern": "email|邮箱|mail",
+        "level": "Confidential"
+      },
+      {
+        "name": "bankCard",
+        "pattern": "bank_?card|银行卡|account",
+        "level": "Secret"
+      },
+      {
+        "name": "address",
+        "pattern": "address|地址|addr",
+        "level": "Internal"
+      },
+      {
+        "name": "name",
+        "pattern": "^name$|姓名|username",
+        "level": "Internal"
+      },
+      {
+        "name": "public",
+        "pattern": "status|type|category|label|tag|level",
+        "level": "Public"
+      }
     ],
     "fieldValueRules": [
-      { "name": "idCardValue", "pattern": "[1-9]\\d{5}(18|19|20)?\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{3}[\\dXx]", "level": "Secret" },
-      { "name": "phoneValue", "pattern": "1[3-9]\\d{9}", "level": "Confidential" },
-      { "name": "emailValue", "pattern": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", "level": "Confidential" },
-      { "name": "bankCardValue", "pattern": "[1-9]\\d{15,18}", "level": "Secret" }
+      {
+        "name": "idCardValue",
+        "pattern": "[1-9]\\d{5}(18|19|20)?\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{3}[\\dXx]",
+        "level": "Secret"
+      },
+      {
+        "name": "phoneValue",
+        "pattern": "1[3-9]\\d{9}",
+        "level": "Confidential"
+      },
+      {
+        "name": "emailValue",
+        "pattern": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+        "level": "Confidential"
+      },
+      {
+        "name": "bankCardValue",
+        "pattern": "[1-9]\\d{15,18}",
+        "level": "Secret"
+      }
     ],
     "levelMapping": {
       "Public": "none",
@@ -220,23 +386,74 @@
   },
   "inventoryScan": {
     "assetTripleCondition": {
-      "pastTransactionKeywords": ["交易", "采购", "采集", "生成", "购买", "合同", "协议", "业务", "系统"],
-      "ownershipControlKeywords": ["自有", "拥有", "控制", "授权", "委托", "归属", "产权", "经营"],
-      "economicBenefitKeywords": ["收益", "价值", "变现", "交易", "赋能", "增值", "利润", "成本", "经济"]
+      "pastTransactionKeywords": [
+        "交易",
+        "采购",
+        "采集",
+        "生成",
+        "购买",
+        "合同",
+        "协议",
+        "业务",
+        "系统"
+      ],
+      "ownershipControlKeywords": [
+        "自有",
+        "拥有",
+        "控制",
+        "授权",
+        "委托",
+        "归属",
+        "产权",
+        "经营"
+      ],
+      "economicBenefitKeywords": [
+        "收益",
+        "价值",
+        "变现",
+        "交易",
+        "赋能",
+        "增值",
+        "利润",
+        "成本",
+        "经济"
+      ]
     },
     "ownershipClueRules": {
-      "holdingRightFields": ["sourceSystem", "acquisitionMethod", "contractNumber", "owner"],
-      "usageRightFields": ["usageScope", "licenseType", "authorizedUsers", "usageDuration"],
-      "operationRightFields": ["productType", "saleChannel", "pricingModel", "commercialUse"]
+      "holdingRightFields": [
+        "sourceSystem",
+        "acquisitionMethod",
+        "contractNumber",
+        "owner"
+      ],
+      "usageRightFields": [
+        "usageScope",
+        "licenseType",
+        "authorizedUsers",
+        "usageDuration"
+      ],
+      "operationRightFields": [
+        "productType",
+        "saleChannel",
+        "pricingModel",
+        "commercialUse"
+      ]
     },
     "scanScaleLimit": 10000,
-    "sensitiveKeywords": ["密码", "密钥", "token", "secret", "credential", "privateKey"]
+    "sensitiveKeywords": [
+      "密码",
+      "密钥",
+      "token",
+      "secret",
+      "credential",
+      "privateKey"
+    ]
   },
   "qualityScoringExtended": {
     "weights": {
       "normality": 0.15,
-      "completeness": 0.20,
-      "accuracy": 0.20,
+      "completeness": 0.2,
+      "accuracy": 0.2,
       "consistency": 0.15,
       "timeliness": 0.15,
       "accessibility": 0.15
@@ -251,7 +468,12 @@
     },
     "normality": {
       "fieldNamePattern": "^[a-z][a-zA-Z0-9_]*$",
-      "requiredFields": ["id", "name", "createdAt", "updatedAt"]
+      "requiredFields": [
+        "id",
+        "name",
+        "createdAt",
+        "updatedAt"
+      ]
     },
     "accessibility": {
       "readTimeoutMs": 5000,
@@ -260,14 +482,27 @@
   },
   "valuation": {
     "costBased": {
-      "costCategories": ["acquisition", "processing", "storage", "maintenance", "labor", "infrastructure"],
+      "costCategories": [
+        "acquisition",
+        "processing",
+        "storage",
+        "maintenance",
+        "labor",
+        "infrastructure"
+      ],
       "depreciationYears": 5,
       "depreciationMethod": "straight-line"
     },
     "incomeBased": {
       "defaultDiscountRate": 0.08,
       "defaultScenarioYears": 3,
-      "scenarioTemplates": ["direct_sale", "subscription", "api_call", "data_sharing", "analytics_service"]
+      "scenarioTemplates": [
+        "direct_sale",
+        "subscription",
+        "api_call",
+        "data_sharing",
+        "analytics_service"
+      ]
     },
     "pricingReference": {
       "valueLevelThresholds": {
@@ -285,7 +520,11 @@
     "costReliabilityMeasurement": {
       "enabled": true,
       "policyRef": "财会〔2023〕11号",
-      "reliabilityLevels": ["high", "medium", "low"],
+      "reliabilityLevels": [
+        "high",
+        "medium",
+        "low"
+      ],
       "criteria": {
         "high": "有完整凭证链，成本可直接追溯至原始发票/合同",
         "medium": "有部分凭证，成本经合理分摊计算",
@@ -295,42 +534,132 @@
   },
   "complianceCheck": {
     "sourceRules": [
-      { "id": "SRC_001", "condition": "数据来源须有合同或协议", "lawRef": "数据安全法第八条", "compliant": true },
-      { "id": "SRC_002", "condition": "采集方式须明示告知", "lawRef": "个人信息保护法第十四条", "compliant": true },
-      { "id": "SRC_003", "condition": "不得非法获取他人数据", "lawRef": "数据安全法第八条", "compliant": true }
+      {
+        "id": "SRC_001",
+        "condition": "数据来源须有合同或协议",
+        "lawRef": "数据安全法第八条",
+        "compliant": true
+      },
+      {
+        "id": "SRC_002",
+        "condition": "采集方式须明示告知",
+        "lawRef": "个人信息保护法第十四条",
+        "compliant": true
+      },
+      {
+        "id": "SRC_003",
+        "condition": "不得非法获取他人数据",
+        "lawRef": "数据安全法第八条",
+        "compliant": true
+      }
     ],
     "processingRules": [
-      { "id": "PRC_001", "condition": "加工不得超出授权范围", "lawRef": "个人信息保护法第十三条", "compliant": true },
-      { "id": "PRC_002", "condition": "个人信息须脱敏处理", "lawRef": "个人信息保护法第五十一条", "compliant": true }
+      {
+        "id": "PRC_001",
+        "condition": "加工不得超出授权范围",
+        "lawRef": "个人信息保护法第十三条",
+        "compliant": true
+      },
+      {
+        "id": "PRC_002",
+        "condition": "个人信息须脱敏处理",
+        "lawRef": "个人信息保护法第五十一条",
+        "compliant": true
+      }
     ],
     "usageRules": [
-      { "id": "USE_001", "condition": "使用不得超出约定场景", "lawRef": "数据安全法第八条", "compliant": true },
-      { "id": "USE_002", "condition": "脱敏后可按一般数据流通", "lawRef": "发改数据〔2025〕18号", "compliant": true }
+      {
+        "id": "USE_001",
+        "condition": "使用不得超出约定场景",
+        "lawRef": "数据安全法第八条",
+        "compliant": true
+      },
+      {
+        "id": "USE_002",
+        "condition": "脱敏后可按一般数据流通",
+        "lawRef": "发改数据〔2025〕18号",
+        "compliant": true
+      }
     ],
-    "personalInfoMinimizeFields": ["idCard", "phone", "bankCard", "email", "address", "name", "birthDate"],
+    "personalInfoMinimizeFields": [
+      "idCard",
+      "phone",
+      "bankCard",
+      "email",
+      "address",
+      "name",
+      "birthDate"
+    ],
     "pilotPolicyReference": {
       "enabled": true,
       "policyName": "数据资产全过程管理试点方案",
       "policyRef": "财资〔2024〕167号",
-      "keyPoints": ["台账编制", "登记", "授权运营", "收益分配", "交易流通"],
+      "keyPoints": [
+        "台账编制",
+        "登记",
+        "授权运营",
+        "收益分配",
+        "交易流通"
+      ],
       "embedMessage": "依据：《数据资产全过程管理试点方案》（财资〔2024〕167号）——围绕数据资产台账编制、登记、授权运营、收益分配、交易流通等重点环节开展试点。"
     }
   },
   "registration": {
     "rules": {
       "disallowedScenarios": [
-        { "id": "DIS_001", "label": "危害国家安全", "keywords": ["国家安全", "机密", "涉密"] },
-        { "id": "DIS_002", "label": "来源违反法律法规", "keywords": ["非法", "窃取", "违规采集"] },
-        { "id": "DIS_003", "label": "权属纠纷未解决", "keywords": ["纠纷", "争议", "诉讼"] },
-        { "id": "DIS_004", "label": "隐瞒真实情况", "keywords": ["隐瞒", "虚假", "欺诈"] }
+        {
+          "id": "DIS_001",
+          "label": "危害国家安全",
+          "keywords": [
+            "国家安全",
+            "机密",
+            "涉密"
+          ]
+        },
+        {
+          "id": "DIS_002",
+          "label": "来源违反法律法规",
+          "keywords": [
+            "非法",
+            "窃取",
+            "违规采集"
+          ]
+        },
+        {
+          "id": "DIS_003",
+          "label": "权属纠纷未解决",
+          "keywords": [
+            "纠纷",
+            "争议",
+            "诉讼"
+          ]
+        },
+        {
+          "id": "DIS_004",
+          "label": "隐瞒真实情况",
+          "keywords": [
+            "隐瞒",
+            "虚假",
+            "欺诈"
+          ]
+        }
       ]
     },
     "agencies": {
       "mode": "local",
       "httpEndpoints": {
-        "beijing": { "url": "https://sjcqdj.nda.gov.cn/api/beijing", "apiKey": "${REG_BJ_API_KEY}" },
-        "shanghai": { "url": "https://sjcqdj.nda.gov.cn/api/shanghai", "apiKey": "${REG_SH_API_KEY}" },
-        "shenzhen": { "url": "https://sjcqdj.nda.gov.cn/api/shenzhen", "apiKey": "${REG_SZ_API_KEY}" }
+        "beijing": {
+          "url": "https://sjcqdj.nda.gov.cn/api/beijing",
+          "apiKey": "${REG_BJ_API_KEY}"
+        },
+        "shanghai": {
+          "url": "https://sjcqdj.nda.gov.cn/api/shanghai",
+          "apiKey": "${REG_SH_API_KEY}"
+        },
+        "shenzhen": {
+          "url": "https://sjcqdj.nda.gov.cn/api/shenzhen",
+          "apiKey": "${REG_SZ_API_KEY}"
+        }
       }
     },
     "nationalSystem": {
@@ -340,24 +669,60 @@
     },
     "tripleAuditStandard": {
       "enabled": true,
-      "standards": ["数据描述准确性", "数据来源合规性", "数据产权明确性"],
+      "standards": [
+        "数据描述准确性",
+        "数据来源合规性",
+        "数据产权明确性"
+      ],
       "policyRef": "国数综政策〔2026〕35号",
       "promptMessage": "登记审查重点为三重审核标准：①数据描述准确性 ②数据来源合规性 ③数据产权明确性。依据：《数据产权登记工作指引（试行）》（国数综政策〔2026〕35号）。"
     },
     "sevenStepFlow": {
       "enabled": true,
       "steps": [
-        { "step": 1, "name": "申请", "durationDays": null },
-        { "step": 2, "name": "受理", "durationDays": 3 },
-        { "step": 3, "name": "审查", "durationDays": null },
-        { "step": 4, "name": "公示", "durationDays": 5 },
-        { "step": 5, "name": "异议处理", "durationDays": 10 },
-        { "step": 6, "name": "信息存证", "durationDays": null },
-        { "step": 7, "name": "凭证核发", "durationDays": null }
+        {
+          "step": 1,
+          "name": "申请",
+          "durationDays": null
+        },
+        {
+          "step": 2,
+          "name": "受理",
+          "durationDays": 3
+        },
+        {
+          "step": 3,
+          "name": "审查",
+          "durationDays": null
+        },
+        {
+          "step": 4,
+          "name": "公示",
+          "durationDays": 5
+        },
+        {
+          "step": 5,
+          "name": "异议处理",
+          "durationDays": 10
+        },
+        {
+          "step": 6,
+          "name": "信息存证",
+          "durationDays": null
+        },
+        {
+          "step": 7,
+          "name": "凭证核发",
+          "durationDays": null
+        }
       ],
       "policyRef": "国数综政策〔2026〕35号"
     },
-    "allowedAgencies": ["beijing", "shanghai", "shenzhen"],
+    "allowedAgencies": [
+      "beijing",
+      "shanghai",
+      "shenzhen"
+    ],
     "maxAgencyCount": 3,
     "onlineDate": "2026-09-11"
   },
@@ -367,5 +732,94 @@
     "data-asset-valuation": "估值底稿自动化生成器——注重成本能够可靠计量的要求",
     "data-asset-compliance-check": "合规预检工具——让企业先自查再找律师出正式意见",
     "data-asset-registration-helper": "材料生成器——材料准备环节最适合工具化"
+  },
+  "attestation": {
+    "inspector": "dsh-visibility-doctor",
+    "severityMapping": {
+      "critical": 20,
+      "major": 10,
+      "minor": 5
+    },
+    "statementTemplate": {
+      "scope": "本鉴证报告基于数据质量六维评分结果生成",
+      "basis": "依据《数据质量鉴证评价方法》（T/CIIA 060-2025）及《企业数据资源相关会计处理暂行规定》（财会〔2023〕11号）",
+      "conclusion": "鉴证结论：数据质量符合/不符合入表要求"
+    }
+  },
+  "aiDatasetInspection": {
+    "kappaThreshold": 0.7,
+    "minSampleThreshold": 50,
+    "leakDetectionScaleLimit": 1000000
+  },
+  "govDataInspection": {
+    "guideRequiredElements": [
+      "办理条件",
+      "申请材料",
+      "办理流程",
+      "办理时限"
+    ],
+    "semanticErrorRules": [
+      "字段语义与业务含义不匹配",
+      "枚举值超出定义范围"
+    ],
+    "logicErrorRules": [
+      "前置条件与后续流程矛盾",
+      "办理时限早于申请日期"
+    ],
+    "businessNormRules": [
+      "字段命名符合政务数据规范",
+      "编码符合国标要求"
+    ],
+    "convenienceWeights": {
+      "timeLimit": 0.3,
+      "onlineCapable": 0.4,
+      "materialConcise": 0.3
+    },
+    "gbt47949Mapping": {
+      "structured": "A01",
+      "semiStructured": "A02",
+      "unstructured": "A03"
+    }
+  },
+  "dataCirculationAssessment": {
+    "tdsAccessCriteria": {
+      "tech": [
+        "身份认证",
+        "资源封装",
+        "目录维护",
+        "审计追溯"
+      ],
+      "compliance": [
+        "网络数据安全管理条例",
+        "GB/T 41479-2022"
+      ]
+    },
+    "tradeComplianceRules": [
+      "参与方合规",
+      "交易平台合规",
+      "交易标的合规",
+      "交易过程合规"
+    ],
+    "weights": {
+      "compliance": 0.4,
+      "tdsAccess": 0.3,
+      "tradePrediction": 0.3
+    }
+  },
+  "cityDataClassification": {
+    "aiService": {
+      "endpoint": "${AI_CLASSIFY_ENDPOINT}",
+      "model": "city-data-classifier-v1",
+      "timeoutMs": 30000,
+      "retryCount": 2
+    },
+    "gbt47949CodePattern": "^[A-Z]d{2}d{2}$",
+    "sensitivityGradingRules": {
+      "public": "公开",
+      "internal": "内部",
+      "confidential": "机密",
+      "restricted": "绝密"
+    },
+    "confidenceThreshold": 0.6
   }
 }

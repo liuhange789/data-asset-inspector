@@ -7,6 +7,8 @@ import {
 import { defaultIncrementalConfig } from './incremental/defaultIncrementalConfig.js'
 import { IncrementalProcessor } from './incremental/incrementalProcessor.js'
 import { CronScheduler } from './incremental/cronScheduler.js'
+import { loadVerticalChains } from './verticalChainRegistry.js'
+import { executeVerticalChain } from './verticalChainExecutor.js'
 
 export const name = 'data-asset-orchestration'
 export const inject = ['skills', 'tools']
@@ -108,4 +110,35 @@ export function apply(ctx: Context) {
   )
 
   console.log('[data-asset-orchestration] 全流程编排插件已加载（支持增量模式）')
+
+  try {
+    const registry = loadVerticalChains()
+    if (registry.chains.length > 0) {
+      ctx.tools.register(
+        defineTool({
+          name: 'execute_vertical_chain',
+          description: '执行垂直链路编排（数据鉴证/AI数据集体检/政务数据巡检/数据可流通性评估/城市数据分类）',
+          parameters: {
+            trigger: { type: 'string', required: true, description: '触发词：数据鉴证|AI数据集体检|政务数据巡检|数据可流通性评估|城市数据分类' },
+          },
+          output: {
+            schema: { type: 'string' },
+            render: (_args, value) => [{ type: 'text', text: value }],
+          },
+          async execute(args) {
+            const trigger = args.trigger as string
+            const chain = registry.chains.find((c) => c.trigger === trigger)
+            if (!chain) {
+              return JSON.stringify({ error: 'CHAIN_NOT_FOUND', message: `未找到触发词: ${trigger}` })
+            }
+            const result = await executeVerticalChain(chain)
+            return JSON.stringify(result, null, 2)
+          },
+        }),
+      )
+      console.log(`[data-asset-orchestration] 垂直链路扩展已加载（${registry.chains.length}条链路）`)
+    }
+  } catch {
+    console.log('[data-asset-orchestration] 垂直链路扩展加载跳过（配置不可用）')
+  }
 }

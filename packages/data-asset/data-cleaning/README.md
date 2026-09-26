@@ -1,6 +1,13 @@
-# @deepseek-ai/dsh-data-cleaning
+# @liuhange/dsh-data-cleaning
 
 Data cleaning plugin for DeepSeek Harness. Deduplication, format standardization, anomaly detection.
+
+
+## 安装
+
+```bash
+dsh plugin --profile web add @liuhange/dsh-data-cleaning
+```
 
 ## Tool: clean_data
 

@@ -1,0 +1,29 @@
+{
+  "chains": [
+    {
+      "trigger": "数据鉴证",
+      "chain": ["score_data_quality", "attest_data_quality", "check_compliance"],
+      "description": "鉴证级质量报告链路：质量评分→鉴证报告→合规检查"
+    },
+    {
+      "trigger": "AI数据集体检",
+      "chain": ["mask_sensitive_data", "clean_data", "inspect_ai_dataset", "score_data_quality"],
+      "description": "AI训练数据集检查链路：脱敏→清洗→AI数据集检查→质量评分"
+    },
+    {
+      "trigger": "政务数据巡检",
+      "chain": ["scan_inventory", "inspect_gov_data", "check_compliance", "registration_helper"],
+      "description": "政务数据专项巡检链路：目录扫描→政务巡检→合规检查→登记助手"
+    },
+    {
+      "trigger": "数据可流通性评估",
+      "chain": ["check_compliance", "assess_circulation", "package_data"],
+      "description": "可流通性评估链路：合规检查→流通评估→数据封装"
+    },
+    {
+      "trigger": "城市数据分类",
+      "chain": ["scan_inventory", "classify_city_data", "classify_sensitivity", "registration_helper"],
+      "description": "城市数据AI分类分级链路：目录扫描→AI分类→敏感度分级→登记助手"
+    }
+  ]
+}
