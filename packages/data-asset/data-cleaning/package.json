@@ -59,7 +59,17 @@
     "数据清洗",
     "去重",
     "格式标准化",
-    "异常检测"
+    "异常检测",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

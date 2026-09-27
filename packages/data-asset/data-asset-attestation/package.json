@@ -55,7 +55,17 @@
     "quality-attestation",
     "鉴证报告",
     "证据链",
-    "质量鉴证"
+    "质量鉴证",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

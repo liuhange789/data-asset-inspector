@@ -57,7 +57,17 @@
     "合规审计",
     "来源合规",
     "处理合规",
-    "使用合规"
+    "使用合规",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

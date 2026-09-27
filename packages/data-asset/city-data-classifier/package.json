@@ -56,7 +56,17 @@
     "gbt-47949",
     "城市数据",
     "AI分类",
-    "敏感度分级"
+    "敏感度分级",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

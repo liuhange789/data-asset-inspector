@@ -2,7 +2,15 @@
 
 [![Listed on dsh-plugin.org](https://dsh-plugin.org/badges/listed.svg)](https://dsh-plugin.org/plugins/liuhange789/data-asset-inspector)
 [![npm version](https://img.shields.io/npm/v/@liuhange/dsh-data-asset-shared.svg)](https://www.npmjs.com/package/@liuhange/dsh-data-asset-shared)
+[![npm downloads](https://img.shields.io/npm/dm/@liuhange/dsh-data-asset-shared.svg)](https://www.npmjs.com/package/@liuhange/dsh-data-asset-shared)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-22+-green.svg)](https://nodejs.org/)
+[![Tests](https://img.shields.io/badge/Tests-403%20passed-brightgreen.svg)]()
+[![Plugins](https://img.shields.io/badge/Plugins-24-orange.svg)]()
+[![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-DSH-purple.svg)](https://github.com/deepseek-ai/deepseek-harness)
+
+> 📦 **24个npm插件** | 🧪 **403个测试全部通过** | 📋 **覆盖数据资产全生命周期** | 🔒 **每个报告含政策依据可审计**
 
 基于 DeepSeek Harness (DSH) 的全领域数据资产管理插件矩阵，覆盖"脱敏→清洗→盘点→质量→估值→合规→登记→政务→AI→流通"完整业务链路。24个插件全部发布至npm，每个插件嵌入政策依据引用，确保"有理有据、可审计、可追溯"。
 

@@ -56,7 +56,17 @@
     "kappa-coefficient",
     "AI数据集",
     "标注一致性",
-    "数据泄露"
+    "数据泄露",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

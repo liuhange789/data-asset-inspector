@@ -55,7 +55,17 @@
     "登记文档",
     "数据描述",
     "合法性声明",
-    "产权归属"
+    "产权归属",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

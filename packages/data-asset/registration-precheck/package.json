@@ -57,7 +57,17 @@
     "资格检查",
     "国家安全检查",
     "来源合规检查",
-    "权属纠纷检查"
+    "权属纠纷检查",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

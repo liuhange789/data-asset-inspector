@@ -1,5 +1,42 @@
 # 变更记录
 
+## [3.1.2] - 2026-09-27
+
+### Bug修复（P0严重×5 + P1高危×40 + P2中危×50）
+
+- **P0**: generate-registration-docs/registration-precheck execute无try-catch → 已修复
+- **P0**: gov-data-inspector 18字段类型断言 → 添加12项运行时校验
+- **P1**: 12个插件execute添加外层try-catch错误处理
+- **P1**: data-asset-valuation除以零防护（depreciationYears≤0, discountRate=-1）
+- **P1**: data-asset-quality-score weights undefined防护
+- **P1**: data-quality-scoring weightSum=0回退均分权重
+- **P1**: data-masking sensitivePatterns undefined跳过
+- **P1**: data-asset-shared xlsx二进制格式读写改为抛明确错误
+- **P2**: 12个插件name导出添加@liuhange/dsh-前缀
+- **P2**: 4处`??`改`||`（空字符串不触发空值合并）
+
+### 曝光量优化
+
+- 全部24个插件npm关键词扩展至20+个（typescript/nodejs/automation/audit/compliance/data-governance等）
+- README添加9个徽章（npm downloads/TypeScript/Node.js/Tests/Plugins/DSH）
+- LICENSE文件添加（MIT）
+- CHANGELOG更新
+
+### 验证结果
+
+- TypeScript编译：24/24通过
+- 测试：403/403通过
+
+---
+
+## [3.1.0] - 2026-09-12
+
+### Added
+- v3.0数据资产入表模块：盘点扫描/质量评分/估值/合规审查/登记助手/质量确权
+- v3.1政务与AI扩展模块：政务数据巡检/城市数据分类/AI数据集检查/数据流通评估/登记材料生成/登记预检/登记机构匹配/可见性诊断
+
+---
+
 ## [2.0.0] - 2026-08-22
 
 ### 新增功能

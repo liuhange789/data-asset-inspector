@@ -59,7 +59,17 @@
     "数据目录",
     "目录扫描",
     "资产清单",
-    "价值评估"
+    "价值评估",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

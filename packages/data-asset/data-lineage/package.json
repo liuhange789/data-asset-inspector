@@ -56,7 +56,17 @@
     "数据血缘",
     "血缘追踪",
     "链式追溯",
-    "血缘导出"
+    "血缘导出",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme",
   "dsh": {

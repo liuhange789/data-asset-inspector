@@ -55,7 +55,17 @@
     "登记助手",
     "登记流程",
     "权属纠纷",
-    "机构匹配"
+    "机构匹配",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

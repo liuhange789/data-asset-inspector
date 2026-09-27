@@ -55,7 +55,17 @@
     "transaction-compliance",
     "可流通性",
     "可信数据空间",
-    "交易合规"
+    "交易合规",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

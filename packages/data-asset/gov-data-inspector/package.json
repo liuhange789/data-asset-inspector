@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-gov-data-inspector",
   "description": "Government data inspection plugin: service guide quality check and public data asset classification",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "publishConfig": {
     "access": "public"
   },
@@ -56,7 +56,17 @@
     "gbt-47949",
     "政务数据",
     "公共数据",
-    "办事指南"
+    "办事指南",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

@@ -61,7 +61,17 @@
     "公开",
     "内部",
     "机密",
-    "绝密"
+    "绝密",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme",
   "dsh": {

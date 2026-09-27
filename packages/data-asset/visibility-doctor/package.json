@@ -46,7 +46,20 @@
     "cli",
     "diagnostics",
     "npm-registry",
-    "exposure-boost"
+    "exposure-boost",
+    "dsh",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "scripts": {
     "build": "tsc",

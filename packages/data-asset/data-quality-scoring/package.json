@@ -61,7 +61,17 @@
     "准确性",
     "一致性",
     "时效性",
-    "改进建议"
+    "改进建议",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme",
   "dsh": {

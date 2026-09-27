@@ -54,7 +54,17 @@
     "ownership-annotation",
     "资产盘点",
     "元数据扫描",
-    "权属标注"
+    "权属标注",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "plugin",
+    "open-source"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }
