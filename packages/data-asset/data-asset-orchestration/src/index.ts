@@ -10,7 +10,7 @@ import { CronScheduler } from './incremental/cronScheduler.js'
 import { loadVerticalChains } from './verticalChainRegistry.js'
 import { executeVerticalChain } from './verticalChainExecutor.js'
 
-export const name = 'data-asset-orchestration'
+export const name = '@liuhange/dsh-data-asset-orchestration'
 export const inject = ['skills', 'tools']
 
 export function apply(ctx: Context) {
@@ -62,6 +62,7 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
+        try {
         const { config } = loader.load()
         const incrementalConfig = config.incrementalScheduling ?? defaultIncrementalConfig
 
@@ -78,6 +79,9 @@ export function apply(ctx: Context) {
         )
 
         return JSON.stringify(result, null, 2)
+        } catch (e) {
+          return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+        }
       },
     }),
   )
@@ -94,6 +98,7 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
+        try {
         const { config } = loader.load()
         const incrementalConfig = config.incrementalScheduling ?? defaultIncrementalConfig
         const cronExpression = args.cronExpression as string
@@ -105,6 +110,9 @@ export function apply(ctx: Context) {
           message: '增量处理调度已配置',
           ...setupResult,
         }, null, 2)
+        } catch (e) {
+          return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+        }
       },
     }),
   )
@@ -126,6 +134,7 @@ export function apply(ctx: Context) {
             render: (_args, value) => [{ type: 'text', text: value }],
           },
           async execute(args) {
+            try {
             const trigger = args.trigger as string
             const chain = registry.chains.find((c) => c.trigger === trigger)
             if (!chain) {
@@ -133,6 +142,9 @@ export function apply(ctx: Context) {
             }
             const result = await executeVerticalChain(chain)
             return JSON.stringify(result, null, 2)
+            } catch (e) {
+              return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+            }
           },
         }),
       )

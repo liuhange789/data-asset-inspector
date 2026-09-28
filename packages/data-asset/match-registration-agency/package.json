@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-match-registration-agency",
   "description": "Match registration agency: recommend data exchange based on data type Also known as @deepseek-ai/dsh-match-registration-agency.",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "publishConfig": {
     "access": "public"
   },
@@ -38,7 +38,7 @@
   },
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   },
   "keywords": [

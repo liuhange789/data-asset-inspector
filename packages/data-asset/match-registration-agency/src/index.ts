@@ -2,7 +2,7 @@ import type { Context } from '@deepseek-ai/cordis'
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import { AgencyMatcher } from './agencyMatcher.js'
 
-export const name = 'match-registration-agency'
+export const name = '@liuhange/dsh-match-registration-agency'
 export const inject = ['tools']
 
 export function apply(ctx: Context) {
@@ -24,9 +24,13 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
+        try {
         const dataType = args.dataType as string
         const result = matcher.match(dataType)
         return JSON.stringify(result, null, 2)
+        } catch (e) {
+          return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+        }
       },
     }),
   )

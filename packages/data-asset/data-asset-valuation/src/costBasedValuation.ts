@@ -22,7 +22,10 @@ export function calculateCostBasedValue(
   let depreciatedValue: number
   let annualDepreciation: number
 
-  if (config.depreciationMethod === 'straight-line') {
+  if (depreciationYears <= 0) {
+    annualDepreciation = 0
+    depreciatedValue = totalCost
+  } else if (config.depreciationMethod === 'straight-line') {
     annualDepreciation = totalCost / depreciationYears
     depreciatedValue = totalCost - annualDepreciation
   } else {

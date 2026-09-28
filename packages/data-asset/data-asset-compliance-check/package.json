@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-compliance-check",
   "description": "Data asset compliance check plugin: source + processing + usage three-dimensional compliance audit Also known as @deepseek-ai/dsh-data-asset-compliance-check.",
-  "version": "3.1.3",
+  "version": "3.1.4",
   "publishConfig": {
     "access": "public"
   },
@@ -38,7 +38,7 @@
   },
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   },
   "keywords": [

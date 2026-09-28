@@ -3,18 +3,24 @@ export const inject = ['tools'] as const
 
 import { loadJsonConfig } from '@liuhange/dsh-data-asset-shared'
 import { resolvePolicyBasis } from './policyBasis.js'
-
-type ErrorCode = 'GOV_DATA_INPUT_INVALID' | 'GOV_DATA_RULES_MISSING' | 'UNKNOWN_ERROR'
+import { KnowledgeBaseLoader } from './knowledgeBaseLoader.js'
+import { InspectionOrchestrator } from './inspectionOrchestrator.js'
+import { StandardRuleSource } from './standardRuleSource.js'
+import { EncodingDetector } from './encodingDetector.js'
+import { DataScaleGuard } from './dataScaleGuard.js'
+import { UrlReachabilityChecker } from './urlReachabilityChecker.js'
+import type { ErrorCode, FormatRule, KnowledgeBase, StandardRule, DataSourceStatus } from './types.js'
 
 export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
   ctx.tools.register({
     name: 'inspect_gov_data',
-    description: '政务数据专项巡检，含办事指南质量检查和公共数据资产分类',
+    description: '政务数据专项巡检，含办事指南质量检查（漏项/语义/逻辑/格式五维检测）和公共数据资产分类',
     parameters: {
       type: 'object',
       properties: {
         dataSource: { type: 'string', description: '政务数据文件路径' },
         inspectionMode: { type: 'string', enum: ['guide', 'classification', 'full'] },
+        itemTypeOverride: { type: 'string', description: '手动指定事项类型，覆盖自动匹配结果' },
       },
       required: ['dataSource'],
     },
@@ -31,37 +37,182 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
           return JSON.stringify({ error: 'GOV_DATA_RULES_MISSING' as ErrorCode, message: '无法加载business-rules.json' })
         }
 
-        const govConfig = rulesConfig.govDataInspection as { guideRequiredElements: string[]; convenienceWeights: Record<string, number>; gbt47949Mapping: Record<string, string> } | undefined
-        if (!govConfig) {
-          return JSON.stringify({ error: 'GOV_DATA_RULES_MISSING', message: 'govDataInspection配置段缺失' })
+        const govConfigRaw = rulesConfig.govDataInspection
+        if (!govConfigRaw || typeof govConfigRaw !== 'object') {
+          return JSON.stringify({ error: 'GOV_DATA_RULES_MISSING' as ErrorCode, message: 'govDataInspection配置段缺失' })
+        }
+        const govConfig = govConfigRaw as Record<string, unknown>
+        const requiredFields: Record<string, string> = {
+          guideRequiredElements: 'string[]',
+          logicErrorRules: 'array',
+          formatRules: 'array',
+          severityMapping: 'object',
+          scoreWeights: 'object',
+          convenienceWeights: 'object',
+          gbt47949Mapping: 'object',
+          itemTypeMatching: 'object',
+          materialConciseThreshold: 'number',
+          missingFieldStandardClause: 'string',
+          dataSourcePriority: 'array',
+          dataSourceCredentials: 'object',
+        }
+        for (const [field, expectedType] of Object.entries(requiredFields)) {
+          const val = govConfig[field]
+          if (val === undefined || val === null) {
+            return JSON.stringify({ error: 'GOV_DATA_RULES_MISSING' as ErrorCode, message: `govDataInspection.${field}配置缺失` })
+          }
+          if (expectedType === 'array' && !Array.isArray(val)) {
+            return JSON.stringify({ error: 'GOV_DATA_RULES_MISSING' as ErrorCode, message: `govDataInspection.${field}应为数组` })
+          }
+          if (expectedType === 'object' && (typeof val !== 'object' || Array.isArray(val))) {
+            return JSON.stringify({ error: 'GOV_DATA_RULES_MISSING' as ErrorCode, message: `govDataInspection.${field}应为对象` })
+          }
+          if (expectedType === 'string' && typeof val !== 'string') {
+            return JSON.stringify({ error: 'GOV_DATA_RULES_MISSING' as ErrorCode, message: `govDataInspection.${field}应为字符串` })
+          }
+          if (expectedType === 'number' && typeof val !== 'number') {
+            return JSON.stringify({ error: 'GOV_DATA_RULES_MISSING' as ErrorCode, message: `govDataInspection.${field}应为数字` })
+          }
+          if (expectedType === 'string[]' && (!Array.isArray(val) || val.some((v) => typeof v !== 'string'))) {
+            return JSON.stringify({ error: 'GOV_DATA_RULES_MISSING' as ErrorCode, message: `govDataInspection.${field}应为字符串数组` })
+          }
+        }
+
+        const govConfigTyped = govConfig as {
+          guideRequiredElements: string[]
+          logicErrorRules: StandardRule[]
+          formatRules: FormatRule[]
+          severityMapping: Record<string, string>
+          scoreWeights: { completeness: number; accuracy: number; traceability: number }
+          convenienceWeights: Record<string, number>
+          gbt47949Mapping: Record<string, string>
+          itemTypeMatching: Record<string, { keywords: string[]; codePrefix: string }>
+          materialConciseThreshold: number
+          missingFieldStandardClause: string
+          dataSourcePriority: string[]
+          dataSourceCredentials: {
+            national: { apiKey: string; endpoint: string }
+            provincial: { apiKey: string; endpoint: string }
+            standard: { docPath: string; endpoint: string }
+          }
+        }
+
+        const encodingResult = EncodingDetector.detect(args.dataSource as string)
+        if (encodingResult.content === null) {
+          if (encodingResult.encodingError === '文件为空') {
+            return JSON.stringify({ error: 'GOV_DATA_INPUT_INVALID' as ErrorCode, message: '无数据，请确认输入文件内容' })
+          }
+          if (encodingResult.encodingError?.includes('无法读取文件')) {
+            const reachability = await UrlReachabilityChecker.check(args.dataSource as string)
+            if (!reachability.reachable) {
+              return JSON.stringify({ error: 'GOV_DATA_URL_UNREACHABLE' as ErrorCode, message: reachability.error ?? '数据源不可达，请检查路径或 URL' })
+            }
+          }
+          return JSON.stringify({ error: 'GOV_DATA_ENCODING_ERROR' as ErrorCode, message: encodingResult.encodingError ?? '文件编码错误' })
         }
 
         let data: unknown[]
         try {
-          const { readFileSync } = await import('node:fs')
-          const raw = readFileSync(args.dataSource as string, 'utf-8')
+          const raw = encodingResult.content
+          if (raw.trim() === '') {
+            return JSON.stringify({ error: 'GOV_DATA_INPUT_INVALID' as ErrorCode, message: '无数据，请确认输入文件内容' })
+          }
           data = JSON.parse(raw)
           if (!Array.isArray(data)) data = [data]
+        } catch (e) {
+          return JSON.stringify({ error: 'GOV_DATA_INPUT_INVALID' as ErrorCode, message: `JSON 格式错误，请检查文件内容: ${(e as Error).message}` })
+        }
+
+        if (data.length === 0) {
+          return JSON.stringify({ error: 'GOV_DATA_INPUT_INVALID' as ErrorCode, message: '无数据，请确认输入文件内容' })
+        }
+
+        const maxFieldCount = (rulesConfig.govDataInspection as Record<string, unknown>)?.maxFieldCount as number | undefined
+        const scaleResult = DataScaleGuard.check(data, maxFieldCount)
+        if (scaleResult.exceeded) {
+          return JSON.stringify({ error: 'GOV_DATA_SCALE_EXCEEDED' as ErrorCode, message: `数据量超出处理上限（字段数${scaleResult.fieldCount}），请分批处理或增加maxFieldCount配置` })
+        }
+
+        const credentials = govConfigTyped.dataSourceCredentials
+        const credConfig = {
+          national: {
+            apiKey: process.env[credentials.national.apiKey],
+            endpoint: process.env[credentials.national.endpoint],
+          },
+          provincial: {
+            apiKey: process.env[credentials.provincial.apiKey],
+            endpoint: process.env[credentials.provincial.endpoint],
+          },
+        }
+
+        const kbLoadResult = await KnowledgeBaseLoader.load(credConfig, govConfigTyped.dataSourcePriority)
+        const kb: KnowledgeBase = kbLoadResult.kb
+        const degradedMode = kbLoadResult.degraded
+        const degradedReason = kbLoadResult.degradedReason
+
+        const dataSourceStatus: DataSourceStatus = KnowledgeBaseLoader.getDataSourceStatus()
+
+        let standardRules: StandardRule[]
+        const stdRuleResult = await StandardRuleSource.fetch({
+          docPath: process.env[credentials.standard.docPath],
+          endpoint: process.env[credentials.standard.endpoint],
+        })
+        if (stdRuleResult.rules.length > 0) {
+          standardRules = stdRuleResult.rules
+          dataSourceStatus.standard = stdRuleResult.status
+        } else {
+          standardRules = govConfigTyped.logicErrorRules
+        }
+
+        if (!standardRules || standardRules.length === 0) {
+          if (!degradedMode) {
+            return JSON.stringify({ error: 'GOV_DATA_LOGIC_RULES_MISSING' as ErrorCode, message: '标准规则集缺失，逻辑错误检测已中止' })
+          }
+          standardRules = []
+        }
+
+        let policyBasis: string[]
+        try {
+          policyBasis = resolvePolicyBasis('GOV_DATA_INSPECTION')
+          if (!policyBasis || policyBasis.length === 0) {
+            return JSON.stringify({ error: 'GOV_DATA_POLICY_MISSING' as ErrorCode, message: '政策依据配置缺失' })
+          }
         } catch {
-          return JSON.stringify({ error: 'GOV_DATA_INPUT_INVALID', message: `无法加载数据: ${args.dataSource}` })
+          return JSON.stringify({ error: 'GOV_DATA_POLICY_MISSING' as ErrorCode, message: '政策依据配置加载失败' })
         }
 
         const mode = (args.inspectionMode as string) ?? 'full'
-        const policyBasis = resolvePolicyBasis('GOV_DATA_INSPECTION')
+        const itemTypeOverride = args.itemTypeOverride as string | undefined
 
         const result: Record<string, unknown> = {
           dataSource: args.dataSource,
           inspectionMode: mode,
           timestamp: new Date().toISOString(),
           policyBasis,
+          dataSourceStatus,
+        }
+
+        if (degradedMode) {
+          result.degradedMode = true
+          result.degradedReason = degradedReason
         }
 
         if (mode === 'guide' || mode === 'full') {
-          result.guideInspection = inspectGuides(data, govConfig.guideRequiredElements, govConfig.convenienceWeights)
+          const orchestrateResult = InspectionOrchestrator.orchestrate(
+            data,
+            govConfigTyped,
+            kb,
+            standardRules,
+            { degradedMode, itemTypeOverride },
+          )
+          result.guideInspection = orchestrateResult
+          if (orchestrateResult.warnings && orchestrateResult.warnings.length > 0) {
+            result.warnings = orchestrateResult.warnings
+          }
         }
 
         if (mode === 'classification' || mode === 'full') {
-          result.classification = classifyGovData(data, govConfig.gbt47949Mapping)
+          result.classification = classifyGovData(data, govConfigTyped.gbt47949Mapping)
         }
 
         return JSON.stringify(result, null, 2)
@@ -70,41 +221,6 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
       }
     },
   })
-}
-
-function inspectGuides(data: unknown[], requiredElements: string[], weights: Record<string, number>): Record<string, unknown> {
-  let completeCount = 0
-  let semanticErrors = 0
-  let logicalErrors = 0
-  let serviceConvenience = 0
-
-  for (const row of data) {
-    if (typeof row === 'object' && row !== null) {
-      const obj = row as Record<string, unknown>
-      let hasAllElements = true
-      for (const elem of requiredElements) {
-        if (!obj[elem]) {
-          hasAllElements = false
-          semanticErrors++
-        }
-      }
-      if (hasAllElements) completeCount++
-      if (obj.timeLimit && typeof obj.timeLimit === 'string' && obj.timeLimit.includes('工作日')) {
-        serviceConvenience += weights.timeLimit ?? 0.3
-      }
-      if (obj.onlineCapable === true) {
-        serviceConvenience += weights.onlineCapable ?? 0.4
-      }
-    }
-  }
-
-  return {
-    completeness: data.length > 0 ? Math.round((completeCount / data.length) * 100) : 0,
-    semanticErrors,
-    logicalErrors,
-    serviceConvenience: Math.round(serviceConvenience * 100) / 100,
-    totalGuidesChecked: data.length,
-  }
 }
 
 function classifyGovData(data: unknown[], gbtMapping: Record<string, string>): Record<string, unknown> {

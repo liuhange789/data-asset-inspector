@@ -752,20 +752,217 @@
     "leakDetectionScaleLimit": 1000000
   },
   "govDataInspection": {
+    "dataSourcePriority": [
+      "provincial",
+      "national"
+    ],
+    "dataSourceCredentials": {
+      "national": {
+        "apiKey": "NATIONAL_API_KEY",
+        "endpoint": "NATIONAL_API_ENDPOINT"
+      },
+      "provincial": {
+        "apiKey": "PROVINCIAL_API_KEY",
+        "endpoint": "PROVINCIAL_API_ENDPOINT"
+      },
+      "standard": {
+        "docPath": "STANDARD_DOC_PATH",
+        "endpoint": "STANDARD_RULES_ENDPOINT"
+      }
+    },
     "guideRequiredElements": [
+      "事项名称",
+      "实施主体",
       "办理条件",
       "申请材料",
       "办理流程",
-      "办理时限"
+      "办理时限",
+      "收费标准",
+      "办理地点",
+      "咨询电话",
+      "监督电话",
+      "办理时间",
+      "网上办理深度",
+      "表格下载",
+      "结果送达方式"
     ],
     "semanticErrorRules": [
-      "字段语义与业务含义不匹配",
-      "枚举值超出定义范围"
+      {
+        "ruleId": "SEM_TIME_LIMIT_001",
+        "targetField": "办理时限",
+        "kbType": "standardTimeLimits",
+        "suggestionTemplate": "办理时限应不超过法定上限{legalUpperLimit}个工作日，当前值{actualValue}超出法定上限"
+      },
+      {
+        "ruleId": "SEM_MATERIAL_001",
+        "targetField": "申请材料",
+        "kbType": "standardMaterials",
+        "suggestionTemplate": "申请材料\"{actualValue}\"与标准材料清单不匹配，建议使用标准名称\"{standardName}\""
+      },
+      {
+        "ruleId": "SEM_CONDITION_001",
+        "targetField": "办理条件",
+        "kbType": "standardConditions",
+        "suggestionTemplate": "办理条件要素\"{elementName}\"与标准模板不符，标准值为\"{standardValue}\""
+      }
     ],
     "logicErrorRules": [
-      "前置条件与后续流程矛盾",
-      "办理时限早于申请日期"
+      {
+        "ruleId": "LOG_SITE_INSPECTION_001",
+        "triggerFields": [
+          "办理流程",
+          "办理时限"
+        ],
+        "condition": "流程含'现场勘查'且时限<5工作日",
+        "threshold": 5,
+        "suggestionTemplate": "办理流程含\"现场勘查\"环节，办理时限应不少于5个工作日，当前时限过短",
+        "standardClause": "DB1405/T 085-2025 第5.2条",
+        "triggerKeywords": [
+          "现场勘查"
+        ]
+      },
+      {
+        "ruleId": "LOG_INSTANT_HANDLE_001",
+        "triggerFields": [
+          "办理流程",
+          "办理时限"
+        ],
+        "condition": "流程含'当场办理'且时限为长时限(工作日单位且数值>1)",
+        "threshold": 1,
+        "suggestionTemplate": "办理流程含\"当场办理\"环节，办理时限应为当场办结或1个工作日内，当前时限过长",
+        "standardClause": "DB1405/T 085-2025 第5.3条",
+        "triggerKeywords": [
+          "当场办理"
+        ]
+      },
+      {
+        "ruleId": "LOG_CONDITION_PROXY_001",
+        "triggerFields": [
+          "办理条件",
+          "办理流程"
+        ],
+        "condition": "条件要求'本人到场'但流程允许代办",
+        "suggestionTemplate": "办理条件要求\"本人到场\"但办理流程允许代办，两者存在矛盾，建议统一",
+        "standardClause": "DB1405/T 085-2025 第5.4条",
+        "triggerKeywords": [
+          "本人到场",
+          "本人办理",
+          "代办",
+          "委托办理"
+        ]
+      },
+      {
+        "ruleId": "LOG_MATERIAL_CONDITION_001",
+        "triggerFields": [
+          "申请材料",
+          "办理条件"
+        ],
+        "condition": "条件要求的证明材料未列入材料清单",
+        "suggestionTemplate": "办理条件要求的证明材料\"{missingMaterial}\"未列入申请材料清单，建议补充",
+        "standardClause": "DB1405/T 085-2025 第5.5条",
+        "triggerKeywords": [
+          "收入证明",
+          "产权证明",
+          "资质证明",
+          "无犯罪记录证明",
+          "健康证明",
+          "社保证明",
+          "纳税证明"
+        ]
+      }
     ],
+    "formatRules": [
+      {
+        "field": "办理时限",
+        "pattern": "^\\d+个工作日$",
+        "suggestionTemplate": "办理时限应使用\"X个工作日\"格式，如\"20个工作日\""
+      },
+      {
+        "field": "咨询电话",
+        "pattern": "^(\\d{3,4}-)?\\d{7,8}$",
+        "suggestionTemplate": "咨询电话应使用\"区号-号码\"格式，如\"010-12345678\""
+      },
+      {
+        "field": "收费标准",
+        "requiredKeywords": [
+          "不收费",
+          "收费依据"
+        ],
+        "suggestionTemplate": "收费标准应注明\"不收费\"或\"金额+收费依据\""
+      },
+      {
+        "field": "办理地点",
+        "requiredKeywords": [
+          "街道",
+          "路",
+          "号",
+          "室",
+          "楼",
+          "层",
+          "栋"
+        ],
+        "suggestionTemplate": "办理地点应包含具体地址信息(街道/路/号等)，不应仅用模糊描述"
+      }
+    ],
+    "severityMapping": {
+      "missing": "major",
+      "semantic": "critical",
+      "logical": "critical"
+    },
+    "scoreWeights": {
+      "completeness": 0.3,
+      "accuracy": 0.4,
+      "traceability": 0.3
+    },
+    "itemTypeMatching": {
+      "行政许可": {
+        "keywords": [
+          "许可",
+          "审批",
+          "核准"
+        ],
+        "codePrefix": "XK"
+      },
+      "行政确认": {
+        "keywords": [
+          "确认",
+          "认定",
+          "证明"
+        ],
+        "codePrefix": "QR"
+      },
+      "行政给付": {
+        "keywords": [
+          "给付",
+          "补贴",
+          "发放"
+        ],
+        "codePrefix": "GF"
+      },
+      "行政征收": {
+        "keywords": [
+          "征收",
+          "征用",
+          "收费"
+        ],
+        "codePrefix": "ZS"
+      },
+      "当场办理类": {
+        "keywords": [
+          "当场办理",
+          "即办件"
+        ],
+        "codePrefix": "DC"
+      },
+      "现场勘查类": {
+        "keywords": [
+          "现场勘查",
+          "实地核查"
+        ],
+        "codePrefix": "XC"
+      }
+    },
+    "materialConciseThreshold": 5,
     "businessNormRules": [
       "字段命名符合政务数据规范",
       "编码符合国标要求"
@@ -779,7 +976,8 @@
       "structured": "A01",
       "semiStructured": "A02",
       "unstructured": "A03"
-    }
+    },
+    "missingFieldStandardClause": "DB1405/T 085-2025 第4.1条"
   },
   "dataCirculationAssessment": {
     "tdsAccessCriteria": {

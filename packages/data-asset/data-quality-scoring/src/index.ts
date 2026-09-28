@@ -20,7 +20,7 @@ import { IssueCollector } from './issueCollector.js'
 import { SuggestionGenerator } from './suggestionGenerator.js'
 import { QualityReportGenerator } from './qualityReportGenerator.js'
 
-export const name = 'data-quality-scoring'
+export const name = '@liuhange/dsh-data-quality-scoring'
 export const inject = ['tools']
 
 function parseRecords(lines: string[], format: string): Record<string, unknown>[] {
@@ -108,6 +108,7 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
+        try {
         const { config, status: configStatus } = loader.load()
         const workingDir = process.cwd()
         const filePath = args.filePath as string
@@ -190,6 +191,9 @@ export function apply(ctx: Context) {
         }
 
         return JSON.stringify(result, null, 2)
+        } catch (e) {
+          return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+        }
       },
     }),
   )

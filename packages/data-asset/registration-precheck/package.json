@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-registration-precheck",
   "description": "Registration precheck plugin: verify data eligibility for national data property registration Also known as @deepseek-ai/dsh-registration-precheck.",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "publishConfig": {
     "access": "public"
   },
@@ -38,7 +38,7 @@
   },
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   },
   "keywords": [

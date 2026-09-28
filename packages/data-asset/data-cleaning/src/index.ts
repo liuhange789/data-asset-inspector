@@ -14,7 +14,7 @@ import { DuplicateRemover } from './duplicateRemover.js'
 import { FormatStandardizer } from './formatStandardizer.js'
 import { AnomalyDetector } from './anomalyDetector.js'
 
-export const name = 'data-cleaning'
+export const name = '@liuhange/dsh-data-cleaning'
 export const inject = ['tools']
 
 export function apply(ctx: Context) {
@@ -42,6 +42,7 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
+        try {
         loader.load()
         const workingDir = process.cwd()
         const filePath = args.filePath as string
@@ -103,6 +104,9 @@ export function apply(ctx: Context) {
         })
 
         return navEnhancer.enhance(report, 'data-cleaning', '')
+        } catch (e) {
+          return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+        }
       },
     }),
   )

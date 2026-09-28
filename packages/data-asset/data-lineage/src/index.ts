@@ -10,7 +10,7 @@ import {
 import type { TraceDataLineageResult, LineageChain } from './types.js'
 import { LineageReportGenerator } from './lineageReportGenerator.js'
 
-export const name = 'data-lineage'
+export const name = '@liuhange/dsh-data-lineage'
 export const inject = ['tools']
 
 export function apply(ctx: Context) {
@@ -32,6 +32,7 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
+        try {
 
         const workingDir = process.cwd()
         const lineageFilePath = args.lineageFilePath as string
@@ -92,6 +93,9 @@ export function apply(ctx: Context) {
         })
 
         return JSON.stringify(result, null, 2)
+        } catch (e) {
+          return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+        }
       },
     }),
   )

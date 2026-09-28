@@ -14,7 +14,8 @@ export function calculateIncomeBasedValue(
     const netCashFlow = scenario.annualRevenue - scenario.annualCost
     let pv = 0
     for (let year = 1; year <= years; year++) {
-      pv += netCashFlow / Math.pow(1 + discountRate, year)
+      const factor = 1 + discountRate
+      pv += factor === 0 ? 0 : netCashFlow / Math.pow(factor, year)
     }
     scenarioResults.push({
       type: scenario.type,

@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-lineage",
   "description": "Data lineage tracking plugin: trace data flow from source to product with hash chaining and Mermaid visualization Also known as @deepseek-ai/dsh-data-lineage.",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "publishConfig": {
     "access": "public"
   },
@@ -71,7 +71,7 @@
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme",
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   }
 }

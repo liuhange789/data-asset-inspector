@@ -18,7 +18,7 @@ import { FlowchartRenderer } from './chartRenderers/flowchartRenderer.js'
 import { HtmlAssembler } from './htmlAssembler.js'
 import { TemplateLoader } from './templateLoader.js'
 
-export const name = 'data-visualization'
+export const name = '@liuhange/dsh-data-visualization'
 export const inject = ['tools']
 
 export function apply(ctx: Context) {
@@ -47,6 +47,7 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
+        try {
         const { config, status: configStatus } = loader.load()
         const workingDir = process.cwd()
         const params = args as unknown as { reportPaths: string; outputPath: string }
@@ -126,6 +127,9 @@ export function apply(ctx: Context) {
         }
 
         return JSON.stringify(result, null, 2)
+        } catch (e) {
+          return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+        }
       },
     }),
   )

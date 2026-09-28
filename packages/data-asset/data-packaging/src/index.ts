@@ -11,7 +11,7 @@ import {
 } from '@liuhange/dsh-data-asset-shared'
 import { ManualGenerator } from './manualGenerator.js'
 
-export const name = 'data-packaging'
+export const name = '@liuhange/dsh-data-packaging'
 export const inject = ['tools']
 
 export function apply(ctx: Context) {
@@ -36,6 +36,7 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
+        try {
         const { config } = loader.load()
         const workingDir = process.cwd()
         const dataPath = args.dataPath as string
@@ -103,6 +104,9 @@ export function apply(ctx: Context) {
 2. 完成数据产权登记（依据国家数据局政策〔2026〕35号）
 3. 出具合规声明后即可挂牌交易
         `, 'data-packaging', '')
+        } catch (e) {
+          return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+        }
       },
     }),
   )

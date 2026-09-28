@@ -13,7 +13,7 @@ import { DirectoryScanner } from './directoryScanner.js'
 import { ValueAssessor } from './valueAssessor.js'
 import { AssetListGenerator } from './assetListGenerator.js'
 
-export const name = 'data-inventory'
+export const name = '@liuhange/dsh-data-inventory'
 export const inject = ['tools']
 
 export function apply(ctx: Context) {
@@ -38,6 +38,7 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
+        try {
         const { config } = loader.load()
         const workingDir = process.cwd()
 
@@ -74,6 +75,9 @@ export function apply(ctx: Context) {
         })
 
         return navEnhancer.enhance(report, 'data-inventory', '')
+        } catch (e) {
+          return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+        }
       },
     }),
   )

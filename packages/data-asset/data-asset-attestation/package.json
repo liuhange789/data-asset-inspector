@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-attestation",
   "description": "Attestation-level data quality report plugin with evidence chain hash and attestation statement",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "publishConfig": {
     "access": "public"
   },
@@ -40,7 +40,7 @@
   },
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   },
   "keywords": [

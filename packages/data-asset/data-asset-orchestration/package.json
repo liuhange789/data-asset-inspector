@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-orchestration",
   "description": "Data asset orchestration skill: sequential execution of masking, cleaning, inventory, packaging Also known as @deepseek-ai/dsh-data-asset-orchestration. Entry point of the @liuhange/dsh data-asset suite (19 packages) — see README for inventory-scan, quality-score, valuation, compliance-check, registration-helper, data-cleaning, data-lineage, data-masking and more.",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "publishConfig": {
     "access": "public"
   },
@@ -43,7 +43,7 @@
   },
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   },
   "keywords": [

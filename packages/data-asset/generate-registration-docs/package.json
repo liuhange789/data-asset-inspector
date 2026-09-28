@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-generate-registration-docs",
   "description": "Generate registration documents: data description, source legality statement, ownership explanation Also known as @deepseek-ai/dsh-generate-registration-docs.",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "publishConfig": {
     "access": "public"
   },
@@ -38,7 +38,7 @@
   },
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   },
   "keywords": [

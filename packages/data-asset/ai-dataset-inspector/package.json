@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-ai-dataset-inspector",
   "description": "AI training dataset inspection plugin: annotation consistency, label distribution, data leakage detection",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "publishConfig": {
     "access": "public"
   },
@@ -40,7 +40,7 @@
   },
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   },
   "keywords": [

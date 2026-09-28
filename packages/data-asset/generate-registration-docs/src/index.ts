@@ -10,7 +10,7 @@ import type {
 import { DocGenerator } from './docGenerator.js'
 import { DocPackager } from './docPackager.js'
 
-export const name = 'generate-registration-docs'
+export const name = '@liuhange/dsh-generate-registration-docs'
 export const inject = ['tools']
 
 export function apply(ctx: Context) {
@@ -44,35 +44,39 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
-        const orchestrationResult = JSON.parse(args.orchestrationResult as string) as OrchestrationResult
-        const precheckReport = JSON.parse(args.precheckReport as string) as PrecheckReport
-        const ownershipConfirmation = JSON.parse(args.ownershipConfirmation as string) as {
-          hasDispute: boolean
-          confirmedAt: string
-          holder: string
-          processor: string
-          operator: string
+        try {
+          const orchestrationResult = JSON.parse(args.orchestrationResult as string) as OrchestrationResult
+          const precheckReport = JSON.parse(args.precheckReport as string) as PrecheckReport
+          const ownershipConfirmation = JSON.parse(args.ownershipConfirmation as string) as {
+            hasDispute: boolean
+            confirmedAt: string
+            holder: string
+            processor: string
+            operator: string
+          }
+
+          if (precheckReport.conclusion !== 'CAN_REGISTER') {
+            return JSON.stringify({
+              error: '预检未通过，无法生成登记材料',
+              failedItems: precheckReport.failedItems,
+            }, null, 2)
+          }
+
+          const docs = docGenerator.generate(orchestrationResult, ownershipConfirmation)
+          const pkg = await docPackager.package(docs)
+
+          auditLogger.log({
+            pluginName: 'generate-registration-docs',
+            operation: 'generate_registration_docs',
+            inputPath: '-',
+            outputPath: pkg.packagePath,
+            result: 'SUCCESS',
+          })
+
+          return JSON.stringify(pkg, null, 2)
+        } catch (e) {
+          return JSON.stringify({ error: 'GENERATE_DOCS_FAILED', message: (e as Error).message })
         }
-
-        if (precheckReport.conclusion !== 'CAN_REGISTER') {
-          return JSON.stringify({
-            error: '预检未通过，无法生成登记材料',
-            failedItems: precheckReport.failedItems,
-          }, null, 2)
-        }
-
-        const docs = docGenerator.generate(orchestrationResult, ownershipConfirmation)
-        const pkg = await docPackager.package(docs)
-
-        auditLogger.log({
-          pluginName: 'generate-registration-docs',
-          operation: 'generate_registration_docs',
-          inputPath: '-',
-          outputPath: pkg.packagePath,
-          result: 'SUCCESS',
-        })
-
-        return JSON.stringify(pkg, null, 2)
       },
     }),
   )

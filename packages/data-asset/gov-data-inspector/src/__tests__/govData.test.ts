@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-describe('gov-data-inspector', () => {
+describe('gov-data-inspector 回归测试', () => {
   it('导出name/inject/apply', async () => {
     const mod = await import('../index.js')
     expect(mod.name).toBe('@liuhange/dsh-gov-data-inspector')
@@ -15,5 +15,16 @@ describe('gov-data-inspector', () => {
     const tool = tools[0] as { name: string; description: string }
     expect(tool.name).toBe('inspect_gov_data')
     expect(tool.description).toContain('政务')
+  })
+
+  it('工具参数保持dataSource+inspectionMode兼容', async () => {
+    const mod = await import('../index.js')
+    const tools: unknown[] = []
+    mod.apply({ tools: { register: (t: unknown) => tools.push(t) } })
+    const tool = tools[0] as {
+      parameters: { properties: Record<string, { type: string }> }
+    }
+    expect(tool.parameters.properties.dataSource).toBeDefined()
+    expect(tool.parameters.properties.inspectionMode).toBeDefined()
   })
 })

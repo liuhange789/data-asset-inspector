@@ -516,7 +516,7 @@ describe('QualityReportGenerator', () => {
 
 describe('apply (data-quality-scoring plugin)', () => {
   it('exports name, inject, and registers the score_data_quality tool', () => {
-    expect(name).toBe('data-quality-scoring')
+    expect(name).toBe('@liuhange/dsh-data-quality-scoring')
     expect(inject).toEqual(['tools'])
   })
 

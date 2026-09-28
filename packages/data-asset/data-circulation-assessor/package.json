@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-circulation-assessor",
   "description": "Data circulation assessor plugin: trusted data space readiness and transaction compliance prediction",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "publishConfig": {
     "access": "public"
   },
@@ -40,7 +40,7 @@
   },
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   },
   "keywords": [

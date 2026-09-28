@@ -42,7 +42,10 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
           policyDocuments = stage?.documents ?? []
         } catch { /* empty */ }
 
-        const weights = qsConfig.weights as Record<string, number>
+        const weights = qsConfig.weights as Record<string, number> | undefined
+        if (!weights || typeof weights !== 'object') {
+          return JSON.stringify({ error: 'QUALITY_RULES_MISSING', message: 'qualityScoringExtended.weights配置缺失' })
+        }
 
         const weightSum = Object.values(weights).reduce((a: number, b: number) => a + b, 0)
         if (Math.abs(weightSum - 1) > 0.001) {

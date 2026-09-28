@@ -14,7 +14,7 @@ import { SensitivityClassifier } from './sensitivityClassifier.js'
 import { StrategyRecommender } from './strategyRecommender.js'
 import { ClassificationReportGenerator } from './classificationReportGenerator.js'
 
-export const name = 'data-sensitivity-classification'
+export const name = '@liuhange/dsh-data-sensitivity-classification'
 export const inject = ['tools']
 
 function parseRecords(lines: string[], format: string): Record<string, unknown>[] {
@@ -71,6 +71,7 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
+        try {
         const { config, status: configStatus } = loader.load()
         const workingDir = process.cwd()
         const filePath = args.filePath as string
@@ -143,6 +144,9 @@ export function apply(ctx: Context) {
         }
 
         return JSON.stringify(result, null, 2)
+        } catch (e) {
+          return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+        }
       },
     }),
   )

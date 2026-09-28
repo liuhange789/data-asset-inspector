@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-quality-scoring",
   "description": "Data quality scoring plugin: multi-dimensional scoring (completeness/accuracy/consistency/timeliness) with weighted total and improvement suggestions Also known as @deepseek-ai/dsh-data-quality-scoring.",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "publishConfig": {
     "access": "public"
   },
@@ -76,7 +76,7 @@
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme",
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   }
 }

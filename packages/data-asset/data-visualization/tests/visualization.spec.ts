@@ -262,7 +262,7 @@ describe('apply (data-visualization plugin)', () => {
   }
 
   it('exports name, inject, and registers the generate_visualization tool', () => {
-    expect(name).toBe('data-visualization')
+    expect(name).toBe('@liuhange/dsh-data-visualization')
     expect(inject).toEqual(['tools'])
   })
 

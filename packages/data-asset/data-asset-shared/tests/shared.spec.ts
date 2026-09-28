@@ -204,15 +204,13 @@ describe('FileFormatAdapter', () => {
     expect(result.lines).toEqual(['{"a":1}'])
   })
 
-  it('reads an xlsx file as raw text lines', async () => {
+  it('reads an xlsx file throws unsupported error', async () => {
     const file = join(tempDir, 'data.xlsx')
     fs.writeFileSync(file, 'sheet\nrow1\n', 'utf-8')
-    const result = await adapter.read(file)
-    expect(result.format).toBe('xlsx')
-    expect(result.lines).toEqual(['sheet', 'row1'])
+    await expect(adapter.read(file)).rejects.toThrow('XLSX_BINARY_FORMAT_NOT_SUPPORTED')
   })
 
-  it('writes csv/txt/xlsx by joining lines and creates the parent directory', async () => {
+  it('writes csv/txt by joining lines and creates the parent directory', async () => {
     const nested = join(tempDir, 'nested', 'out.csv')
     await adapter.write(nested, ['a', 'b'], 'csv')
     expect(fs.readFileSync(nested, 'utf-8')).toBe('a\nb')
@@ -222,8 +220,7 @@ describe('FileFormatAdapter', () => {
     expect(fs.readFileSync(txt, 'utf-8')).toBe('x\ny')
 
     const xlsx = join(tempDir, 'out.xlsx')
-    await adapter.write(xlsx, ['s', 't'], 'xlsx')
-    expect(fs.readFileSync(xlsx, 'utf-8')).toBe('s\nt')
+    await expect(adapter.write(xlsx, ['s', 't'], 'xlsx')).rejects.toThrow('XLSX_BINARY_FORMAT_NOT_SUPPORTED')
   })
 
   it('writes json by parsing each line back into an object array', async () => {

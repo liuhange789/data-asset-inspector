@@ -17,7 +17,7 @@ import { AdvancedMaskingExecutor } from './advancedMaskingExecutor.js'
 import { defaultAdvancedMaskingConfig } from './defaultAdvancedMaskingConfig.js'
 import type { AdvancedMaskingAlgorithm } from './algorithms/types.js'
 
-export const name = 'data-masking'
+export const name = '@liuhange/dsh-data-masking'
 export const inject = ['tools']
 
 export function apply(ctx: Context) {
@@ -55,6 +55,7 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
+        try {
         const { config } = loader.load()
         const workingDir = process.cwd()
         const filePath = args.filePath as string
@@ -110,6 +111,7 @@ export function apply(ctx: Context) {
         for (const field of scanResult.fields) {
           const fieldType = field.type as SensitiveFieldType
           const patternConfig = config.sensitivePatterns[fieldType]
+          if (!patternConfig) continue
           const fieldStrategy = (patternConfig.level as MaskingStrategy) ?? strategy
           const maskedValue = strategyExecutor.execute(field.value, fieldType, fieldStrategy)
           maskedLines = maskedLines.map(line => line.replace(field.value, maskedValue))
@@ -138,6 +140,9 @@ export function apply(ctx: Context) {
         })
 
         return navEnhancer.enhance(report, 'data-masking', '')
+        } catch (e) {
+          return JSON.stringify({ error: 'PLUGIN_ERROR', message: (e as Error).message })
+        }
       },
     }),
   )

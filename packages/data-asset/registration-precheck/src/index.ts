@@ -6,7 +6,7 @@ import {
 import type { OrchestrationResult } from '@liuhange/dsh-data-asset-shared'
 import { PrecheckExecutor } from './precheckExecutor.js'
 
-export const name = 'registration-precheck'
+export const name = '@liuhange/dsh-registration-precheck'
 export const inject = ['tools']
 
 export function apply(ctx: Context) {
@@ -34,23 +34,27 @@ export function apply(ctx: Context) {
         render: (_args, value) => [{ type: 'text', text: value }],
       },
       async execute(args) {
-        const orchestrationResult = JSON.parse(args.orchestrationResult as string) as OrchestrationResult
-        const ownershipConfirmation = JSON.parse(args.ownershipConfirmation as string) as {
-          hasDispute: boolean
-          confirmedAt: string
+        try {
+          const orchestrationResult = JSON.parse(args.orchestrationResult as string) as OrchestrationResult
+          const ownershipConfirmation = JSON.parse(args.ownershipConfirmation as string) as {
+            hasDispute: boolean
+            confirmedAt: string
+          }
+
+          const report = precheckExecutor.execute(orchestrationResult, ownershipConfirmation)
+
+          auditLogger.log({
+            pluginName: 'registration-precheck',
+            operation: 'registration_precheck',
+            inputPath: '-',
+            outputPath: '-',
+            result: report.conclusion === 'CAN_REGISTER' ? 'SUCCESS' : 'FAILED',
+          })
+
+          return JSON.stringify(report, null, 2)
+        } catch (e) {
+          return JSON.stringify({ error: 'PRECHECK_FAILED', message: (e as Error).message })
         }
-
-        const report = precheckExecutor.execute(orchestrationResult, ownershipConfirmation)
-
-        auditLogger.log({
-          pluginName: 'registration-precheck',
-          operation: 'registration_precheck',
-          inputPath: '-',
-          outputPath: '-',
-          result: report.conclusion === 'CAN_REGISTER' ? 'SUCCESS' : 'FAILED',
-        })
-
-        return JSON.stringify(report, null, 2)
       },
     }),
   )

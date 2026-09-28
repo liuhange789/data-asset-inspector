@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-masking",
   "description": "Data masking plugin: sensitive field identification and graded masking (FULL/PARTIAL/GENERALIZE) Also known as @deepseek-ai/dsh-data-masking.",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "publishConfig": {
     "access": "public"
   },
@@ -42,7 +42,7 @@
   },
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   },
   "keywords": [

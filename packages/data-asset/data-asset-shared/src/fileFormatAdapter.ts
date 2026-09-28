@@ -91,10 +91,8 @@ export class FileFormatAdapter {
     return { lines, format: 'json', raw: parsed }
   }
 
-  private readXlsx(filePath: string): FileReadResult {
-    const content = fs.readFileSync(filePath, 'utf-8')
-    const lines = content.split('\n').filter(line => line.trim())
-    return { lines, format: 'xlsx', raw: content }
+  private readXlsx(_filePath: string): FileReadResult {
+    throw new Error('XLSX_BINARY_FORMAT_NOT_SUPPORTED: xlsx是二进制格式(ZIP+XML)，当前实现不支持。请先转换为CSV或JSON格式。')
   }
 
   private writeCsv(filePath: string, lines: string[]): void {
@@ -112,7 +110,7 @@ export class FileFormatAdapter {
     fs.writeFileSync(filePath, JSON.stringify(objects, null, 2), 'utf-8')
   }
 
-  private writeXlsx(filePath: string, lines: string[]): void {
-    fs.writeFileSync(filePath, lines.join('\n'), 'utf-8')
+  private writeXlsx(_filePath: string, _lines: string[]): void {
+    throw new Error('XLSX_BINARY_FORMAT_NOT_SUPPORTED: xlsx是二进制格式(ZIP+XML)，当前实现不支持。请输出为CSV或JSON格式。')
   }
 }

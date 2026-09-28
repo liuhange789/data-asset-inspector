@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-sensitivity-classification",
   "description": "Data sensitivity classification plugin: auto-identify sensitivity levels (Public/Internal/Confidential/Secret) and recommend masking strategies Also known as @deepseek-ai/dsh-data-sensitivity-classification.",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "publishConfig": {
     "access": "public"
   },
@@ -76,7 +76,7 @@
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme",
   "dsh": {
     "bundle": {
-      "patch": true
+      "patch": "./cordis.patch.yml"
     }
   }
 }

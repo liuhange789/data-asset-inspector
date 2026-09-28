@@ -215,7 +215,7 @@ describe('ClassificationReportGenerator', () => {
 
 describe('apply (data-sensitivity-classification plugin)', () => {
   it('exports name, inject, and registers the classify_sensitivity tool', () => {
-    expect(name).toBe('data-sensitivity-classification')
+    expect(name).toBe('@liuhange/dsh-data-sensitivity-classification')
     expect(inject).toEqual(['tools'])
   })
 

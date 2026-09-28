@@ -14,7 +14,15 @@ export class WeightedScoreCalculator {
     let normalizedWeights = { ...weights }
     let weightsNormalized = false
 
-    if (weightSum !== 1) {
+    if (weightSum <= 0) {
+      normalizedWeights = {
+        completeness: 0.25,
+        accuracy: 0.25,
+        consistency: 0.25,
+        timeliness: 0.25,
+      }
+      weightsNormalized = true
+    } else if (weightSum !== 1) {
       normalizedWeights = {
         completeness: weights.completeness / weightSum,
         accuracy: weights.accuracy / weightSum,

@@ -290,7 +290,7 @@ describe('apply (data-lineage plugin)', () => {
   }
 
   it('exports name, inject, and registers the trace_data_lineage tool', () => {
-    expect(name).toBe('data-lineage')
+    expect(name).toBe('@liuhange/dsh-data-lineage')
     expect(inject).toEqual(['tools'])
   })
 
