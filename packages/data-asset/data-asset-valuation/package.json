@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-valuation",
   "description": "Data asset valuation plugin: cost-based (replacement cost - depreciation) + income-based (DCF) dual model Also known as @deepseek-ai/dsh-data-asset-valuation.",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "publishConfig": {
     "access": "public"
   },
@@ -23,7 +23,8 @@
   },
   "files": [
     "lib/**/*.js",
-    "lib/types/**/*.d.ts"
+    "lib/types/**/*.d.ts",
+    "cordis.patch.yml"
   ],
   "license": "MIT",
   "scripts": {

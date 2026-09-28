@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-lineage",
   "description": "Data lineage tracking plugin: trace data flow from source to product with hash chaining and Mermaid visualization Also known as @deepseek-ai/dsh-data-lineage.",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "publishConfig": {
     "access": "public"
   },
@@ -28,7 +28,8 @@
   "files": [
     "lib/index.js",
     "lib/invariant.js",
-    "lib/types/**/*.d.ts"
+    "lib/types/**/*.d.ts",
+    "cordis.patch.yml"
   ],
   "license": "MIT",
   "scripts": {

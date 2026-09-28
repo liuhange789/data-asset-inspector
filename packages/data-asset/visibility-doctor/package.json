@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-visibility-doctor",
   "description": "dsh 插件曝光度诊断与采用率提升 CLI 工具",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "author": "liuhange789",
   "type": "module",
@@ -32,7 +32,8 @@
     "dist/types/**/*.d.ts",
     "bin/*.js",
     "templates/*.md",
-    "config/*.json"
+    "config/*.json",
+    "cordis.patch.yml"
   ],
   "publishConfig": {
     "access": "public"
