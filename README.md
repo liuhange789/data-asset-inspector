@@ -6,11 +6,28 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-22+-green.svg)](https://nodejs.org/)
-[![Tests](https://img.shields.io/badge/Tests-403%20passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-429%20passed-brightgreen.svg)]()
 [![Plugins](https://img.shields.io/badge/Plugins-24-orange.svg)]()
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-DSH-purple.svg)](https://github.com/deepseek-ai/deepseek-harness)
+[![cordis.patch](https://img.shields.io/badge/cordis.patch-ready-blue.svg)]()
+[![Zero Hardcoding](https://img.shields.io/badge/Zero%20Hardcoding-policy--basis%20traceable-success.svg)]()
 
-> 📦 **24个npm插件** | 🧪 **403个测试全部通过** | 📋 **覆盖数据资产全生命周期** | 🔒 **每个报告含政策依据可审计**
+> 📦 **24个npm插件** | 🧪 **429个测试全部通过** | 📋 **覆盖数据资产全生命周期** | 🔒 **每个报告含政策依据可审计** | ⭐ **如果对你有帮助，请给个Star！**
+
+## 为什么选择本插件矩阵？
+
+| 对比维度 | DSH官方插件 (10个) | 本插件矩阵 (24个) |
+|---------|-------------------|------------------|
+| 插件数量 | 10 | **24**（+14独有） |
+| npm发布 | ❌ 仅GitHub源码 | ✅ 全部已发布 |
+| 政务数据巡检 | ❌ 无 | ✅ 五维检测+降级模式 |
+| 数据资产估值 | ❌ 无 | ✅ 成本法/收益法/市场法 |
+| 合规审查 | ❌ 无 | ✅ 全过程管理试点 |
+| AI数据集检查 | ❌ 无 | ✅ 偏见检测 |
+| 无凭据降级 | ❌ 无 | ✅ 分类独立运行 |
+| 异常输入处理 | ❌ 无 | ✅ 6类异常全覆盖 |
+| cordis.patch | ❌ 无 | ✅ 24包均含 |
+| 测试覆盖 | 未公开 | **429 tests passed** |
 
 基于 DeepSeek Harness (DSH) 的全领域数据资产管理插件矩阵，覆盖"脱敏→清洗→盘点→质量→估值→合规→登记→政务→AI→流通"完整业务链路。24个插件全部发布至npm，每个插件嵌入政策依据引用，确保"有理有据、可审计、可追溯"。
 
