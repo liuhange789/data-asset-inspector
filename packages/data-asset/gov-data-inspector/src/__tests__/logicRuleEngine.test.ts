@@ -88,4 +88,21 @@ describe('LogicRuleEngine', () => {
     expect(ageProxyDetail).toBeDefined()
     expect(ageProxyDetail?.suggestion).toContain('未成年人由监护人代办')
   })
+
+  it('E26: 办理条件含"年满18周岁"+办理流程含"监护人代办" → 检出逻辑矛盾', () => {
+    const guide = { 事项名称: '身份证补领', 办理条件: '申请人须年满18周岁', 办理流程: '受理→监护人代办→发证', 办理时限: '20个工作日' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules)
+    const ageProxyDetail = details.find((d) => d.description.includes('年满18周岁'))
+    expect(ageProxyDetail).toBeDefined()
+    expect(ageProxyDetail!.errorType).toBe('logical')
+    expect(ageProxyDetail!.field).toBe('办理流程')
+  })
+
+  it('E35: 办理条件含"须为成年人"+办理流程含"未成年人代办" → 检出逻辑矛盾', () => {
+    const guide = { 事项名称: '户口迁移', 办理条件: '须为成年人', 办理流程: '可由未成年人代办' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules)
+    const ageProxyDetail = details.find((d) => d.description.includes('年满18周岁'))
+    expect(ageProxyDetail).toBeDefined()
+    expect(ageProxyDetail!.errorType).toBe('logical')
+  })
 })

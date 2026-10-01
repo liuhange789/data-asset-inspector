@@ -139,4 +139,34 @@ describe('SemanticRuleEngine', () => {
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
     expect(result.details.some((d) => d.standardClause === '降级模式·本地词表校验')).toBe(true)
   })
+
+  it('SRE-07: 降级+空KB+材料完全无匹配(maxSim===0) → 输出"疑似错误"含"与本地词表无任何匹配"', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '$$$###' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('与本地词表无任何匹配') && d.description.includes('疑似错误'))).toBe(true)
+  })
+
+  it('SRE-08: 降级+空KB+办理条件含疑似笔误 → 输出semantic错误含"笔误"', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '年满周岁' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.description.includes('笔误'))).toBe(true)
+  })
+
+  it('SRE-09: 降级+空KB+办理条件完全无匹配 → 输出"疑似错误"含"与本地词表无任何匹配"', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '$$$###' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.description.includes('与本地词表无任何匹配'))).toBe(true)
+  })
+
+  it('SRE-10: 降级+空KB+localTerms加载失败 → 返回空不崩溃', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件', 办理条件: '年满18周岁' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, localTermsPath: '/nonexistent/path/terms.json' })
+    expect(result.details).toEqual([])
+  })
+
+  it('SRE-11: 降级+空KB+材料正确+条件正确 → 返回空details', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件', 办理条件: '年满18周岁' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details).toEqual([])
+  })
 })

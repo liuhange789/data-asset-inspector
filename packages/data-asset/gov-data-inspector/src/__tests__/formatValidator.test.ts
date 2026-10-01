@@ -73,4 +73,28 @@ describe('FormatValidator', () => {
     expect(timeLimitIssue).toBeDefined()
     expect(timeLimitIssue?.issue).toContain('格式要求')
   })
+
+  it('FV-06: 监督电话格式不正确 → 输出格式问题', () => {
+    const rules: FormatRule[] = [...formatRules, { field: '监督电话', pattern: '^(\\d{3,4}-)?\\d{7,8}$', suggestionTemplate: '监督电话应使用"区号-号码"格式' }]
+    const issues = FormatValidator.validate({ 监督电话: '请联系前台' }, 'g1', rules)
+    expect(issues.some((i) => i.field === '监督电话')).toBe(true)
+  })
+
+  it('FV-07: 监督电话格式正确 → 无格式问题', () => {
+    const rules: FormatRule[] = [...formatRules, { field: '监督电话', pattern: '^(\\d{3,4}-)?\\d{7,8}$', suggestionTemplate: '监督电话应使用"区号-号码"格式' }]
+    const issues = FormatValidator.validate({ 监督电话: '010-12345678' }, 'g1', rules)
+    expect(issues.some((i) => i.field === '监督电话')).toBe(false)
+  })
+
+  it('FV-08: 办理时间缺少必要关键词 → 输出格式问题', () => {
+    const rules: FormatRule[] = [...formatRules, { field: '办理时间', requiredKeywords: ['工作日', '上午', '下午', '周一至周五'], suggestionTemplate: '办理时间应注明工作日及上下午时段' }]
+    const issues = FormatValidator.validate({ 办理时间: '随时可办理' }, 'g1', rules)
+    expect(issues.some((i) => i.field === '办理时间')).toBe(true)
+  })
+
+  it('FV-09: 办理时间含正确关键词 → 无格式问题', () => {
+    const rules: FormatRule[] = [...formatRules, { field: '办理时间', requiredKeywords: ['工作日', '上午', '下午', '周一至周五'], suggestionTemplate: '办理时间应注明工作日及上下午时段' }]
+    const issues = FormatValidator.validate({ 办理时间: '周一至周五 上午9:00-12:00 下午13:30-17:00' }, 'g1', rules)
+    expect(issues.some((i) => i.field === '办理时间')).toBe(false)
+  })
 })

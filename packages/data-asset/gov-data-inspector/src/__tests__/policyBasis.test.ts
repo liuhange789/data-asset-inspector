@@ -7,9 +7,9 @@ describe('政策依据配置', () => {
     expect(basis.length).toBe(6)
   })
 
-  it('policyBasis含DB1405/T 085-2025与国办发〔2017〕47号', () => {
+  it('policyBasis含国办发〔2015〕46号与国办发〔2017〕47号', () => {
     const basis = resolvePolicyBasis('GOV_DATA_INSPECTION')
-    expect(basis.some((b) => b.includes('DB1405/T 085-2025'))).toBe(true)
+    expect(basis.some((b) => b.includes('国办发〔2015〕46号'))).toBe(true)
     expect(basis.some((b) => b.includes('国办发〔2017〕47号'))).toBe(true)
   })
 
@@ -22,5 +22,21 @@ describe('政策依据配置', () => {
   it('文号使用〔〕括号', () => {
     const basis = resolvePolicyBasis('GOV_DATA_INSPECTION')
     expect(basis.some((b) => b.includes('〔') && b.includes('〕'))).toBe(true)
+  })
+
+  it('P2-2: policyBasis不含河北省地方标准DB1405/T 085-2025', () => {
+    const basis = resolvePolicyBasis('GOV_DATA_INSPECTION')
+    expect(basis.some((b) => b.includes('DB1405/T 085-2025'))).toBe(false)
+  })
+
+  it('P2-2: policyBasis含国家层面权威标准国办发〔2015〕46号', () => {
+    const basis = resolvePolicyBasis('GOV_DATA_INSPECTION')
+    expect(basis.some((b) => b.includes('国办发〔2015〕46号'))).toBe(true)
+  })
+
+  it('P2-2: 保留GB/T 47949-2026与GB/T 47950-2026不变', () => {
+    const basis = resolvePolicyBasis('GOV_DATA_INSPECTION')
+    expect(basis.some((b) => b.includes('GB/T 47949-2026'))).toBe(true)
+    expect(basis.some((b) => b.includes('GB/T 47950-2026'))).toBe(true)
   })
 })

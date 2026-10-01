@@ -27,4 +27,36 @@ describe('gov-data-inspector 回归测试', () => {
     expect(tool.parameters.properties.dataSource).toBeDefined()
     expect(tool.parameters.properties.inspectionMode).toBeDefined()
   })
+
+  it('P0-3: apply注册的工具含output字段', async () => {
+    const mod = await import('../index.js')
+    const tools: unknown[] = []
+    mod.apply({ tools: { register: (t: unknown) => tools.push(t) } })
+    const tool = tools[0] as { output: { schema: Record<string, unknown>; render: { type: string } } }
+    expect(tool.output).toBeDefined()
+    expect(tool.output.schema).toBeDefined()
+    expect(tool.output.render).toBeDefined()
+  })
+
+  it('P0-3: output.schema描述巡检报告顶层字段', async () => {
+    const mod = await import('../index.js')
+    const tools: unknown[] = []
+    mod.apply({ tools: { register: (t: unknown) => tools.push(t) } })
+    const tool = tools[0] as { output: { schema: { properties: Record<string, unknown> } } }
+    const props = tool.output.schema.properties
+    expect(props.dataSource).toBeDefined()
+    expect(props.inspectionMode).toBeDefined()
+    expect(props.timestamp).toBeDefined()
+    expect(props.policyBasis).toBeDefined()
+    expect(props.guideInspection).toBeDefined()
+    expect(props.classification).toBeDefined()
+  })
+
+  it('P0-3: output.render.type为json', async () => {
+    const mod = await import('../index.js')
+    const tools: unknown[] = []
+    mod.apply({ tools: { register: (t: unknown) => tools.push(t) } })
+    const tool = tools[0] as { output: { render: { type: string } } }
+    expect(tool.output.render.type).toBe('json')
+  })
 })

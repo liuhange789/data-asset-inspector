@@ -1,9 +1,20 @@
 # Cordis Framework Patch Declaration for @liuhange/dsh-gov-data-inspector
 # This file declares the plugin's runtime patch for the Cordis framework.
 # Used by DSH plugin manager to apply framework-level patches during installation.
-plugin: @liuhange/dsh-gov-data-inspector
-version: 3.1.5
-patch:
-  - target: tools
-    action: register
-    description: Register plugin tools into Cordis runtime
+- target: loaders.web
+  action: insert
+  entry:
+    id: "@liuhange/dsh-gov-data-inspector"
+    name: "@liuhange/dsh-gov-data-inspector"
+    version: "3.1.6"
+- target: loaders.headless
+  action: insert
+  entry:
+    id: "@liuhange/dsh-gov-data-inspector"
+    name: "@liuhange/dsh-gov-data-inspector"
+    version: "3.1.6"
+- target: tools
+  action: register
+  description: Register plugin tools into Cordis runtime
+  plugin: "@liuhange/dsh-gov-data-inspector"
+  version: "3.1.6"

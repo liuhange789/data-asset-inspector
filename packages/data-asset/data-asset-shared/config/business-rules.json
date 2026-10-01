@@ -816,7 +816,7 @@
         "condition": "流程含'现场勘查'且时限<5工作日",
         "threshold": 5,
         "suggestionTemplate": "办理流程含\"现场勘查\"环节，办理时限应不少于5个工作日，当前时限过短",
-        "standardClause": "DB1405/T 085-2025 第5.2条",
+        "standardClause": "国办发〔2015〕46号 第5.2条",
         "triggerKeywords": [
           "现场勘查"
         ]
@@ -830,7 +830,7 @@
         "condition": "流程含'当场办理'且时限为长时限(工作日单位且数值>1)",
         "threshold": 1,
         "suggestionTemplate": "办理流程含\"当场办理\"环节，办理时限应为当场办结或1个工作日内，当前时限过长",
-        "standardClause": "DB1405/T 085-2025 第5.3条",
+        "standardClause": "国办发〔2015〕46号 第5.3条",
         "triggerKeywords": [
           "当场办理"
         ]
@@ -843,7 +843,7 @@
         ],
         "condition": "条件要求'本人到场'但流程允许代办",
         "suggestionTemplate": "办理条件要求\"本人到场\"但办理流程允许代办，两者存在矛盾，建议统一",
-        "standardClause": "DB1405/T 085-2025 第5.4条",
+        "standardClause": "国办发〔2015〕46号 第5.4条",
         "triggerKeywords": [
           "本人到场",
           "本人办理",
@@ -859,7 +859,7 @@
         ],
         "condition": "条件要求的证明材料未列入材料清单",
         "suggestionTemplate": "办理条件要求的证明材料\"{missingMaterial}\"未列入申请材料清单，建议补充",
-        "standardClause": "DB1405/T 085-2025 第5.5条",
+        "standardClause": "国办发〔2015〕46号 第5.5条",
         "triggerKeywords": [
           "收入证明",
           "产权证明",
@@ -872,7 +872,7 @@
       },
       {
         "ruleId": "LOG_CONDITION_AGE_PROXY_001",
-        "standardClause": "DB1405/T 085-2025 第5.6条",
+        "standardClause": "国办发〔2015〕46号 第5.6条",
         "triggerFields": [
           "办理条件",
           "办理流程"
@@ -921,6 +921,21 @@
           "栋"
         ],
         "suggestionTemplate": "办理地点应包含具体地址信息(街道/路/号等)，不应仅用模糊描述"
+      },
+      {
+        "field": "监督电话",
+        "pattern": "^(\\d{3,4}-)?\\d{7,8}$",
+        "suggestionTemplate": "监督电话应使用\"区号-号码\"格式，如\"010-12345678\""
+      },
+      {
+        "field": "办理时间",
+        "requiredKeywords": [
+          "工作日",
+          "上午",
+          "下午",
+          "周一至周五"
+        ],
+        "suggestionTemplate": "办理时间应注明工作日及上下午时段，如\"周一至周五 上午9:00-12:00 下午13:30-17:00\""
       }
     ],
     "severityMapping": {
@@ -996,7 +1011,7 @@
       "semiStructured": "A02",
       "unstructured": "A03"
     },
-    "missingFieldStandardClause": "DB1405/T 085-2025 第4.1条",
+    "missingFieldStandardClause": "国办发〔2015〕46号 第4.1条",
     "localTermsPath": "config/local-standard-terms.json",
     "degradedSimilarityThreshold": 0.8,
     "inputLengthThreshold": 50000

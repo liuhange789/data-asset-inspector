@@ -25,6 +25,25 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
       },
       required: ['dataSource'],
     },
+    output: {
+      schema: {
+        type: 'object',
+        properties: {
+          dataSource: { type: 'string', description: '巡检数据源路径' },
+          inspectionMode: { type: 'string', enum: ['guide', 'classification', 'full'], description: '巡检模式' },
+          timestamp: { type: 'string', description: '巡检时间戳(ISO8601)' },
+          policyBasis: { type: 'array', items: { type: 'string' }, description: '政策依据列表' },
+          dataSourceStatus: { type: 'object', description: '数据源获取状态' },
+          degradedMode: { type: 'boolean', description: '是否降级模式' },
+          degradedReason: { type: 'string', description: '降级原因' },
+          guideInspection: { type: 'object', description: '办事指南巡检结果(含completeness/missingFields/semanticErrors/logicalErrors/errorDetails/formatIssues等)' },
+          classification: { type: 'object', description: '公共数据资产分类结果(含dataAssetCode/categoryLevel/specificType)' },
+          warnings: { type: 'array', description: '未匹配事项类型等告警信息' },
+        },
+        required: ['dataSource', 'inspectionMode', 'timestamp', 'policyBasis'],
+      },
+      render: { type: 'json' },
+    },
     async execute(args: Record<string, unknown>) {
       try {
         if (!args?.dataSource || typeof args.dataSource !== 'string') {
