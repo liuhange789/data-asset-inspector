@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-underground-pipeline-inspector",
-  "description": "Underground pipeline data quality inspection plugin: coverage, edge matching, topology, coordinate, flow direction, attribute precision, spatial reference, quality element scoring, gross error rate, and review override per GB/T 35644-2017, GB/T 29806-2013, CJJ 61-2017, CJJ 68-2016, GB/T 24356-2023",
-  "version": "1.0.0",
+  "description": "Underground pipeline data quality inspection plugin per GB/T 35644-2017, GB/T 29806-2013, CJJ 61-2017, CJJ 68-2016: coverage, edge matching, topology, flow direction, spatial reference, gross error rate scoring for urban surveying",
+  "version": "1.0.1",
   "publishConfig": {
     "access": "public"
   },
@@ -67,7 +67,35 @@
     "audit",
     "compliance",
     "plugin",
-    "open-source"
+    "open-source",
+    "GB/T 35644-2017",
+    "GB/T 29806-2013",
+    "CJJ 61-2017",
+    "CJJ 68-2016",
+    "城市地下管线",
+    "地下管网",
+    "underground-utility",
+    "管线探测",
+    "pipeline-detection",
+    "供水管线",
+    "排水管线",
+    "燃气管线",
+    "电力管线",
+    "通信管线",
+    "拓扑关系",
+    "topology",
+    "edge-matching",
+    "gross-error-rate",
+    "空间参考系",
+    "spatial-reference",
+    "管线分类代码",
+    "pipeline-classification",
+    "政府采购",
+    "government-procurement",
+    "城市测绘",
+    "urban-surveying",
+    "policy-basis",
+    "zero-hardcoding"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

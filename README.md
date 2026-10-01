@@ -6,19 +6,19 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-22+-green.svg)](https://nodejs.org/)
-[![Tests](https://img.shields.io/badge/Tests-429%20passed-brightgreen.svg)]()
-[![Plugins](https://img.shields.io/badge/Plugins-24-orange.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-538%20passed-brightgreen.svg)]()
+[![Plugins](https://img.shields.io/badge/Plugins-29-orange.svg)]()
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-DSH-purple.svg)](https://github.com/deepseek-ai/deepseek-harness)
 [![cordis.patch](https://img.shields.io/badge/cordis.patch-ready-blue.svg)]()
 [![Zero Hardcoding](https://img.shields.io/badge/Zero%20Hardcoding-policy--basis%20traceable-success.svg)]()
 
-> 📦 **24个npm插件** | 🧪 **429个测试全部通过** | 📋 **覆盖数据资产全生命周期** | 🔒 **每个报告含政策依据可审计** | ⭐ **如果对你有帮助，请给个Star！**
+> 📦 **29个npm插件** | 🧪 **538个测试全部通过** | 📋 **覆盖数据资产全生命周期** | 🔒 **每个报告含政策依据可审计** | ⭐ **如果对你有帮助，请给个Star！**
 
 ## 为什么选择本插件矩阵？
 
-| 对比维度 | DSH官方插件 (10个) | 本插件矩阵 (24个) |
+| 对比维度 | DSH官方插件 (10个) | 本插件矩阵 (29个) |
 |---------|-------------------|------------------|
-| 插件数量 | 10 | **24**（+14独有） |
+| 插件数量 | 10 | **29**（+19独有） |
 | npm发布 | ❌ 仅GitHub源码 | ✅ 全部已发布 |
 | 政务数据巡检 | ❌ 无 | ✅ 五维检测+降级模式 |
 | 数据资产估值 | ❌ 无 | ✅ 成本法/收益法/市场法 |
@@ -26,12 +26,12 @@
 | AI数据集检查 | ❌ 无 | ✅ 偏见检测 |
 | 无凭据降级 | ❌ 无 | ✅ 分类独立运行 |
 | 异常输入处理 | ❌ 无 | ✅ 6类异常全覆盖 |
-| cordis.patch | ❌ 无 | ✅ 24包均含 |
-| 测试覆盖 | 未公开 | **429 tests passed** |
+| cordis.patch | ❌ 无 | ✅ 29包均含 |
+| 测试覆盖 | 未公开 | **538 tests passed** |
 
-基于 DeepSeek Harness (DSH) 的全领域数据资产管理插件矩阵，覆盖"脱敏→清洗→盘点→质量→估值→合规→登记→政务→AI→流通"完整业务链路。24个插件全部发布至npm，每个插件嵌入政策依据引用，确保"有理有据、可审计、可追溯"。
+基于 DeepSeek Harness (DSH) 的全领域数据资产管理插件矩阵，覆盖"脱敏→清洗→盘点→质量→估值→合规→登记→政务→AI→流通→金融→科研→建筑→管线→测绘"完整业务链路。29个插件全部发布至npm，每个插件嵌入政策依据引用，确保"有理有据、可审计、可追溯"。
 
-## 全部24个插件列表
+## 全部29个插件列表
 
 ### 基础模块
 
@@ -73,7 +73,6 @@
 
 | 插件 | 包名 | 功能 | 版本 |
 |------|------|------|------|
-| 政务数据巡检 | @liuhange/dsh-gov-data-inspector | 办事指南五维检测+官方数据源对接+公共数据分类 | 3.1.2 |
 | 城市数据分类 | @liuhange/dsh-city-data-classifier | 城市数据资产分类、GB/T 47949映射 | 3.1.1 |
 | AI数据集检查 | @liuhange/dsh-ai-dataset-inspector | AI训练数据集质量检查、偏见检测 | 3.1.1 |
 | 数据流通评估 | @liuhange/dsh-data-circulation-assessor | 数据流通可行性评估、风险分级 | 3.1.1 |
@@ -82,6 +81,17 @@
 | 登记机构匹配 | @liuhange/dsh-match-registration-agency | 数据类型→登记机构智能匹配 | 3.0.2 |
 | 可见性诊断 | @liuhange/dsh-visibility-doctor | npm/GitHub可见性诊断、DSH插件市场收录检查 | 1.0.0 |
 
+### v3.2 行业垂直扩展模块
+
+| 插件 | 包名 | 功能 | 版本 |
+|------|------|------|------|
+| 政务数据巡检 | @liuhange/dsh-gov-data-inspector | 办事指南五维检测+官方数据源对接+公共数据分类（GB/T 47949-2026 & GB/T 47950-2026） | 3.1.6 |
+| 金融反洗钱 | @liuhange/dsh-fin-aml-checker | 大额/可疑交易阈值检测、豁免过滤、时效检查、KYC/CFT（反洗钱法 & 央行令） | 3.1.1 |
+| 科研数据溯源 | @liuhange/dsh-research-data-provenance | 血缘完整性、可复现性、六维质量评分、FAIR原则（科学数据管理办法） | 3.1.1 |
+| 建筑数据盘点 | @liuhange/dsh-construction-data-inventory | BIM/IFC分类映射、资产编码、变更追溯（GB/T 51269-2017 & GB/T 24356-2023） | 3.2.0 |
+| 地下管线巡检 | @liuhange/dsh-underground-pipeline-inspector | 覆盖率、接边、拓扑、流向、空间参考、粗差率评分（GB/T 35644 & CJJ 61/68） | 1.0.0 |
+| 测绘质量检查 | @liuhange/dsh-geo-data-quality-inspector | 高程中误差、平面精度、接边、拓扑、逻辑一致性、DSM/DEM加权评分（GB/T 24356-2023） | 1.0.0 |
+
 ## 安装方式
 
 ### 方式一：DSH CLI 安装（推荐）
@@ -89,7 +99,7 @@
 ```bash
 npx @deepseek-ai/dsh web
 
-# 安装全部24个插件
+# 安装全部29个插件
 dsh plugin --profile web add @liuhange/dsh-data-asset-shared
 dsh plugin --profile web add @liuhange/dsh-data-masking
 dsh plugin --profile web add @liuhange/dsh-data-cleaning
@@ -106,7 +116,6 @@ dsh plugin --profile web add @liuhange/dsh-data-asset-valuation
 dsh plugin --profile web add @liuhange/dsh-data-asset-compliance-check
 dsh plugin --profile web add @liuhange/dsh-data-asset-registration-helper
 dsh plugin --profile web add @liuhange/dsh-data-asset-attestation
-dsh plugin --profile web add @liuhange/dsh-gov-data-inspector
 dsh plugin --profile web add @liuhange/dsh-city-data-classifier
 dsh plugin --profile web add @liuhange/dsh-ai-dataset-inspector
 dsh plugin --profile web add @liuhange/dsh-data-circulation-assessor
@@ -114,12 +123,18 @@ dsh plugin --profile web add @liuhange/dsh-generate-registration-docs
 dsh plugin --profile web add @liuhange/dsh-registration-precheck
 dsh plugin --profile web add @liuhange/dsh-match-registration-agency
 dsh plugin --profile web add @liuhange/dsh-visibility-doctor
+dsh plugin --profile web add @liuhange/dsh-gov-data-inspector
+dsh plugin --profile web add @liuhange/dsh-fin-aml-checker
+dsh plugin --profile web add @liuhange/dsh-research-data-provenance
+dsh plugin --profile web add @liuhange/dsh-construction-data-inventory
+dsh plugin --profile web add @liuhange/dsh-underground-pipeline-inspector
+dsh plugin --profile web add @liuhange/dsh-geo-data-quality-inspector
 ```
 
 ### 方式二：npm 批量安装
 
 ```bash
-npm install @liuhange/dsh-data-asset-shared @liuhange/dsh-data-masking @liuhange/dsh-data-cleaning @liuhange/dsh-data-inventory @liuhange/dsh-data-packaging @liuhange/dsh-data-asset-orchestration @liuhange/dsh-data-quality-scoring @liuhange/dsh-data-lineage @liuhange/dsh-data-visualization @liuhange/dsh-data-sensitivity-classification @liuhange/dsh-data-asset-inventory-scan @liuhange/dsh-data-asset-quality-score @liuhange/dsh-data-asset-valuation @liuhange/dsh-data-asset-compliance-check @liuhange/dsh-data-asset-registration-helper @liuhange/dsh-data-asset-attestation @liuhange/dsh-gov-data-inspector @liuhange/dsh-city-data-classifier @liuhange/dsh-ai-dataset-inspector @liuhange/dsh-data-circulation-assessor @liuhange/dsh-generate-registration-docs @liuhange/dsh-registration-precheck @liuhange/dsh-match-registration-agency @liuhange/dsh-visibility-doctor
+npm install @liuhange/dsh-data-asset-shared @liuhange/dsh-data-masking @liuhange/dsh-data-cleaning @liuhange/dsh-data-inventory @liuhange/dsh-data-packaging @liuhange/dsh-data-asset-orchestration @liuhange/dsh-data-quality-scoring @liuhange/dsh-data-lineage @liuhange/dsh-data-visualization @liuhange/dsh-data-sensitivity-classification @liuhange/dsh-data-asset-inventory-scan @liuhange/dsh-data-asset-quality-score @liuhange/dsh-data-asset-valuation @liuhange/dsh-data-asset-compliance-check @liuhange/dsh-data-asset-registration-helper @liuhange/dsh-data-asset-attestation @liuhange/dsh-city-data-classifier @liuhange/dsh-ai-dataset-inspector @liuhange/dsh-data-circulation-assessor @liuhange/dsh-generate-registration-docs @liuhange/dsh-registration-precheck @liuhange/dsh-match-registration-agency @liuhange/dsh-visibility-doctor @liuhange/dsh-gov-data-inspector @liuhange/dsh-fin-aml-checker @liuhange/dsh-research-data-provenance @liuhange/dsh-construction-data-inventory @liuhange/dsh-underground-pipeline-inspector @liuhange/dsh-geo-data-quality-inspector
 ```
 
 ## 快速开始
@@ -149,7 +164,8 @@ export function apply(ctx: Context): void;
 v1.0: 脱敏 → 清洗 → 盘点 → 包装 → 编排
 v2.0: 质量评分 → 血缘追踪 → 可视化 → 敏感度分级
 v3.0: 盘点扫描 → 质量评分 → 估值 → 合规审查 → 登记助手 → 质量确权
-v3.1: 政务巡检 → 城市分类 → AI数据集 → 流通评估 → 登记材料 → 登记预检 → 机构匹配 → 可见性诊断
+v3.1: 城市分类 → AI数据集 → 流通评估 → 登记材料 → 登记预检 → 机构匹配 → 可见性诊断
+v3.2: 政务巡检 → 金融反洗钱 → 科研溯源 → 建筑盘点 → 管线巡检 → 测绘质检
 ```
 
 ## 政策依据
@@ -166,6 +182,17 @@ v3.1: 政务巡检 → 城市分类 → AI数据集 → 流通评估 → 登记�
 | 数据资产全过程管理试点工作方案 | — | 合规审查、登记助手 |
 | DB1405/T 085-2025 政务数据质量检查规范 | — | 政务数据巡检 |
 | 国务院办公厅关于印发政务服务平台移动端建设指南 | 国办发〔2017〕47号 | 政务数据巡检 |
+| GB/T 47949-2026 政务数据分类分级 | GB/T 47949-2026 | 政务数据巡检 |
+| GB/T 47950-2026 政务数据质量检查 | GB/T 47950-2026 | 政务数据巡检 |
+| 中华人民共和国反洗钱法 | — | 金融反洗钱 |
+| 金融机构大额交易和可疑交易报告管理办法 | 央行令 | 金融反洗钱 |
+| 科学数据管理办法 | 国办发〔2018〕31号 | 科研数据溯源 |
+| GB/T 51269-2017 建设工程造价数据标准 | GB/T 51269-2017 | 建筑数据盘点 |
+| GB/T 24356-2023 测绘成果质量检查与验收 | GB/T 24356-2023 | 建筑数据盘点、测绘质量检查 |
+| GB/T 35644-2017 地下管线数据质量检查与验收 | GB/T 35644-2017 | 地下管线巡检、测绘质量检查 |
+| GB/T 29806-2013 地下管线探测技术规程 | GB/T 29806-2013 | 地下管线巡检 |
+| CJJ 61-2017 城市地下管线探测技术规程 | CJJ 61-2017 | 地下管线巡检 |
+| CJJ 68-2016 城镇地下管线信息系统技术标准 | CJJ 68-2016 | 地下管线巡检 |
 
 ## 商业规则配置
 
@@ -178,7 +205,7 @@ v3.1: 政务巡检 → 城市分类 → AI数据集 → 流通评估 → 登记�
 
 - TypeScript 5.7 + Node.js 22+
 - DeepSeek Harness (DSH) / Cordis 4.0
-- Vitest 3.0 测试框架（403个测试全部通过）
+- Vitest 3.0 测试框架（538个测试全部通过）
 - pnpm workspace 单仓多包
 
 ## License

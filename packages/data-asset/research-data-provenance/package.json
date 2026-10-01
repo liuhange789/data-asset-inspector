@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-research-data-provenance",
-  "description": "Research data provenance audit plugin: lineage completeness, reproducibility, six-dimension quality scoring with dual-regulation policy basis",
-  "version": "3.1.1",
+  "description": "Research data provenance audit plugin per 科学数据管理办法: lineage completeness, reproducibility, six-dimension quality scoring, FAIR principles, research integrity with policy basis",
+  "version": "3.1.2",
   "publishConfig": {
     "access": "public"
   },
@@ -70,7 +70,25 @@
     "data-governance",
     "data-quality",
     "plugin",
-    "open-source"
+    "open-source",
+    "科学数据管理办法",
+    "数据溯源",
+    "data-provenance",
+    "data-lineage",
+    "血缘分析",
+    "lineage-analysis",
+    "科研诚信",
+    "research-integrity",
+    "数据质量评分",
+    "quality-scoring",
+    "六维质量",
+    "six-dimension-quality",
+    "FAIR原则",
+    "FAIR-principles",
+    "科学数据共享",
+    "research-data-sharing",
+    "policy-basis",
+    "zero-hardcoding"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

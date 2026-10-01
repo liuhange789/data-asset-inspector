@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-fin-aml-checker",
-  "description": "Financial AML large-transaction compliance inspection plugin: threshold detection, exemption filtering, timeliness check, and review override for anti-money-lauing reporting obligations",
-  "version": "3.1.1",
+  "description": "Financial AML compliance plugin per 反洗钱法 & 央行令: large & suspicious transaction threshold detection, exemption filtering, timeliness check, KYC, CFT, regulatory reporting for banking compliance",
+  "version": "3.1.2",
   "publishConfig": {
     "access": "public"
   },
@@ -64,7 +64,29 @@
     "audit",
     "compliance",
     "plugin",
-    "open-source"
+    "open-source",
+    "反洗钱法",
+    "央行令",
+    "大额交易报告",
+    "可疑交易报告",
+    "AML",
+    "threshold-detection",
+    "exemption-filter",
+    "timeliness-check",
+    "金融合规",
+    "financial-compliance",
+    "反恐融资",
+    "CFT",
+    "KYC",
+    "客户身份识别",
+    "风险等级",
+    "金融机构",
+    "银行合规",
+    "banking-compliance",
+    "监管报送",
+    "regulatory-reporting",
+    "policy-basis",
+    "zero-hardcoding"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

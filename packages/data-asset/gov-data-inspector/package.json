@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-gov-data-inspector",
-  "description": "Government data inspection plugin: service guide quality check and public data asset classification",
-  "version": "3.1.6",
+  "description": "Government data inspection plugin per GB/T 47949-2026 & GB/T 47950-2026: service guide quality check, public data asset classification, semantic & logic detection, compliance audit, data governance for digital government 一网通办",
+  "version": "3.1.7",
   "publishConfig": {
     "access": "public"
   },
@@ -67,7 +67,25 @@
     "data-governance",
     "data-quality",
     "plugin",
-    "open-source"
+    "open-source",
+    "GB/T 47949-2026",
+    "GB/T 47950-2026",
+    "政务服务",
+    "public-data-asset",
+    "government-data",
+    "policy-basis",
+    "zero-hardcoding",
+    "降级模式",
+    "语义检测",
+    "逻辑检测",
+    "格式校验",
+    "数据巡检",
+    "data-inspection",
+    "compliance-audit",
+    "数据治理",
+    "数字政府",
+    "电子政务",
+    "一网通办"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }
