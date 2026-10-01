@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-10-01",
+  "elevationAccuracy": {
+    "description": "高程中误差阈值，单位米，依据自然资源部DSM检查导则",
+    "rmseThresholdMeter": 0.5,
+    "policyBasis": "依据：《数字高程模型质量检查技术规定》（自然资源部DSM检查导则）第4.2条"
+  },
+  "planarAccuracy": {
+    "description": "平面位置中误差阈值，单位米",
+    "rmseThresholdMeter": 0.25,
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.2条"
+  },
+  "edgeMatching": {
+    "description": "接边精度容差，单位米",
+    "toleranceMeter": 0.01,
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.2.3条"
+  },
+  "checkPointCount": {
+    "description": "桩点法检测点数范围，最少20点最多50点",
+    "minCheckPoints": 20,
+    "maxCheckPoints": 50,
+    "policyBasis": "依据：《数字高程模型质量检查技术规定》（自然资源部DSM检查导则）第5.1条"
+  },
+  "gridParameter": {
+    "description": "格网参数约束，同名格网高程值一致性容差与格网间距",
+    "sameNameElevationToleranceMeter": 0.05,
+    "gridSpacingMeter": 1.0,
+    "policyBasis": "依据：《数字高程模型质量检查技术规定》（自然资源部DSM检查导则）第6.3条"
+  },
+  "highPrecisionReference": {
+    "description": "高精度资料定点验证配置，不可用时降级为桩点法",
+    "degradationReason": "高精度参考资料不可用，降级为桩点法检测",
+    "policyBasis": "依据：《数字高程模型质量检查技术规定》（自然资源部DSM检查导则）第5.2条"
+  },
+  "crossValidation": {
+    "description": "参考资料交叉验证容差，单位米",
+    "toleranceMeter": 0.3,
+    "policyBasis": "依据：《数字高程模型质量检查技术规定》（自然资源部DSM检查导则）第5.3条"
+  },
+  "spatialReference": {
+    "description": "合法坐标系与高程基准枚举",
+    "allowedSridList": [
+      "CGCS2000",
+      "CGCS2000_3_degree_GK_Zone_38",
+      "CGCS2000_3_degree_GK_Zone_39",
+      "CGCS2000_3_degree_GK_Zone_40",
+      "WGS84",
+      "EPSG:4490",
+      "EPSG:4326"
+    ],
+    "allowedVerticalDatumList": [
+      "1985国家高程基准",
+      "1956黄海高程系",
+      "地方独立高程基准"
+    ],
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.1条"
+  }
+}

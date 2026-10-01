@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-10-01",
+  "diameterRange": {
+    "description": "管径值域，单位毫米",
+    "minMm": 0,
+    "maxMm": 3000,
+    "policyBasis": "依据：《信息技术 地下管线数据交换技术要求》（GB/T 29806-2013）第6.3.4条"
+  },
+  "materialEnum": {
+    "description": "管材材质枚举",
+    "allowedValues": [
+      "钢管",
+      "铸铁管",
+      "球墨铸铁管",
+      "钢筋混凝土管",
+      "混凝土管",
+      "陶土管",
+      "PVC管",
+      "PE管",
+      "HDPE管",
+      "玻璃钢管",
+      "塑料管",
+      "其他"
+    ],
+    "policyBasis": "依据：《信息技术 地下管线数据交换技术要求》（GB/T 29806-2013）第6.3.5条"
+  },
+  "buryMethodEnum": {
+    "description": "埋设方式枚举",
+    "allowedValues": [
+      "直埋",
+      "管沟",
+      "顶管",
+      "拖拉管",
+      "盾构",
+      "其他"
+    ],
+    "policyBasis": "依据：《信息技术 地下管线数据交换技术要求》（GB/T 29806-2013）第6.3.6条"
+  },
+  "flowDirectionEnum": {
+    "description": "排水流向枚举",
+    "allowedValues": [
+      "顺流",
+      "逆流",
+      "未知"
+    ],
+    "policyBasis": "依据：《城镇排水管渠运行维护及安全技术规程》（CJJ 68-2016）第3.2.4条"
+  },
+  "attributeSpec": {
+    "description": "属性项规范，字段名称与最大长度约束",
+    "fieldConstraints": [
+      {
+        "fieldName": "pointId",
+        "maxLength": 32,
+        "policyBasis": "依据：《信息技术 地下管线数据交换技术要求》（GB/T 29806-2013）第6.2.1条"
+      },
+      {
+        "fieldName": "segmentId",
+        "maxLength": 32,
+        "policyBasis": "依据：《信息技术 地下管线数据交换技术要求》（GB/T 29806-2013）第6.2.2条"
+      },
+      {
+        "fieldName": "pointType",
+        "maxLength": 16,
+        "policyBasis": "依据：《信息技术 地下管线数据交换技术要求》（GB/T 29806-2013）第6.2.3条"
+      },
+      {
+        "fieldName": "material",
+        "maxLength": 16,
+        "policyBasis": "依据：《信息技术 地下管线数据交换技术要求》（GB/T 29806-2013）第6.3.5条"
+      },
+      {
+        "fieldName": "buryMethod",
+        "maxLength": 16,
+        "policyBasis": "依据：《信息技术 地下管线数据交换技术要求》（GB/T 29806-2013）第6.3.6条"
+      }
+    ],
+    "policyBasis": "依据：《信息技术 地下管线数据交换技术要求》（GB/T 29806-2013）第6.2条"
+  }
+}

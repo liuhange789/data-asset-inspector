@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-10-01",
+  "qualityElements": {
+    "description": "四类质量元素及权重：数学精度0.25、地理精度0.38、整饰质量0.25、附件质量0.12",
+    "elements": [
+      {
+        "elementName": "数学精度",
+        "weight": 0.25,
+        "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.2条"
+      },
+      {
+        "elementName": "地理精度",
+        "weight": 0.38,
+        "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.3条"
+      },
+      {
+        "elementName": "整饰质量",
+        "weight": 0.25,
+        "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.4条"
+      },
+      {
+        "elementName": "附件质量",
+        "weight": 0.12,
+        "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.5条"
+      }
+    ],
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6章"
+  },
+  "errorClassThresholds": {
+    "description": "A/B/C/D错误分类扣分阈值，A类最严重",
+    "classAScoreDeduction": 1.0,
+    "classBScoreDeduction": 0.6,
+    "classCScoreDeduction": 0.3,
+    "classDScoreDeduction": 0.1,
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第7.2条"
+  },
+  "qualityGradeThresholds": {
+    "description": "质量等级划分阈值，合格分下限",
+    "excellentMinScore": 90,
+    "goodMinScore": 80,
+    "qualifiedMinScore": 70,
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第8.1条"
+  }
+}

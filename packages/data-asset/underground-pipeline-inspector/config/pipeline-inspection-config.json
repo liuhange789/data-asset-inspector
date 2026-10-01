@@ -1,0 +1,67 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-10-01",
+  "workspace": {
+    "description": "巡检工作区范围定义，含图层名称与边界",
+    "requiredLayers": [
+      "pipeline_point",
+      "pipeline_segment",
+      "pipeline_structure"
+    ],
+    "policyBasis": "依据：《地下管线数据获取规程》（GB/T 35644-2017）第5.1条"
+  },
+  "edgeMatching": {
+    "description": "接边点坐标容差，单位米",
+    "toleranceMeter": 0.005,
+    "policyBasis": "依据：《城市地下管线探测技术规程》（CJJ 61-2017）第4.6.2条"
+  },
+  "legalCoordinateSystems": {
+    "description": "合法坐标系枚举",
+    "allowedSridList": [
+      "CGCS2000_3_degree_GK_Zone_38",
+      "CGCS2000_3_degree_GK_Zone_39",
+      "CGCS2000_3_degree_GK_Zone_40",
+      "CGCS2000"
+    ],
+    "policyBasis": "依据：《地下管线数据获取规程》（GB/T 35644-2017）第5.2.2条"
+  },
+  "verticalDatum": {
+    "description": "合法高程基准枚举",
+    "allowedDatumList": [
+      "1985国家高程基准",
+      "1956黄海高程系",
+      "地方独立高程基准"
+    ],
+    "policyBasis": "依据：《地下管线数据获取规程》（GB/T 35644-2017）第5.2.3条"
+  },
+  "connectivity": {
+    "description": "连通性要求，管线点最小连通管段数与最大连通管段数",
+    "minConnectedSegments": 1,
+    "maxConnectedSegments": 4,
+    "policyBasis": "依据：《地下管线数据获取规程》（GB/T 35644-2017）第6.3条"
+  },
+  "grossErrorRate": {
+    "description": "管线点粗差率阈值，超过则不合格",
+    "thresholdRate": 0.05,
+    "policyBasis": "依据：《广东省地下管线数据检查导则》第7.3.11条"
+  },
+  "fieldIntegrity": {
+    "description": "管线点与管段必填字段清单",
+    "pipelinePointRequiredFields": [
+      "pointId",
+      "pointType",
+      "x",
+      "y",
+      "elevation"
+    ],
+    "pipelineSegmentRequiredFields": [
+      "segmentId",
+      "startPointId",
+      "endPointId",
+      "diameter",
+      "material",
+      "buryMethod"
+    ],
+    "policyBasis": "依据：《信息技术 地下管线数据交换技术要求》（GB/T 29806-2013）第6.2条"
+  }
+}

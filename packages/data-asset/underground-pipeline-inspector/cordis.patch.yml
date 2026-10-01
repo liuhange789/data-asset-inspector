@@ -1,0 +1,9 @@
+# Cordis Framework Patch Declaration for @liuhange/dsh-underground-pipeline-inspector
+# This file declares the plugin's runtime patch for the Cordis framework.
+# Used by DSH plugin manager to apply framework-level patches during installation.
+plugin: @liuhange/dsh-underground-pipeline-inspector
+version: 1.0.0
+patch:
+  - target: tools
+    action: register
+    description: Register plugin tools into Cordis runtime

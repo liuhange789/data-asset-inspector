@@ -1,0 +1,34 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-10-01",
+  "pseudoNode": {
+    "description": "伪节点容差，单位米，两线段端点距离小于容差视为伪节点",
+    "toleranceMeter": 0.001,
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.3.2条"
+  },
+  "danglingNode": {
+    "description": "悬挂点容差，单位米，线段端点无匹配点且距离大于容差视为悬挂点",
+    "toleranceMeter": 0.001,
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.3.3条"
+  },
+  "polygonOverlap": {
+    "description": "面重叠容差，单位平方米，面要素重叠面积大于容差视为重叠错误",
+    "toleranceSquareMeter": 0.0001,
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.3.4条"
+  },
+  "polygonGap": {
+    "description": "面缝隙容差，单位平方米，相邻面要素缝隙面积大于容差视为缝隙错误",
+    "toleranceSquareMeter": 0.0001,
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.3.5条"
+  },
+  "duplicateCollection": {
+    "description": "重复采集阈值，同一地物重复采集次数超过阈值视为重复采集错误",
+    "maxDuplicateCount": 1,
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.3.6条"
+  },
+  "topologyTimeout": {
+    "description": "面要素拓扑计算超时阈值，单位毫秒，超时标记未完成建议分批处理",
+    "timeoutMs": 5000,
+    "policyBasis": "依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.3条"
+  }
+}
