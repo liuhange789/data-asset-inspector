@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+
 export interface EncodingDetectResult {
   content: string | null
   encodingError?: string
@@ -5,8 +7,6 @@ export interface EncodingDetectResult {
 
 export const EncodingDetector = {
   detect(filePath: string): EncodingDetectResult {
-    const { readFileSync } = require('node:fs') as typeof import('node:fs')
-
     let buffer: Buffer
     try {
       buffer = readFileSync(filePath)

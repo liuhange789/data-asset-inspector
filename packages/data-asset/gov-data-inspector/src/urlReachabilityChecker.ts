@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs'
+
 export interface UrlReachabilityResult {
   reachable: boolean
   error?: string
@@ -24,7 +26,7 @@ export const UrlReachabilityChecker = {
       }
     }
 
-    const { existsSync } = require('node:fs') as typeof import('node:fs')
+
     if (existsSync(dataSource)) {
       return { reachable: true }
     }

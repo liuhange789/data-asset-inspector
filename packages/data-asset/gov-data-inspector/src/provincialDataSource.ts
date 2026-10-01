@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import type { OfficialStandardData, DataSourceStatusEntry } from './types.js'
 import { EndpointResolver } from './endpointResolver.js'
 
@@ -45,7 +46,7 @@ export const ProvincialDataSource = {
 
     try {
       if (resolved.kind === 'file') {
-        const { readFileSync } = require('node:fs') as typeof import('node:fs')
+
         const raw = JSON.parse(readFileSync(resolved.target, 'utf-8'))
         const data = parseOfficialData(raw, 'provincial')
         return {

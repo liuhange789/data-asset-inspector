@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs'
+
 export interface ResolvedEndpoint {
   kind: 'https' | 'http' | 'file'
   target: string
@@ -15,7 +17,6 @@ export const EndpointResolver = {
       return { kind: 'http', target: endpoint }
     }
 
-    const { existsSync } = require('node:fs') as typeof import('node:fs')
     if (existsSync(endpoint)) {
       return { kind: 'file', target: endpoint }
     }

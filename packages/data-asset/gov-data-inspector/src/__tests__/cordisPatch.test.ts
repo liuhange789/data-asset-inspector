@@ -11,7 +11,7 @@ describe('cordis.patch.yml 安装阻塞修复', () => {
   })
 
   it('P0-1: version字段用双引号包裹', () => {
-    expect(patchContent).toContain('version: "3.1.6"')
+    expect(patchContent).toContain('version: "3.1.8"')
   })
 
   it('P0-2: 顶层数组结构(以- target开头)', () => {
