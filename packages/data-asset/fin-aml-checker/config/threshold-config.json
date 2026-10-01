@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-09-30",
+  "cashThresholdCny": 50000,
+  "cashThresholdFcy": 10000,
+  "nonNaturalPersonTransferCny": 2000000,
+  "nonNaturalPersonTransferFcy": 200000,
+  "naturalPersonDomesticCny": 500000,
+  "naturalPersonDomesticFcy": 100000,
+  "naturalPersonCrossBorderCny": 200000,
+  "naturalPersonCrossBorderFcy": 10000,
+  "cashTransactionTypes": [
+    "现金缴存",
+    "现金支取",
+    "现金结售汇",
+    "票据解付"
+  ],
+  "transferTransactionTypes": [
+    "账户划转",
+    "银行转账",
+    "款项划转"
+  ]
+}

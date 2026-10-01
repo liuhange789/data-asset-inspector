@@ -1,0 +1,111 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-01T00:00:00.000Z",
+  "nodes": [
+    {
+      "classificationCode": "10",
+      "classificationName": "按功能分建筑物",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["BIM构件-建筑物", "BIM模型-建筑物", "设计图纸-建筑物"]
+    },
+    {
+      "classificationCode": "11",
+      "classificationName": "按形态分建筑物",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["BIM构件-建筑物形态", "设计图纸-建筑物形态"]
+    },
+    {
+      "classificationCode": "12",
+      "classificationName": "按功能分建筑空间",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["BIM构件-建筑空间", "BIM模型-建筑空间"]
+    },
+    {
+      "classificationCode": "13",
+      "classificationName": "按形态分建筑空间",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["BIM构件-建筑空间形态"]
+    },
+    {
+      "classificationCode": "14",
+      "classificationName": "元素",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["BIM构件-元素", "BIM模型-元素", "设计图纸-元素"]
+    },
+    {
+      "classificationCode": "15",
+      "classificationName": "工作成果",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["BIM构件-工作成果", "设计图纸-工作成果"]
+    },
+    {
+      "classificationCode": "20",
+      "classificationName": "工程建设项目阶段",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["进度记录-项目阶段", "工序记录-项目阶段"]
+    },
+    {
+      "classificationCode": "21",
+      "classificationName": "行为",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["进度记录-行为", "工序记录-行为", "施工数据-行为"]
+    },
+    {
+      "classificationCode": "22",
+      "classificationName": "专业领域",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["进度记录-专业领域", "工序记录-专业领域", "施工数据-专业领域"]
+    },
+    {
+      "classificationCode": "30",
+      "classificationName": "建筑产品",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["材料清单-建筑产品", "材质信息-建筑产品"]
+    },
+    {
+      "classificationCode": "31",
+      "classificationName": "组织角色",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["材料清单-组织角色", "参建方信息-组织角色"]
+    },
+    {
+      "classificationCode": "32",
+      "classificationName": "工具",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["材料清单-工具"]
+    },
+    {
+      "classificationCode": "33",
+      "classificationName": "信息",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["材料清单-信息", "材质信息-信息"]
+    },
+    {
+      "classificationCode": "40",
+      "classificationName": "材质",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["材料清单-材质", "材质信息-材质", "材料数据-材质"]
+    },
+    {
+      "classificationCode": "41",
+      "classificationName": "属性",
+      "parentCode": "",
+      "level": 1,
+      "mappedDataTypes": ["验收属性", "质量属性", "验收文档-属性", "属性数据"]
+    }
+  ]
+}

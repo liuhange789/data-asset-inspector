@@ -1,0 +1,11 @@
+import type { EncodingRuleConfig } from './types.js'
+
+export const defaultEncodingRuleConfig: EncodingRuleConfig = {
+  version: '1.0.0',
+  lastUpdated: '2024-01-01T00:00:00.000Z',
+  classificationCodeLength: 5,
+  sequentialCodeLength: 4,
+  sequentialCodeStart: 1,
+  sequentialCodeMax: 9999,
+  checksumAlgorithm: 'Luhn',
+}

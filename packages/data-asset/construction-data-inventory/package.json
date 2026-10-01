@@ -1,0 +1,69 @@
+{
+  "name": "@liuhange/dsh-construction-data-inventory",
+  "description": "Construction project data asset inventory plugin: multi-source heterogeneous data adaptation, GB/T 51269 classification mapping, asset code generation, change traceability detection",
+  "version": "3.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuhange789/data-asset-inspector.git",
+    "directory": "packages/data-asset/construction-data-inventory"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/**/*.js",
+    "lib/types/**/*.d.ts",
+    "config/*.json"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@liuhange/dsh-data-asset-shared": "^3.1.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh-tools": "0.0.1-rc.1"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
+    "construction-data-inventory",
+    "gbt-51269",
+    "ifc-model",
+    "classification-mapping",
+    "asset-code",
+    "change-traceability",
+    "建筑工程",
+    "数据资产盘点",
+    "分类编码",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "plugin",
+    "open-source"
+  ],
+  "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
+}

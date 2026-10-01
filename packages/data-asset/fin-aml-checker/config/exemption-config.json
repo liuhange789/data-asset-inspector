@@ -1,0 +1,76 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-09-30",
+  "rules": [
+    {
+      "ruleId": "EXEMPT-001",
+      "ruleName": "定期存款续存",
+      "matchConditions": { "transactionType": ["定期存款续存", "定期存款利息转入"] },
+      "policyBasisClause": "第七条第一项",
+      "enabled": true
+    },
+    {
+      "ruleId": "EXEMPT-002",
+      "ruleName": "同业拆借",
+      "matchConditions": { "transactionType": ["同业拆借", "同业存款", "同业借款"], "counterpartyType": ["金融机构"] },
+      "policyBasisClause": "第七条相关项",
+      "enabled": true
+    },
+    {
+      "ruleId": "EXEMPT-003",
+      "ruleName": "政府机关交易",
+      "matchConditions": { "counterpartyType": ["政府机关", "财政部门"] },
+      "policyBasisClause": "第七条相关项",
+      "enabled": true
+    },
+    {
+      "ruleId": "EXEMPT-004",
+      "ruleName": "黄金交易所交易",
+      "matchConditions": { "transactionType": ["黄金交易"], "counterpartyType": ["上海黄金交易所"] },
+      "policyBasisClause": "第七条相关项",
+      "enabled": true
+    },
+    {
+      "ruleId": "EXEMPT-005",
+      "ruleName": "银行间市场金融机构交易",
+      "matchConditions": { "transactionType": ["银行间市场交易"], "counterpartyType": ["证券公司", "基金管理公司", "保险公司"] },
+      "policyBasisClause": "第七条相关项",
+      "enabled": true
+    },
+    {
+      "ruleId": "EXEMPT-006",
+      "ruleName": "邮政储蓄特定交易",
+      "matchConditions": { "transactionType": ["邮政储蓄特定交易"] },
+      "policyBasisClause": "第七条相关项",
+      "enabled": true
+    },
+    {
+      "ruleId": "EXEMPT-007",
+      "ruleName": "银行间债券市场交易",
+      "matchConditions": { "transactionType": ["银行间债券市场交易"] },
+      "policyBasisClause": "第七条相关项",
+      "enabled": true
+    },
+    {
+      "ruleId": "EXEMPT-008",
+      "ruleName": "财政拨款补贴",
+      "matchConditions": { "transactionType": ["财政拨款", "财政补贴"], "counterpartyType": ["财政部门", "政府机关"] },
+      "policyBasisClause": "第七条相关项",
+      "enabled": true
+    },
+    {
+      "ruleId": "EXEMPT-009",
+      "ruleName": "工资奖金代发",
+      "matchConditions": { "transactionType": ["工资代发", "奖金代发"] },
+      "policyBasisClause": "第七条相关项",
+      "enabled": true
+    },
+    {
+      "ruleId": "EXEMPT-010",
+      "ruleName": "中国人民银行确定可不报告交易",
+      "matchConditions": { "transactionType": ["人行豁免交易"] },
+      "policyBasisClause": "第七条相关项",
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+import type {
+  ThresholdConfig,
+  ExemptionConfig,
+  ExchangeRateConfig,
+  HolidayConfig,
+} from './types.js'
+
+export const defaultThresholdConfig: ThresholdConfig = {
+  version: '1.0.0',
+  lastUpdated: '2026-09-30',
+  cashThresholdCny: 50000,
+  cashThresholdFcy: 10000,
+  nonNaturalPersonTransferCny: 2000000,
+  nonNaturalPersonTransferFcy: 200000,
+  naturalPersonDomesticCny: 500000,
+  naturalPersonDomesticFcy: 100000,
+  naturalPersonCrossBorderCny: 200000,
+  naturalPersonCrossBorderFcy: 10000,
+  cashTransactionTypes: [
+    '现金缴存',
+    '现金支取',
+    '现金结售汇',
+    '票据解付',
+  ],
+  transferTransactionTypes: [
+    '账户划转',
+    '银行转账',
+    '款项划转',
+  ],
+}
+
+export const defaultExemptionConfig: ExemptionConfig = {
+  version: '1.0.0',
+  lastUpdated: '2026-09-30',
+  rules: [
+    {
+      ruleId: 'EXEMPT-001',
+      ruleName: '定期存款续存',
+      matchConditions: { transactionType: ['定期存款续存', '定期存款利息转入'] },
+      policyBasisClause: '第七条第一项',
+      enabled: true,
+    },
+    {
+      ruleId: 'EXEMPT-002',
+      ruleName: '同业拆借',
+      matchConditions: { transactionType: ['同业拆借', '同业存款', '同业借款'], counterpartyType: ['金融机构'] },
+      policyBasisClause: '第七条相关项',
+      enabled: true,
+    },
+    {
+      ruleId: 'EXEMPT-003',
+      ruleName: '政府机关交易',
+      matchConditions: { counterpartyType: ['政府机关', '财政部门'] },
+      policyBasisClause: '第七条相关项',
+      enabled: true,
+    },
+    {
+      ruleId: 'EXEMPT-004',
+      ruleName: '黄金交易所交易',
+      matchConditions: { transactionType: ['黄金交易'], counterpartyType: ['上海黄金交易所'] },
+      policyBasisClause: '第七条相关项',
+      enabled: true,
+    },
+    {
+      ruleId: 'EXEMPT-005',
+      ruleName: '银行间市场金融机构交易',
+      matchConditions: { transactionType: ['银行间市场交易'], counterpartyType: ['证券公司', '基金管理公司', '保险公司'] },
+      policyBasisClause: '第七条相关项',
+      enabled: true,
+    },
+    {
+      ruleId: 'EXEMPT-006',
+      ruleName: '邮政储蓄特定交易',
+      matchConditions: { transactionType: ['邮政储蓄特定交易'] },
+      policyBasisClause: '第七条相关项',
+      enabled: true,
+    },
+    {
+      ruleId: 'EXEMPT-007',
+      ruleName: '银行间债券市场交易',
+      matchConditions: { transactionType: ['银行间债券市场交易'] },
+      policyBasisClause: '第七条相关项',
+      enabled: true,
+    },
+    {
+      ruleId: 'EXEMPT-008',
+      ruleName: '财政拨款补贴',
+      matchConditions: { transactionType: ['财政拨款', '财政补贴'], counterpartyType: ['财政部门', '政府机关'] },
+      policyBasisClause: '第七条相关项',
+      enabled: true,
+    },
+    {
+      ruleId: 'EXEMPT-009',
+      ruleName: '工资奖金代发',
+      matchConditions: { transactionType: ['工资代发', '奖金代发'] },
+      policyBasisClause: '第七条相关项',
+      enabled: true,
+    },
+    {
+      ruleId: 'EXEMPT-010',
+      ruleName: '中国人民银行确定可不报告交易',
+      matchConditions: { transactionType: ['人行豁免交易'] },
+      policyBasisClause: '第七条相关项',
+      enabled: true,
+    },
+  ],
+}
+
+export const defaultExchangeRateConfig: ExchangeRateConfig = {
+  version: '1.0.0',
+  lastUpdated: '2026-09-30',
+  rateMap: {
+    CNY: 1,
+    USD: 7.2,
+    EUR: 7.8,
+    GBP: 9.1,
+    JPY: 0.048,
+    HKD: 0.92,
+    CHF: 8.1,
+    AUD: 4.7,
+    CAD: 5.3,
+    SGD: 5.4,
+  },
+}
+
+export const defaultHolidayConfig: HolidayConfig = {
+  version: '1.0.0',
+  lastUpdated: '2026-09-30',
+  holidays: [
+    '2026-01-01',
+    '2026-01-02',
+    '2026-01-03',
+    '2026-02-17',
+    '2026-02-18',
+    '2026-02-19',
+    '2026-02-20',
+    '2026-04-05',
+    '2026-05-01',
+    '2026-05-02',
+    '2026-05-03',
+    '2026-06-19',
+    '2026-09-25',
+    '2026-10-01',
+    '2026-10-02',
+    '2026-10-03',
+    '2026-10-04',
+    '2026-10-05',
+    '2026-10-06',
+    '2026-10-07',
+  ],
+}

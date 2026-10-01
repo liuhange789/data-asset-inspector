@@ -1,0 +1,26 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-01T00:00:00.000Z",
+  "adapters": [
+    {
+      "type": "IFC",
+      "adapterClassName": "IfcModelAdapter",
+      "supportedVersions": ["IFC2X3", "IFC4"]
+    },
+    {
+      "type": "CONTRACT",
+      "adapterClassName": "ContractAdapter",
+      "supportedVersions": ["1.0"]
+    },
+    {
+      "type": "PROGRESS",
+      "adapterClassName": "ProgressRecordAdapter",
+      "supportedVersions": ["1.0"]
+    },
+    {
+      "type": "ACCEPTANCE",
+      "adapterClassName": "AcceptanceDocAdapter",
+      "supportedVersions": ["1.0"]
+    }
+  ]
+}
