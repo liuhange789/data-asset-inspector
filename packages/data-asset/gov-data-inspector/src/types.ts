@@ -70,17 +70,37 @@ export interface ItemTypeMatchResult {
   matchSource: MatchSource
 }
 
+export type LoadSource = 'file' | 'npm' | 'default'
+
+export interface ConfigPackProvenance {
+  configPackId: string
+  region: string
+  configPackVersion: string
+  loadSource: LoadSource
+}
+
+export interface ConfigPackWarning {
+  type: 'CONFIG_PACK_WARNING'
+  code: string
+  message: string
+}
+
+export type Warning = UnmatchedWarning | ConfigPackWarning
+
 export interface InspectionReport {
   dataSource: string
   inspectionMode: string
   timestamp: string
   policyBasis: string[]
+  configPackId?: string
+  region?: string
+  configPackVersion?: string
   guideInspection?: GuideInspectionResult
   classification?: GovDataClassification
   dataSourceStatus?: DataSourceStatus
   degradedMode?: boolean
   degradedReason?: string
-  warnings?: UnmatchedWarning[]
+  warnings?: Warning[]
 }
 
 export interface GovDataClassification {
@@ -180,4 +200,14 @@ export type ErrorCode =
   | 'GOV_DATA_URL_UNREACHABLE'
   | 'GOV_DATA_NO_DATA'
   | 'GOV_DATA_INPUT_TOO_LARGE'
+  | 'GOV_CONFIG_PACK_INVALID'
+  | 'GOV_CONFIG_PACK_SCHEMA_INVALID'
+  | 'GOV_CONFIG_PACK_UNAVAILABLE'
+  | 'GOV_CONFIG_PACK_DUPLICATE'
+  | 'GOV_CONFIG_PACK_NOT_FOUND'
+  | 'GOV_CONFIG_PACK_ENCODING_ERROR'
+  | 'GOV_CONFIG_PACK_PARSE_ERROR'
+  | 'GOV_CONFIG_PACK_FALLBACK'
+  | 'GOV_CONFIG_RULE_EXEC_ERROR'
+  | 'GOV_LOCAL_TERMS_EMPTY'
   | 'UNKNOWN_ERROR'

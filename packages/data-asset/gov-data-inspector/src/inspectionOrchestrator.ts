@@ -7,14 +7,18 @@ import { QualityMetricsCalculator } from './qualityMetricsCalculator.js'
 import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 
 export interface OrchestrateConfig {
-  guideRequiredElements: string[]
+  guideRequiredElements?: string[]
+  requiredFields?: string[]
   formatRules: FormatRule[]
   severityMapping: Record<string, string>
-  scoreWeights: { completeness: number; accuracy: number; traceability: number }
+  scoreWeights?: { completeness: number; accuracy: number; traceability: number }
+  scoringWeights?: { completeness: number; accuracy: number; traceability: number }
   convenienceWeights: Record<string, number>
   itemTypeMatching: Record<string, { keywords: string[]; codePrefix: string }>
   materialConciseThreshold: number
   missingFieldStandardClause: string
+  gbt47949Mapping?: Record<string, string>
+  gbtMapping?: Record<string, string>
 }
 
 export interface OrchestrateOptions {
@@ -22,6 +26,7 @@ export interface OrchestrateOptions {
   itemTypeOverride?: string | undefined
   localTermsPath?: string | undefined
   degradedSimilarityThreshold?: number | undefined
+  inlineLocalTerms?: { materials: string[]; conditions: string[] } | undefined
 }
 
 export interface OrchestrateResult extends GuideInspectionResult {
@@ -42,6 +47,9 @@ export const InspectionOrchestrator = {
     let completeCount = 0
     let serviceConvenience = 0
 
+    const requiredFields = config.requiredFields ?? config.guideRequiredElements ?? []
+    const scoringWeights = config.scoringWeights ?? config.scoreWeights
+
     for (let i = 0; i < data.length; i++) {
       const row = data[i]
       if (typeof row !== 'object' || row === null) continue
@@ -51,7 +59,7 @@ export const InspectionOrchestrator = {
       const missingDetails = MissingFieldDetector.detect(
         guide,
         guideId,
-        config.guideRequiredElements,
+        requiredFields,
         config.severityMapping,
         undefined,
         config.missingFieldStandardClause,
@@ -67,7 +75,7 @@ export const InspectionOrchestrator = {
         kb,
         config.itemTypeMatching,
         config.severityMapping,
-        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold },
+        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold, inlineLocalTerms: options?.inlineLocalTerms },
       )
       allErrorDetails.push(...semanticResult.details)
       if (semanticResult.warning) {
@@ -101,7 +109,7 @@ export const InspectionOrchestrator = {
     }
 
     const counts = ErrorDetailBuilder.countByType(allErrorDetails)
-    const totalFieldCount = data.length * config.guideRequiredElements.length
+    const totalFieldCount = data.length * requiredFields.length
 
     const detectionRates: DetectionRates = QualityMetricsCalculator.calculate({
       semanticErrorCount: counts.semantic,
@@ -109,10 +117,10 @@ export const InspectionOrchestrator = {
       missingFieldCount: counts.missing,
       formatIssueCount: allFormatIssues.length,
       totalGuides: data.length,
-      requiredFieldCount: config.guideRequiredElements.length,
+      requiredFieldCount: requiredFields.length,
       totalFieldCount: totalFieldCount > 0 ? totalFieldCount : 1,
       errorDetails: allErrorDetails,
-      scoreWeights: config.scoreWeights,
+      scoreWeights: scoringWeights!,
     })
 
     return {

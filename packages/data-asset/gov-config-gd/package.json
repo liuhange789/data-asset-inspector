@@ -1,0 +1,27 @@
+{
+  "name": "@liuhange/gov-config-gd",
+  "version": "2026.1.0",
+  "description": "广东省政务数据巡检配置包 — 含粤府办/粤委改等广东省地方政策依据与标准词表",
+  "type": "module",
+  "exports": {
+    ".": "./config-pack.json"
+  },
+  "files": [
+    "config-pack.json"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuhange789/data-asset-inspector.git",
+    "directory": "packages/data-asset/gov-config-gd"
+  },
+  "keywords": [
+    "gov-data",
+    "config-pack",
+    "guangdong",
+    "广东省",
+    "政务服务",
+    "dsh-plugin"
+  ],
+  "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
+}

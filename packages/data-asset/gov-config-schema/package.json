@@ -1,0 +1,26 @@
+{
+  "name": "@liuhange/gov-config-schema",
+  "version": "2026.1.0",
+  "description": "政务数据巡检配置包 JSON Schema — 供配置包维护者离线校验配置包内容",
+  "type": "module",
+  "exports": {
+    ".": "./config-pack-schema.json"
+  },
+  "files": [
+    "config-pack-schema.json"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuhange789/data-asset-inspector.git",
+    "directory": "packages/data-asset/gov-config-schema"
+  },
+  "keywords": [
+    "gov-data",
+    "config-pack",
+    "json-schema",
+    "schema",
+    "dsh-plugin"
+  ],
+  "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
+}

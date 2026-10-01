@@ -12,6 +12,7 @@ interface DetectOptions {
   itemTypeOverride?: string | undefined
   localTermsPath?: string | undefined
   degradedSimilarityThreshold?: number | undefined
+  inlineLocalTerms?: { materials: string[]; conditions: string[] } | undefined
 }
 
 export interface SemanticDetectResult {
@@ -245,7 +246,7 @@ export const SemanticRuleEngine = {
 
     const hasKbData = kb.timeLimits.length > 0 || kb.materials.length > 0 || kb.conditions.length > 0
     if (!hasKbData && options?.degradedMode) {
-      const localTerms = LocalTermsLoader.load(options.localTermsPath)
+      const localTerms = LocalTermsLoader.load(options.localTermsPath, options.inlineLocalTerms)
       if (localTerms.materials.length === 0 && localTerms.conditions.length === 0) {
         return { details: [] }
       }

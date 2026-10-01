@@ -1,13 +1,26 @@
 import { loadJsonConfig } from '@liuhange/dsh-data-asset-shared'
 
-export function resolvePolicyBasis(stage: string): string[] {
+interface PolicyDoc {
+  name: string
+  docNumber: string
+  coreRequirement: string
+}
+
+export function resolvePolicyBasis(
+  stage: string,
+  packPolicyBasis?: PolicyDoc[],
+): string[] {
+  if (packPolicyBasis && packPolicyBasis.length > 0) {
+    return packPolicyBasis.map((d) => `依据：《${d.name}》（${d.docNumber}）—${d.coreRequirement}`)
+  }
+
   try {
     const config = loadJsonConfig(
       'POLICY_REFS_PATH',
       'config/policy-references.json',
       '@liuhange/dsh-data-asset-shared/config/policy-references.json',
     )
-    const refs = (config as { policyReferences: { stage: string; documents: { name: string; docNumber: string; coreRequirement: string }[] }[] }).policyReferences
+    const refs = (config as { policyReferences: { stage: string; documents: PolicyDoc[] }[] }).policyReferences
     const stageEntry = refs?.find((s) => s.stage === stage)
     if (!stageEntry) {
       console.warn(`Policy stage "${stage}" not configured`)

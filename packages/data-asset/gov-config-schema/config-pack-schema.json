@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://liuhange.dev/gov-data-inspector/config-pack-schema.json",
+  "title": "Government Data Inspector Config Pack",
+  "type": "object",
+  "required": [
+    "configPackId",
+    "region",
+    "configPackVersion",
+    "policyBasis",
+    "requiredFields",
+    "formatRules",
+    "localStandardTerms",
+    "logicErrorRules",
+    "scoringWeights",
+    "itemTypeMatching",
+    "severityMapping",
+    "gbtMapping",
+    "dataSourceCredentials",
+    "dataSourcePriority"
+  ],
+  "properties": {
+    "configPackId": {
+      "type": "string",
+      "pattern": "^[a-z]{2}-[a-z]+-\\d{4}$|^default$"
+    },
+    "region": {
+      "type": "string",
+      "minLength": 2
+    },
+    "configPackVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "policyBasis": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "docNumber", "coreRequirement"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "docNumber": { "type": "string", "minLength": 1 },
+          "coreRequirement": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "requiredFields": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "formatRules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "suggestionTemplate"],
+        "properties": {
+          "field": { "type": "string" },
+          "pattern": { "type": "string" },
+          "requiredKeywords": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "suggestionTemplate": { "type": "string" }
+        }
+      }
+    },
+    "localStandardTerms": {
+      "type": "object",
+      "required": ["materials", "conditions"],
+      "properties": {
+        "materials": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "conditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "logicErrorRules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ruleId", "standardClause", "triggerFields", "triggerKeywords"],
+        "properties": {
+          "ruleId": { "type": "string" },
+          "standardClause": { "type": "string" },
+          "triggerFields": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "condition": { "type": "string" },
+          "threshold": { "type": ["number", "null"] },
+          "suggestionTemplate": { "type": "string" },
+          "triggerKeywords": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "scoringWeights": {
+      "type": "object",
+      "required": ["completeness", "accuracy", "traceability"],
+      "properties": {
+        "completeness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "accuracy": { "type": "number", "minimum": 0, "maximum": 1 },
+        "traceability": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "itemTypeMatching": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["keywords", "codePrefix"],
+        "properties": {
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "codePrefix": { "type": "string" }
+        }
+      }
+    },
+    "severityMapping": {
+      "type": "object",
+      "properties": {
+        "missing": { "type": "string", "enum": ["critical", "major", "minor"] },
+        "semantic": { "type": "string", "enum": ["critical", "major", "minor"] },
+        "logical": { "type": "string", "enum": ["critical", "major", "minor"] }
+      }
+    },
+    "gbtMapping": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string" }
+    },
+    "dataSourceCredentials": {
+      "type": "object",
+      "required": ["national", "provincial", "standard"],
+      "properties": {
+        "national": {
+          "type": "object",
+          "required": ["apiKey", "endpoint"],
+          "properties": {
+            "apiKey": { "type": "string" },
+            "endpoint": { "type": "string" }
+          }
+        },
+        "provincial": {
+          "type": "object",
+          "required": ["apiKey", "endpoint"],
+          "properties": {
+            "apiKey": { "type": "string" },
+            "endpoint": { "type": "string" }
+          }
+        },
+        "standard": {
+          "type": "object",
+          "required": ["docPath", "endpoint"],
+          "properties": {
+            "docPath": { "type": "string" },
+            "endpoint": { "type": "string" }
+          }
+        }
+      }
+    },
+    "dataSourcePriority": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "enum": ["national", "provincial"] }
+    },
+    "convenienceWeights": {
+      "type": "object",
+      "additionalProperties": { "type": "number" }
+    },
+    "materialConciseThreshold": { "type": "number" },
+    "missingFieldStandardClause": { "type": "string" },
+    "degradedSimilarityThreshold": { "type": "number", "minimum": 0, "maximum": 1 },
+    "inputLengthThreshold": { "type": "number" }
+  }
+}
