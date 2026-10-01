@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, afterEach } from 'vitest'
-import { existsSync, rmSync, mkdirSync } from 'node:fs'
+import { existsSync, rmSync, mkdirSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { InventoryReportGenerator } from '../src/inventory-report-generator.js'
 import type {
@@ -176,5 +176,59 @@ describe('InventoryReportGenerator', () => {
     const path = generator.exportLedger(sampleAssets, tmpDir)
 
     expect(existsSync(path)).toBe(true)
+  })
+
+  it('输出质量检查报告', () => {
+    const report = generator.generate({
+      assetList: sampleAssets,
+      classificationEncodingList: sampleClassificationEncodingList,
+      changeTraceabilityReport: [],
+      overrideList: [],
+      errorList: [],
+      configVersions: sampleConfigVersions,
+      projectId: 'proj-1',
+    })
+    report.qualityReport = {
+      qualityElementScores: [
+        { elementName: '空间参考系', weight: 0.1667, score: 99, policyBasis: '依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.1条' },
+      ],
+      totalScore: 99,
+      errorClassStatistics: {
+        classACount: 1,
+        classBCount: 0,
+        classCCount: 0,
+        classDCount: 0,
+        totalCount: 1,
+        policyBasis: '依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第7.2条',
+      },
+      errorClassProportions: { classAProportion: 100, classBProportion: 0, classCProportion: 0, classDProportion: 0 },
+      policyBasisSummary: ['依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第6.1条'],
+    }
+    const output = generator.writeQualityReport(report, tmpDir)
+
+    expect(output).not.toBeNull()
+    expect(existsSync(output!.jsonPath)).toBe(true)
+    expect(existsSync(output!.mdPath)).toBe(true)
+    const jsonContent = JSON.parse(readFileSync(output!.jsonPath, 'utf-8'))
+    expect(jsonContent.totalScore).toBe(99)
+    const mdContent = readFileSync(output!.mdPath, 'utf-8')
+    expect(mdContent).toContain('建筑数据资产质量检查报告')
+    expect(mdContent).toContain('GB/T 24356-2023')
+  })
+
+  it('无质量报告时writeQualityReport返回null', () => {
+    const report = generator.generate({
+      assetList: [],
+      classificationEncodingList: [],
+      changeTraceabilityReport: [],
+      overrideList: [],
+      errorList: [],
+      configVersions: sampleConfigVersions,
+      projectId: 'proj-1',
+    })
+
+    const output = generator.writeQualityReport(report, tmpDir)
+
+    expect(output).toBeNull()
   })
 })

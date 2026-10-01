@@ -15,6 +15,7 @@ export interface UnifiedAssetItem {
   judgmentStatus: JudgmentStatus
   originalAssetCode?: string
   policyBasis?: string
+  qualityScore?: QualityElementScore[]
 }
 
 export interface SourceConfigEntry {
@@ -127,6 +128,7 @@ export interface ConfigVersionSet {
 export interface ValidationError {
   assetId: string
   errorMessage: string
+  errorClass?: ErrorClass
 }
 
 export interface InventoryReport {
@@ -141,6 +143,7 @@ export interface InventoryReport {
   policyBasisSummary: string[]
   configVersions: ConfigVersionSet
   legalDisclaimer: string
+  qualityReport?: QualityReport
 }
 
 export interface ConfigLoadResult {
@@ -178,4 +181,76 @@ export interface AssetCodeGenerateResult {
 export interface ToolError {
   error: ErrorCode
   message: string
+}
+export type ErrorClass = 'A' | 'B' | 'C' | 'D'
+
+export interface QualityCheckResult {
+  checkName: string
+  errorClass: ErrorClass
+  objectId: string
+  description: string
+  policyBasis: string
+}
+
+export interface QualityElementScore {
+  elementName: string
+  weight: number
+  score: number
+  policyBasis: string
+}
+
+export interface QualityElementConfigItem {
+  elementName: string
+  weight: number
+  keywords: string[]
+  policyBasis: string
+}
+
+export interface QualityElementConfig {
+  version: string
+  lastUpdated: string
+  qualityElements: {
+    description: string
+    elements: QualityElementConfigItem[]
+    policyBasis: string
+  }
+  errorClassThresholds: {
+    description: string
+    classAScoreDeduction: number
+    classBScoreDeduction: number
+    classCScoreDeduction: number
+    classDScoreDeduction: number
+    policyBasis: string
+  }
+  qualityGradeThresholds: {
+    description: string
+    excellentMinScore: number
+    goodMinScore: number
+    qualifiedMinScore: number
+    policyBasis: string
+  }
+}
+
+export interface ErrorClassStatistics {
+  classACount: number
+  classBCount: number
+  classCCount: number
+  classDCount: number
+  totalCount: number
+  policyBasis: string
+}
+
+export interface ErrorClassProportions {
+  classAProportion: number
+  classBProportion: number
+  classCProportion: number
+  classDProportion: number
+}
+
+export interface QualityReport {
+  qualityElementScores: QualityElementScore[]
+  totalScore: number
+  errorClassStatistics: ErrorClassStatistics
+  errorClassProportions: ErrorClassProportions
+  policyBasisSummary: string[]
 }

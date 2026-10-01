@@ -9,13 +9,15 @@ import type {
   ClassificationEncodingEntry,
   ConfigVersionSet,
   InventoryReport,
+  QualityCheckResult,
+  QualityElementConfig,
   ReviewOverrideRecord,
   SourceConfig,
   UnifiedAssetItem,
   ValidationError,
 } from './types.js'
 import type { ErrorCode } from './invariant.js'
-import { PLUGIN_NAME } from './invariant.js'
+import { PLUGIN_NAME, DEFAULT_QUALITY_ELEMENT_CONFIG_PATH } from './invariant.js'
 import { ConstructionConfigLoader } from './construction-config-loader.js'
 import { InputValidator } from './input-validator.js'
 import { IfcModelAdapter } from './ifc-model-adapter.js'
@@ -28,6 +30,9 @@ import { AssetCodeGenerator } from './asset-code-generator.js'
 import { ChangeTraceabilityChecker } from './change-traceability-checker.js'
 import { ReviewOverrideRecorder } from './review-override-recorder.js'
 import { InventoryReportGenerator } from './inventory-report-generator.js'
+import { QualityElementScorer } from './quality-element-scorer.js'
+import { ErrorClassifier } from './error-classifier.js'
+import { PolicyBasisBuilder } from './policy-basis-builder.js'
 
 function errorResult(error: ErrorCode, message: string): string {
   return JSON.stringify({ error, message })
@@ -60,6 +65,19 @@ function loadChangeRecords(changeDataPath: string): ChangeRecord[] {
   return JSON.parse(raw) as ChangeRecord[]
 }
 
+function loadQualityElementConfig(): QualityElementConfig | null {
+  const filePath = resolve(process.cwd(), DEFAULT_QUALITY_ELEMENT_CONFIG_PATH)
+  if (!existsSync(filePath)) {
+    return null
+  }
+  try {
+    const raw = readFileSync(filePath, 'utf-8')
+    return JSON.parse(raw) as QualityElementConfig
+  } catch {
+    return null
+  }
+}
+
 function buildClassificationEncodingList(assets: UnifiedAssetItem[]): ClassificationEncodingEntry[] {
   const list: ClassificationEncodingEntry[] = []
   for (const asset of assets) {
@@ -85,6 +103,9 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
   const changeTraceabilityChecker = new ChangeTraceabilityChecker()
   const reportGenerator = new InventoryReportGenerator()
   const overrideRecorder = new ReviewOverrideRecorder()
+  const qualityScorer = new QualityElementScorer()
+  const errorClassifier = new ErrorClassifier()
+  const policyBasisBuilder = new PolicyBasisBuilder()
 
   ctx.tools.register({
     name: 'inspect_ai_dataset',
@@ -214,6 +235,43 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
           skippedChangeTraceability,
         })
 
+        let qualityReportOutput: { jsonPath: string; mdPath: string } | null = null
+        try {
+          const qualityConfig = loadQualityElementConfig()
+          if (qualityConfig) {
+            const qualityCheckResults: QualityCheckResult[] = errorList
+              .filter((e) => e.errorClass)
+              .map((e) => ({
+                checkName: e.errorMessage,
+                errorClass: e.errorClass!,
+                objectId: e.assetId,
+                description: e.errorMessage,
+                policyBasis: policyBasisBuilder.buildQualityElement('7.2'),
+              }))
+            const { scores, totalScore } = qualityScorer.score(qualityCheckResults, qualityConfig)
+            const errorClassStats = errorClassifier.classify(
+              qualityCheckResults,
+              qualityConfig.errorClassThresholds.policyBasis,
+            )
+            const proportions = errorClassifier.calculateProportions(errorClassStats)
+            const qualityBasisList = scores.map((s) => s.policyBasis)
+            qualityBasisList.push(errorClassStats.policyBasis)
+            report.qualityReport = {
+              qualityElementScores: scores,
+              totalScore,
+              errorClassStatistics: errorClassStats,
+              errorClassProportions: proportions,
+              policyBasisSummary: policyBasisBuilder.buildSummary(qualityBasisList),
+            }
+            for (const asset of report.assetList) {
+              asset.qualityScore = scores
+            }
+            qualityReportOutput = reportGenerator.writeQualityReport(report, outputPathDir)
+          }
+        } catch (e) {
+          allWarnings.push(`QUALITY_SCORING_FAILED: ${(e as Error).message}`)
+        }
+
         const reportJsonPath = reportGenerator.writeJson(report, outputPathDir)
         const reportMdPath = reportGenerator.writeMarkdown(report, outputPathDir)
         const ledgerPath = reportGenerator.exportLedger(unifiedAssets, outputPathDir)
@@ -232,6 +290,8 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
           reportJsonPath,
           reportMdPath,
           ledgerPath,
+          qualityReportPath: qualityReportOutput,
+          qualityReport: report.qualityReport ?? null,
           warnings: allWarnings,
           policyBasisSummary: report.policyBasisSummary,
           legalDisclaimer: report.legalDisclaimer,

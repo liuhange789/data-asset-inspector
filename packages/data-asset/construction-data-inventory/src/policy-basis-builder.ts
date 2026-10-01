@@ -17,6 +17,10 @@ export class PolicyBasisBuilder {
     return `依据：${POLICY_STANDARD_NAME}变更管理要求`
   }
 
+  buildQualityElement(clause: string): string {
+    return `依据：《测绘成果质量检查与验收》（GB/T 24356-2023）第${clause}条`
+  }
+
   buildSummary(policyBasisList: string[]): string[] {
     const unique = new Set<string>()
     for (const basis of policyBasisList) {

@@ -6,6 +6,7 @@ import type {
   ClassificationEncodingEntry,
   ConfigVersionSet,
   InventoryReport,
+  QualityReport,
   ReviewOverrideRecord,
   UnifiedAssetItem,
   ValidationError,
@@ -101,6 +102,23 @@ export class InventoryReportGenerator {
     return this.ledgerExporter.exportToPath(assetList, outputPathDir)
   }
 
+  writeQualityReport(
+    report: InventoryReport,
+    outputPathDir: string,
+  ): { jsonPath: string; mdPath: string } | null {
+    if (!report.qualityReport) {
+      return null
+    }
+    if (!existsSync(outputPathDir)) {
+      mkdirSync(outputPathDir, { recursive: true })
+    }
+    const jsonPath = resolve(outputPathDir, 'quality-check-report.json')
+    writeFileSync(jsonPath, JSON.stringify(report.qualityReport, null, 2), 'utf-8')
+    const mdPath = resolve(outputPathDir, 'quality-check-report.md')
+    writeFileSync(mdPath, this.renderQualityMarkdown(report.qualityReport), 'utf-8')
+    return { jsonPath, mdPath }
+  }
+
   private renderMarkdown(report: InventoryReport): string {
     const lines: string[] = []
     lines.push(`# 建筑工程项目数据资产盘点报告`)
@@ -162,6 +180,37 @@ export class InventoryReportGenerator {
     lines.push('')
     lines.push(`## 政策依据汇总`)
     for (const basis of report.policyBasisSummary) {
+      lines.push(`- ${basis}`)
+    }
+    lines.push('')
+    return lines.join('\n')
+  }
+
+  private renderQualityMarkdown(qr: QualityReport): string {
+    const lines: string[] = []
+    lines.push(`# 建筑数据资产质量检查报告`)
+    lines.push('')
+    lines.push(`> 依据：《测绘成果质量检查与验收》（GB/T 24356-2023）`)
+    lines.push('')
+    lines.push(`## 质量元素评分`)
+    lines.push('| 质量元素 | 权重 | 得分 | 政策依据 |')
+    lines.push('|---------|------|------|---------|')
+    for (const s of qr.qualityElementScores) {
+      lines.push(`| ${s.elementName} | ${s.weight} | ${s.score} | ${s.policyBasis} |`)
+    }
+    lines.push('')
+    lines.push(`- 综合得分: ${qr.totalScore}`)
+    lines.push('')
+    lines.push(`## 错误分类统计`)
+    lines.push(`- A类错误: ${qr.errorClassStatistics.classACount} (${qr.errorClassProportions.classAProportion}%)`)
+    lines.push(`- B类错误: ${qr.errorClassStatistics.classBCount} (${qr.errorClassProportions.classBProportion}%)`)
+    lines.push(`- C类错误: ${qr.errorClassStatistics.classCCount} (${qr.errorClassProportions.classCProportion}%)`)
+    lines.push(`- D类错误: ${qr.errorClassStatistics.classDCount} (${qr.errorClassProportions.classDProportion}%)`)
+    lines.push(`- 违规总数: ${qr.errorClassStatistics.totalCount}`)
+    lines.push(`- ${qr.errorClassStatistics.policyBasis}`)
+    lines.push('')
+    lines.push(`## 政策依据汇总`)
+    for (const basis of qr.policyBasisSummary) {
       lines.push(`- ${basis}`)
     }
     lines.push('')

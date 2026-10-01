@@ -3,6 +3,7 @@ export const PLUGIN_NAME = '@liuhange/dsh-construction-data-inventory'
 export const DEFAULT_CLASSIFICATION_CONFIG_PATH = 'config/classification-config.json'
 export const DEFAULT_ENCODING_RULE_CONFIG_PATH = 'config/encoding-rule-config.json'
 export const DEFAULT_SOURCE_ADAPTER_CONFIG_PATH = 'config/source-adapter-config.json'
+export const DEFAULT_QUALITY_ELEMENT_CONFIG_PATH = 'config/quality-element-config.json'
 export const DEFAULT_OVERRIDE_LOG_PATH = 'logs/override-records.log'
 
 export const LEGAL_DISCLAIMER = '本报告由辅助盘点工具生成，不替代GB/T 51269标准的正式合规认证'
