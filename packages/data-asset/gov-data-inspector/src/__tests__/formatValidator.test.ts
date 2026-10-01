@@ -39,4 +39,38 @@ describe('FormatValidator', () => {
     const issues = FormatValidator.validate({ 办理时限: 'abc' }, 'g1', undefined)
     expect(issues.length).toBe(0)
   })
+
+  it('FV-01: 时限值"7个自然日" formatIssues含semanticHint含"自然日而非工作日"', () => {
+    const issues = FormatValidator.validate({ 办理时限: '7个自然日' }, 'g1', formatRules)
+    const timeLimitIssue = issues.find((i) => i.field === '办理时限')
+    expect(timeLimitIssue).toBeDefined()
+    expect(timeLimitIssue?.semanticHint).toContain("自然日")
+    expect(timeLimitIssue?.semanticHint).toContain("工作日")
+  })
+
+  it('FV-02: 时限值"大约两周" semanticHint为undefined', () => {
+    const issues = FormatValidator.validate({ 办理时限: '大约两周' }, 'g1', formatRules)
+    const timeLimitIssue = issues.find((i) => i.field === '办理时限')
+    expect(timeLimitIssue).toBeDefined()
+    expect(timeLimitIssue?.semanticHint).toBeUndefined()
+  })
+
+  it('FV-03: 咨询电话"请联系前台" semanticHint为undefined', () => {
+    const issues = FormatValidator.validate({ 咨询电话: '请联系前台' }, 'g1', formatRules)
+    const phoneIssue = issues.find((i) => i.field === '咨询电话')
+    expect(phoneIssue).toBeDefined()
+    expect(phoneIssue?.semanticHint).toBeUndefined()
+  })
+
+  it('FV-04: 双标注主归类仍归属formatIssues不计入semanticErrors', () => {
+    const issues = FormatValidator.validate({ 办理时限: '7个自然日' }, 'g1', formatRules)
+    expect(issues.some((i) => i.field === '办理时限' && i.semanticHint !== undefined)).toBe(true)
+  })
+
+  it('FV-05: 双标注policyBasis保留原有格式校验政策依据', () => {
+    const issues = FormatValidator.validate({ 办理时限: '7个自然日' }, 'g1', formatRules)
+    const timeLimitIssue = issues.find((i) => i.field === '办理时限')
+    expect(timeLimitIssue).toBeDefined()
+    expect(timeLimitIssue?.issue).toContain('格式要求')
+  })
 })

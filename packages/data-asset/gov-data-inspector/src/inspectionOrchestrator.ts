@@ -20,6 +20,8 @@ export interface OrchestrateConfig {
 export interface OrchestrateOptions {
   degradedMode?: boolean | undefined
   itemTypeOverride?: string | undefined
+  localTermsPath?: string | undefined
+  degradedSimilarityThreshold?: number | undefined
 }
 
 export interface OrchestrateResult extends GuideInspectionResult {
@@ -65,7 +67,7 @@ export const InspectionOrchestrator = {
         kb,
         config.itemTypeMatching,
         config.severityMapping,
-        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride },
+        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold },
       )
       allErrorDetails.push(...semanticResult.details)
       if (semanticResult.warning) {

@@ -9,6 +9,7 @@ import { StandardRuleSource } from './standardRuleSource.js'
 import { EncodingDetector } from './encodingDetector.js'
 import { DataScaleGuard } from './dataScaleGuard.js'
 import { UrlReachabilityChecker } from './urlReachabilityChecker.js'
+import { InputBoundaryChecker } from './input-boundary-checker.js'
 import type { ErrorCode, FormatRule, KnowledgeBase, StandardRule, DataSourceStatus } from './types.js'
 
 export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
@@ -117,6 +118,11 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
           if (raw.trim() === '') {
             return JSON.stringify({ error: 'GOV_DATA_INPUT_INVALID' as ErrorCode, message: '无数据，请确认输入文件内容' })
           }
+          const inputLengthThreshold = ((govConfig as Record<string, unknown>)?.inputLengthThreshold as number | undefined) ?? 50000
+          const tooLargeResult = InputBoundaryChecker.checkTooLarge(raw, inputLengthThreshold)
+          if (tooLargeResult.isTooLarge) {
+            return JSON.stringify({ error: 'GOV_DATA_INPUT_TOO_LARGE' as ErrorCode, message: '输入数据超过处理上限，请分批提交' })
+          }
           data = JSON.parse(raw)
           if (!Array.isArray(data)) data = [data]
         } catch (e) {
@@ -125,6 +131,11 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
 
         if (data.length === 0) {
           return JSON.stringify({ error: 'GOV_DATA_INPUT_INVALID' as ErrorCode, message: '无数据，请确认输入文件内容' })
+        }
+
+        const emptyCheck = InputBoundaryChecker.checkEmpty(data)
+        if (emptyCheck.isEmpty) {
+          return JSON.stringify({ error: 'GOV_DATA_NO_DATA' as ErrorCode, message: '未检测到有效数据' })
         }
 
         const maxFieldCount = (rulesConfig.govDataInspection as Record<string, unknown>)?.maxFieldCount as number | undefined
@@ -203,7 +214,12 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
             govConfigTyped,
             kb,
             standardRules,
-            { degradedMode, itemTypeOverride },
+            {
+              degradedMode,
+              itemTypeOverride,
+              localTermsPath: (govConfig as Record<string, unknown>)?.localTermsPath as string | undefined,
+              degradedSimilarityThreshold: (govConfig as Record<string, unknown>)?.degradedSimilarityThreshold as number | undefined,
+            },
           )
           result.guideInspection = orchestrateResult
           if (orchestrateResult.warnings && orchestrateResult.warnings.length > 0) {

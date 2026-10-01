@@ -202,3 +202,56 @@ describe('UnmatchedWarningBuilder', () => {
     expect(warning.message).toContain('未匹配到检测规则')
   })
 })
+describe('输入边界友好提示', () => {
+  const emptyObjectPath = resolve(tmpDir, 'empty-object.json')
+  const tooLargePath = resolve(tmpDir, 'too-large.json')
+  const atThresholdPath = resolve(tmpDir, 'at-threshold.json')
+
+  beforeAll(() => {
+    writeFileSync(emptyObjectPath, JSON.stringify({}), 'utf-8')
+    writeFileSync(tooLargePath, 'a'.repeat(100000), 'utf-8')
+    writeFileSync(atThresholdPath, JSON.stringify([{ 事项名称: '测试', 办理时限: '20个工作日' }]).padEnd(50000, ' '), 'utf-8')
+  })
+
+  it('IDX-01: 空对象{} → 返回GOV_DATA_NO_DATA', async () => {
+    const execute = await getExecute()
+    const result = JSON.parse(await execute({ dataSource: emptyObjectPath, inspectionMode: 'guide' }))
+    expect(result.error).toBe('GOV_DATA_NO_DATA')
+    expect(result.message).toContain('未检测到有效数据')
+  })
+
+  it('IDX-02: 10万字符 → 返回GOV_DATA_INPUT_TOO_LARGE', async () => {
+    const execute = await getExecute()
+    const result = JSON.parse(await execute({ dataSource: tooLargePath }))
+    expect(result.error).toBe('GOV_DATA_INPUT_TOO_LARGE')
+    expect(result.message).toContain('超过处理上限')
+    expect(result.message).toContain('分批提交')
+  })
+
+  it('IDX-03: 50000字符 → 正常处理无超长错误', async () => {
+    const execute = await getExecute()
+    const result = JSON.parse(await execute({ dataSource: atThresholdPath }))
+    expect(result.error).not.toBe('GOV_DATA_INPUT_TOO_LARGE')
+  })
+
+  it('IDX-04: 空对象不进入漏项检测不报告14个漏项', async () => {
+    const execute = await getExecute()
+    const result = JSON.parse(await execute({ dataSource: emptyObjectPath, inspectionMode: 'guide' }))
+    expect(result.guideInspection).toBeUndefined()
+  })
+
+  it('IDX-05: 空对象不报告missingFields', async () => {
+    const execute = await getExecute()
+    const result = JSON.parse(await execute({ dataSource: emptyObjectPath, inspectionMode: 'guide' }))
+    expect(result.missingFields).toBeUndefined()
+  })
+
+  it('IDX-06: 降级模式+含笔误数据 → 报告含degradedMode和保底校验结果', async () => {
+    const typoDataPath = resolve(tmpDir, 'typo-data.json')
+    writeFileSync(typoDataPath, JSON.stringify([{ 事项名称: '食品经营许可', 申请材料: '身份证复件', 办理时限: '20个工作日' }]), 'utf-8')
+    const execute = await getExecute()
+    const result = JSON.parse(await execute({ dataSource: typoDataPath, inspectionMode: 'guide' }))
+    expect(result.degradedMode).toBe(true)
+    expect(result.degradedReason).toBeDefined()
+  })
+})

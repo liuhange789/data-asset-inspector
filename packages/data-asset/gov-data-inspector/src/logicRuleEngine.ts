@@ -136,6 +136,40 @@ function ruleMaterialCondition(
   return []
 }
 
+function ruleConditionAgeProxy(
+  guide: Record<string, unknown>,
+  guideId: string,
+  rule: StandardRule,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const condition = String(guide['办理条件'] ?? '')
+  const process = String(guide['办理流程'] ?? '')
+  if (!condition || !process) return []
+  if (!rule.triggerKeywords || rule.triggerKeywords.length === 0) return []
+  const ageKeywords = rule.triggerKeywords.filter((kw) => !kw.includes('代办'))
+  const proxyKeywords = rule.triggerKeywords.filter((kw) => kw.includes('代办'))
+  if (ageKeywords.length === 0 || proxyKeywords.length === 0) return []
+  const ageHit = ageKeywords.some((kw) => condition.includes(kw))
+  const proxyHit = proxyKeywords.some((kw) => process.includes(kw))
+  if (ageHit && proxyHit) {
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '办理流程',
+          errorType: 'logical',
+          description: `办理条件要求年满18周岁，但办理流程允许监护人代办，两者存在逻辑矛盾。[条款:${rule.standardClause}]`,
+          suggestion: `建议明确：未成年人由监护人代办，或删除年龄限制`,
+          dataSource: 'standard',
+          standardClause: rule.standardClause,
+        },
+        severityMapping,
+      ),
+    ]
+  }
+  return []
+}
+
 const RULE_DISPATCH: Record<
   string,
   (guide: Record<string, unknown>, guideId: string, rule: StandardRule, severityMapping?: Record<string, string>) => ErrorDetail[]
@@ -144,6 +178,7 @@ const RULE_DISPATCH: Record<
   LOG_INSTANT_HANDLE_001: ruleInstantHandle,
   LOG_CONDITION_PROXY_001: ruleConditionProxy,
   LOG_MATERIAL_CONDITION_001: ruleMaterialCondition,
+  LOG_CONDITION_AGE_PROXY_001: ruleConditionAgeProxy,
 }
 
 export const LogicRuleEngine = {

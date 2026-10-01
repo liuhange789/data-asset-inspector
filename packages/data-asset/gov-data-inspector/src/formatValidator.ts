@@ -16,23 +16,31 @@ export const FormatValidator = {
       if (rule.pattern) {
         const regex = new RegExp(rule.pattern)
         if (!regex.test(strVal)) {
-          issues.push({
+          const issue: FormatIssue = {
             guideId,
             field: rule.field,
             issue: `字段"${rule.field}"值"${strVal}"不符合格式要求（正则: ${rule.pattern}）`,
             suggestion: rule.suggestionTemplate,
-          })
+          }
+          if (rule.field === '办理时限' && strVal.includes('自然日')) {
+            issue.semanticHint = "时限使用'自然日'而非'工作日'，可能存在语义偏差"
+          }
+          issues.push(issue)
         }
       }
       if (rule.requiredKeywords && rule.requiredKeywords.length > 0) {
         const hasAnyKeyword = rule.requiredKeywords.some((kw) => strVal.includes(kw))
         if (!hasAnyKeyword) {
-          issues.push({
+          const issue: FormatIssue = {
             guideId,
             field: rule.field,
             issue: `字段"${rule.field}"值"${strVal}"缺少必要关键词（需包含: ${rule.requiredKeywords.join('或')}）`,
             suggestion: rule.suggestionTemplate,
-          })
+          }
+          if (rule.field === '办理时限' && strVal.includes('自然日')) {
+            issue.semanticHint = "时限使用'自然日'而非'工作日'，可能存在语义偏差"
+          }
+          issues.push(issue)
         }
       }
     }

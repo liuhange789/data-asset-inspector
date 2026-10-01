@@ -869,6 +869,25 @@
           "社保证明",
           "纳税证明"
         ]
+      },
+      {
+        "ruleId": "LOG_CONDITION_AGE_PROXY_001",
+        "standardClause": "DB1405/T 085-2025 第5.6条",
+        "triggerFields": [
+          "办理条件",
+          "办理流程"
+        ],
+        "condition": "办理条件含年龄限制且办理流程含代办",
+        "threshold": null,
+        "suggestionTemplate": "建议明确：未成年人由监护人代办，或删除年龄限制",
+        "triggerKeywords": [
+          "年满18周岁",
+          "年满十八周岁",
+          "须为成年人",
+          "监护人代办",
+          "未成年人代办",
+          "法定代理人代办"
+        ]
       }
     ],
     "formatRules": [
@@ -977,7 +996,10 @@
       "semiStructured": "A02",
       "unstructured": "A03"
     },
-    "missingFieldStandardClause": "DB1405/T 085-2025 第4.1条"
+    "missingFieldStandardClause": "DB1405/T 085-2025 第4.1条",
+    "localTermsPath": "config/local-standard-terms.json",
+    "degradedSimilarityThreshold": 0.8,
+    "inputLengthThreshold": 50000
   },
   "dataCirculationAssessment": {
     "tdsAccessCriteria": {

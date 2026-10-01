@@ -1,6 +1,7 @@
 import type { ErrorDetail, KnowledgeBase, StandardTimeLimit, StandardMaterial, StandardCondition, ItemTypeMatchResult, UnmatchedWarning } from './types.js'
 import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 import { UnmatchedWarningBuilder } from './unmatchedWarningBuilder.js'
+import { LocalTermsLoader } from './local-terms-loader.js'
 
 interface ItemTypeMatchingConfig {
   [itemType: string]: { keywords: string[]; codePrefix: string }
@@ -9,6 +10,8 @@ interface ItemTypeMatchingConfig {
 interface DetectOptions {
   degradedMode?: boolean | undefined
   itemTypeOverride?: string | undefined
+  localTermsPath?: string | undefined
+  degradedSimilarityThreshold?: number | undefined
 }
 
 export interface SemanticDetectResult {
@@ -242,7 +245,43 @@ export const SemanticRuleEngine = {
 
     const hasKbData = kb.timeLimits.length > 0 || kb.materials.length > 0 || kb.conditions.length > 0
     if (!hasKbData && options?.degradedMode) {
-      return { details: [] }
+      const localTerms = LocalTermsLoader.load(options.localTermsPath)
+      if (localTerms.materials.length === 0) {
+        return { details: [] }
+      }
+      const threshold = options.degradedSimilarityThreshold ?? 0.8
+      const materialStr = String(guide['申请材料'] ?? '')
+      if (!materialStr) return { details: [] }
+      const materials = materialStr.split(/[、,，;；\n]/).map((s) => s.trim()).filter(Boolean)
+      const details: ErrorDetail[] = []
+      for (const mat of materials) {
+        let maxSim = 0
+        let closestTerm = ''
+        for (const term of localTerms.materials) {
+          const sim = levenshteinSimilarity(mat, term)
+          if (sim > maxSim) {
+            maxSim = sim
+            closestTerm = term
+          }
+        }
+        if (maxSim < threshold && maxSim > 0) {
+          details.push(
+            ErrorDetailBuilder.build(
+              {
+                guideId,
+                field: '申请材料',
+                errorType: 'semantic',
+                description: `申请材料"${mat}"与标准词表"${closestTerm}"高度相似（相似度${maxSim.toFixed(2)}），可能存在笔误。[降级模式·本地词表校验]`,
+                suggestion: `建议将"${mat}"修改为标准名称"${closestTerm}"`,
+                dataSource: 'standard',
+                standardClause: '降级模式·本地词表校验',
+              },
+              severityMapping,
+            ),
+          )
+        }
+      }
+      return { details }
     }
 
     const details: ErrorDetail[] = []

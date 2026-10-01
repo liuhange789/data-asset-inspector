@@ -32,6 +32,7 @@ export interface FormatIssue {
   field: string
   issue: string
   suggestion: string
+  semanticHint?: string
 }
 
 export interface DetectionRates {
@@ -177,4 +178,6 @@ export type ErrorCode =
   | 'GOV_DATA_ENCODING_ERROR'
   | 'GOV_DATA_SCALE_EXCEEDED'
   | 'GOV_DATA_URL_UNREACHABLE'
+  | 'GOV_DATA_NO_DATA'
+  | 'GOV_DATA_INPUT_TOO_LARGE'
   | 'UNKNOWN_ERROR'
