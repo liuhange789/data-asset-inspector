@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/gov-config-schema",
-  "version": "2026.1.0",
+  "version": "2026.1.1",
   "description": "政务数据巡检配置包 JSON Schema — 供配置包维护者离线校验配置包内容",
   "type": "module",
   "exports": {
@@ -20,7 +20,14 @@
     "config-pack",
     "json-schema",
     "schema",
-    "dsh-plugin"
+    "dsh-plugin",
+    "validation",
+    "data-inspection",
+    "gbt-47949",
+    "compliance",
+    "data-governance",
+    "typescript",
+    "npm"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/gov-config-zj",
-  "version": "2026.1.0",
+  "version": "2026.1.1",
   "description": "浙江省政务数据巡检配置包 — 含浙政办/浙委改等浙江省地方政策依据与标准词表",
   "type": "module",
   "exports": {
@@ -21,7 +21,16 @@
     "zhejiang",
     "浙江省",
     "政务服务",
-    "dsh-plugin"
+    "dsh-plugin",
+    "data-inspection",
+    "policy-basis",
+    "gbt-47949",
+    "compliance",
+    "data-governance",
+    "public-data",
+    "digital-government",
+    "typescript",
+    "npm"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }
