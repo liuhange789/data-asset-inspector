@@ -14,7 +14,7 @@
 ## 安装
 
 ```bash
-pnpm add @liuhange/dsh-research-data-provenance
+dsh plugin --profile web add @liuhange/dsh-research-data-provenance
 ```
 
 ## 工具

@@ -17,7 +17,7 @@
 ## 安装
 
 ```bash
-pnpm add @liuhange/dsh-construction-data-inventory
+dsh plugin --profile web add @liuhange/dsh-construction-data-inventory
 ```
 
 ## 工具
