@@ -17,7 +17,7 @@ export const MissingFieldDetector = {
     const details: ErrorDetail[] = []
     for (const elem of requiredElements) {
       const val = guide[elem]
-      if (val === undefined || val === null || (typeof val === 'string' && val.trim() === '')) {
+      if (val === undefined || val === null || (typeof val === 'string' && val.trim() === '') || (Array.isArray(val) && val.length === 0) || (typeof val === 'string' && ['无', '暂无', '无要求', '/', '—', '-'].includes(val.trim()))) {
         details.push(
           ErrorDetailBuilder.build(
             {

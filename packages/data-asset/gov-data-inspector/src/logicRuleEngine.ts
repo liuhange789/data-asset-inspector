@@ -144,13 +144,13 @@ function ruleConditionAgeProxy(
 ): ErrorDetail[] {
   const condition = String(guide['办理条件'] ?? '')
   const process = String(guide['办理流程'] ?? '')
-  if (!condition || !process) return []
+  if (!condition) return []
   if (!rule.triggerKeywords || rule.triggerKeywords.length === 0) return []
   const ageKeywords = rule.triggerKeywords.filter((kw) => !kw.includes('代办'))
   const proxyKeywords = rule.triggerKeywords.filter((kw) => kw.includes('代办'))
   if (ageKeywords.length === 0 || proxyKeywords.length === 0) return []
   const ageHit = ageKeywords.some((kw) => condition.includes(kw))
-  const proxyHit = proxyKeywords.some((kw) => process.includes(kw))
+  const proxyHit = proxyKeywords.some((kw) => process.includes(kw) || condition.includes(kw))
   if (ageHit && proxyHit) {
     return [
       ErrorDetailBuilder.build(

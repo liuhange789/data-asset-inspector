@@ -39,7 +39,7 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
           dataSourceStatus: { type: 'object', description: '数据源获取状态' },
           degradedMode: { type: 'boolean', description: '是否降级模式' },
           degradedReason: { type: 'string', description: '降级原因' },
-          guideInspection: { type: 'object', description: '办事指南巡检结果(含completeness/missingFields/semanticErrors/logicalErrors/errorDetails/formatIssues等)' },
+          guideInspection: { type: 'object', description: '办事指南巡检结果(含completeness/missingFields/semanticErrors/logicalErrors/errorDetails/suspectedErrors/formatIssues/detectionRates等)' },
           classification: { type: 'object', description: '公共数据资产分类结果(含dataAssetCode/categoryLevel/specificType)' },
           warnings: { type: 'array', description: '未匹配事项类型等告警信息' },
         },

@@ -13,12 +13,12 @@ function makeDetail(errorType: 'missing' | 'semantic' | 'logical'): ErrorDetail 
     description: '描述错误',
     suggestion: '建议修复',
     dataSource: 'standard',
-    standardClause: 'DB1405/T 085-2025 第X条',
+    standardClause: '国办发〔2017〕47号 第X条',
   }
 }
 
 describe('QualityMetricsCalculator', () => {
-  it('数据集含5个真实语义错误检出3个 → 语义检出率60%', () => {
+  it('3个语义错误1个指南 → 语义检出率100%（封顶）', () => {
     const rates = QualityMetricsCalculator.calculate({
       semanticErrorCount: 3,
       logicalErrorCount: 0,
@@ -28,13 +28,12 @@ describe('QualityMetricsCalculator', () => {
       requiredFieldCount: 14,
       totalFieldCount: 14,
       errorDetails: [makeDetail('semantic'), makeDetail('semantic'), makeDetail('semantic')],
-      trueSemanticErrorCount: 5,
       scoreWeights,
     })
-    expect(rates.semanticDetectionRate).toBe(60)
+    expect(rates.semanticDetectionRate).toBe(100)
   })
 
-  it('数据集含4个真实逻辑错误检出2个 → 逻辑检出率50%', () => {
+  it('2个逻辑错误1个指南 → 逻辑检出率100%（封顶）', () => {
     const rates = QualityMetricsCalculator.calculate({
       semanticErrorCount: 0,
       logicalErrorCount: 2,
@@ -44,26 +43,27 @@ describe('QualityMetricsCalculator', () => {
       requiredFieldCount: 14,
       totalFieldCount: 14,
       errorDetails: [makeDetail('logical'), makeDetail('logical')],
-      trueLogicalErrorCount: 4,
       scoreWeights,
     })
-    expect(rates.logicalDetectionRate).toBe(50)
+    expect(rates.logicalDetectionRate).toBe(100)
   })
 
-  it('真实错误数未知 → 检出率标注"未度量"', () => {
+  it('检出率含missingFieldDetectionRate和formatDetectionRate', () => {
     const rates = QualityMetricsCalculator.calculate({
       semanticErrorCount: 3,
       logicalErrorCount: 0,
-      missingFieldCount: 0,
-      formatIssueCount: 0,
+      missingFieldCount: 2,
+      formatIssueCount: 3,
       totalGuides: 1,
       requiredFieldCount: 14,
       totalFieldCount: 14,
       errorDetails: [],
       scoreWeights,
     })
-    expect(rates.semanticDetectionRate).toBe('未度量')
-    expect(rates.logicalDetectionRate).toBe('未度量')
+    expect(rates.semanticDetectionRate).toBe(100)
+    expect(rates.logicalDetectionRate).toBe(0)
+    expect(rates.missingFieldDetectionRate).toBe(14)
+    expect(rates.formatDetectionRate).toBe(21)
   })
 
   it('完整性95%+准确性40%+可追溯性90%按权重计算 → 综合得分≥70', () => {

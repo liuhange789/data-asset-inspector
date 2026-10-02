@@ -36,8 +36,10 @@ export interface FormatIssue {
 }
 
 export interface DetectionRates {
-  semanticDetectionRate: number | '未度量'
-  logicalDetectionRate: number | '未度量'
+  semanticDetectionRate: number
+  logicalDetectionRate: number
+  missingFieldDetectionRate: number
+  formatDetectionRate: number
   falsePositiveRate: number
   completenessScore: number
   accuracyScore: number
@@ -51,6 +53,7 @@ export interface GuideInspectionResult {
   semanticErrors: number
   logicalErrors: number
   errorDetails: ErrorDetail[]
+  suspectedErrors: ErrorDetail[]
   formatIssues: FormatIssue[]
   serviceConvenience: number
   totalGuidesChecked: number

@@ -42,6 +42,7 @@ export const InspectionOrchestrator = {
     options?: OrchestrateOptions,
   ): OrchestrateResult {
     const allErrorDetails: ErrorDetail[] = []
+    const allSuspectedErrors: ErrorDetail[] = []
     const allFormatIssues: FormatIssue[] = []
     const allWarnings: UnmatchedWarning[] = []
     let completeCount = 0
@@ -78,6 +79,10 @@ export const InspectionOrchestrator = {
         { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold, inlineLocalTerms: options?.inlineLocalTerms },
       )
       allErrorDetails.push(...semanticResult.details)
+      const suspected = semanticResult.details.filter(
+        (d) => d.standardClause?.includes('降级模式') && d.description.includes('相似度'),
+      )
+      allSuspectedErrors.push(...suspected)
       if (semanticResult.warning) {
         allWarnings.push(semanticResult.warning)
       }
@@ -129,6 +134,7 @@ export const InspectionOrchestrator = {
       semanticErrors: counts.semantic,
       logicalErrors: counts.logical,
       errorDetails: allErrorDetails,
+      suspectedErrors: allSuspectedErrors,
       formatIssues: allFormatIssues,
       serviceConvenience: Math.round(serviceConvenience * 100) / 100,
       totalGuidesChecked: data.length,

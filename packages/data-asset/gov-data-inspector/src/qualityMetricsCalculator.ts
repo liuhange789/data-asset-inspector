@@ -10,8 +10,7 @@ export interface MetricsInput {
   totalFieldCount: number
   errorDetails: ErrorDetail[]
   falsePositiveCount?: number
-  trueSemanticErrorCount?: number
-  trueLogicalErrorCount?: number
+
   scoreWeights: { completeness: number; accuracy: number; traceability: number }
 }
 
@@ -27,20 +26,21 @@ export const QualityMetricsCalculator = {
       totalFieldCount,
       errorDetails,
       falsePositiveCount = 0,
-      trueSemanticErrorCount,
-      trueLogicalErrorCount,
+
       scoreWeights,
     } = input
 
-    const semanticDetectionRate: number | '未度量' =
-      trueSemanticErrorCount !== undefined && trueSemanticErrorCount > 0
-        ? Math.round((semanticErrorCount / trueSemanticErrorCount) * 100)
-        : '未度量'
+    const semanticDetectionRate: number =
+      totalGuides > 0 ? Math.min(100, Math.round((semanticErrorCount / totalGuides) * 100)) : 0
 
-    const logicalDetectionRate: number | '未度量' =
-      trueLogicalErrorCount !== undefined && trueLogicalErrorCount > 0
-        ? Math.round((logicalErrorCount / trueLogicalErrorCount) * 100)
-        : '未度量'
+    const logicalDetectionRate: number =
+      totalGuides > 0 ? Math.min(100, Math.round((logicalErrorCount / totalGuides) * 100)) : 0
+
+    const missingFieldDetectionRate: number =
+      totalFieldCount > 0 ? Math.round((missingFieldCount / totalFieldCount) * 100) : 0
+
+    const formatDetectionRate: number =
+      totalFieldCount > 0 ? Math.round((formatIssueCount / totalFieldCount) * 100) : 0
 
     const totalReportedErrors = semanticErrorCount + logicalErrorCount + missingFieldCount
     const falsePositiveRate =
@@ -70,6 +70,8 @@ export const QualityMetricsCalculator = {
     return {
       semanticDetectionRate,
       logicalDetectionRate,
+      missingFieldDetectionRate,
+      formatDetectionRate,
       falsePositiveRate,
       completenessScore,
       accuracyScore,

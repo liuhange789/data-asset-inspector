@@ -280,7 +280,7 @@ export const SemanticRuleEngine = {
                 severityMapping,
               ),
             )
-          } else if (maxSim < threshold && maxSim > 0) {
+          } else if (maxSim < threshold && maxSim > 0.3) {
             details.push(
               ErrorDetailBuilder.build(
                 {
@@ -326,7 +326,7 @@ export const SemanticRuleEngine = {
                 severityMapping,
               ),
             )
-          } else if (maxSim < threshold && maxSim > 0) {
+          } else if (maxSim < threshold && maxSim > 0.3) {
             details.push(
               ErrorDetailBuilder.build(
                 {

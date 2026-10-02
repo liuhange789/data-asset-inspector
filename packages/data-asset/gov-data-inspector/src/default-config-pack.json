@@ -14,9 +14,9 @@
       "coreRequirement": "明确初始、变更和注销登记流程"
     },
     {
-      "name": "行政许可事项办事指南编写规范",
-      "docNumber": "国办发〔2015〕46号",
-      "coreRequirement": "规范行政许可事项办事指南的编写要求，明确事项名称、实施主体、办理条件、申请材料、办理流程、办理时限等核心要素的编写标准与准确完整要求"
+      "name": "进一步深化互联网+政务服务推进一网一门一次改革实施方案",
+      "docNumber": "国办发〔2018〕45号",
+      "coreRequirement": "规范政务服务事项办理流程、办理条件、申请材料等核心要素，推进一网通办，明确办事指南信息完整准确要求"
     },
     {
       "name": "政府网站发展指引",
@@ -687,7 +687,7 @@
       "condition": "流程含'现场勘查'且时限<5工作日",
       "threshold": 5,
       "suggestionTemplate": "办理流程含\"现场勘查\"环节，办理时限应不少于5个工作日，当前时限过短",
-      "standardClause": "国办发〔2015〕46号 第5.2条",
+      "standardClause": "国办发〔2017〕47号 第5.2条",
       "triggerKeywords": [
         "现场勘查"
       ]
@@ -701,7 +701,7 @@
       "condition": "流程含'当场办理'且时限为长时限(工作日单位且数值>1)",
       "threshold": 1,
       "suggestionTemplate": "办理流程含\"当场办理\"环节，办理时限应为当场办结或1个工作日内，当前时限过长",
-      "standardClause": "国办发〔2015〕46号 第5.3条",
+      "standardClause": "国办发〔2017〕47号 第5.3条",
       "triggerKeywords": [
         "当场办理"
       ]
@@ -714,7 +714,7 @@
       ],
       "condition": "条件要求'本人到场'但流程允许代办",
       "suggestionTemplate": "办理条件要求\"本人到场\"但办理流程允许代办，两者存在矛盾，建议统一",
-      "standardClause": "国办发〔2015〕46号 第5.4条",
+      "standardClause": "国办发〔2017〕47号 第5.4条",
       "triggerKeywords": [
         "本人到场",
         "本人办理",
@@ -730,7 +730,7 @@
       ],
       "condition": "条件要求的证明材料未列入材料清单",
       "suggestionTemplate": "办理条件要求的证明材料\"{missingMaterial}\"未列入申请材料清单，建议补充",
-      "standardClause": "国办发〔2015〕46号 第5.5条",
+      "standardClause": "国办发〔2017〕47号 第5.5条",
       "triggerKeywords": [
         "收入证明",
         "产权证明",
@@ -743,12 +743,11 @@
     },
     {
       "ruleId": "LOG_CONDITION_AGE_PROXY_001",
-      "standardClause": "国办发〔2015〕46号 第5.6条",
+      "standardClause": "国办发〔2017〕47号 第5.6条",
       "triggerFields": [
-        "办理条件",
-        "办理流程"
+        "办理条件"
       ],
-      "condition": "办理条件含年龄限制且办理流程含代办",
+      "condition": "办理条件含年龄限制且含代办要求",
       "threshold": null,
       "suggestionTemplate": "建议明确：未成年人由监护人代办，或删除年龄限制",
       "triggerKeywords": [
@@ -848,7 +847,7 @@
     "materialConcise": 0.3
   },
   "materialConciseThreshold": 5,
-  "missingFieldStandardClause": "国办发〔2015〕46号 第4.1条",
-  "degradedSimilarityThreshold": 0.8,
+  "missingFieldStandardClause": "国办发〔2017〕47号 第4.1条",
+  "degradedSimilarityThreshold": 0.6,
   "inputLengthThreshold": 50000
 }
