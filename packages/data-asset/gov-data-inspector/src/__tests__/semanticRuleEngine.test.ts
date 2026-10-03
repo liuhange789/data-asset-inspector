@@ -181,7 +181,7 @@ describe('SemanticRuleEngine', () => {
   it('SEM-01: 条件含年龄限制+代办表述 → 检出条件流程矛盾', () => {
     const guide = { 事项名称: '食品经营许可', 办理条件: '申请人须年满18周岁', 办理流程: '可由监护人代办' }
     const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching, undefined, { semanticConflictRules: conflictRules })
-    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('语义矛盾'))).toBe(true)
+    expect(result.details.some((d) => d.errorType === 'logical' && d.description.includes('矛盾'))).toBe(true)
   })
 
   it('SEM-02: 条件含年龄限制但无代办表述 → 不报告条件流程矛盾', () => {
@@ -223,6 +223,6 @@ describe('SemanticRuleEngine', () => {
   it('SEM-08: 降级模式+空KB+矛盾检测仍生效', () => {
     const guide = { 事项名称: '食品经营许可', 办理条件: '申请人须年满18周岁', 办理流程: '可由监护人代办' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, semanticConflictRules: conflictRules })
-    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('语义矛盾'))).toBe(true)
+    expect(result.details.some((d) => d.errorType === 'logical' && d.description.includes('矛盾'))).toBe(true)
   })
 })

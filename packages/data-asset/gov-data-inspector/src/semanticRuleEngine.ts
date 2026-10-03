@@ -238,9 +238,9 @@ function checkConditionProcessConflict(
       ErrorDetailBuilder.build(
         {
           guideId,
-          field: '办理流程',
-          errorType: 'semantic',
-          description: `办理条件含年龄限制，但指南中存在代办表述，存在语义矛盾。[语义矛盾检测]`,
+          field: '办理条件',
+          errorType: 'logical',
+          description: `办理条件含年龄限制，但指南中存在代办表述，存在逻辑矛盾。[语义矛盾检测]`,
           suggestion: `建议明确：未成年人由监护人代办，或删除年龄限制`,
           dataSource: 'standard',
           standardClause: '语义矛盾检测·条件流程冲突',
@@ -342,11 +342,6 @@ export const SemanticRuleEngine = {
     const matchResult = matchItemType(guide, itemTypeMatching, options)
     const itemType = matchResult.itemType
 
-    if (!itemType) {
-      const warning = UnmatchedWarningBuilder.build(guideId)
-      return { details: [], unmatched: true, warning }
-    }
-
     const conflictDetails: ErrorDetail[] = []
     if (options?.semanticConflictRules) {
       conflictDetails.push(...checkConditionProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
@@ -354,8 +349,14 @@ export const SemanticRuleEngine = {
       conflictDetails.push(...checkTimeProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
     }
 
+    if (!itemType) {
+      const warning = UnmatchedWarningBuilder.build(guideId)
+      return { details: conflictDetails, unmatched: true, warning }
+    }
+
     if (!kb || !kb.timeLimits || !kb.materials || !kb.conditions) {
       if (options?.degradedMode) {
+        if (conflictDetails.length > 0) return { details: conflictDetails }
         return { details: conflictDetails }
       }
       throw new Error('GOV_DATA_KB_MISSING: 标准知识库不可用，语义错误检测已中止')
@@ -363,11 +364,12 @@ export const SemanticRuleEngine = {
 
     const hasKbData = kb.timeLimits.length > 0 || kb.materials.length > 0 || kb.conditions.length > 0
     if (!hasKbData && options?.degradedMode) {
+      if (conflictDetails.length > 0) return { details: conflictDetails }
       const localTerms = LocalTermsLoader.load(options.localTermsPath, options.inlineLocalTerms)
       if (localTerms.materials.length === 0 && localTerms.conditions.length === 0) {
         return { details: conflictDetails }
       }
-      const threshold = options.degradedSimilarityThreshold ?? 0.8
+      const threshold = options.degradedSimilarityThreshold ?? 0.85
       const details: ErrorDetail[] = []
       const materialStr = String(guide['申请材料'] ?? '')
       if (materialStr && localTerms.materials.length > 0) {
