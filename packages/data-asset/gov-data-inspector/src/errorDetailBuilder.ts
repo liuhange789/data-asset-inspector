@@ -12,6 +12,7 @@ export interface ErrorDetailBuilderInput {
   suggestion: string
   dataSource?: DataSource | undefined
   standardClause?: string | undefined
+  policyBasis?: string | undefined
 }
 
 function resolveSeverity(
@@ -49,6 +50,7 @@ export const ErrorDetailBuilder = {
     }
     if (input.dataSource) result.dataSource = input.dataSource
     if (input.standardClause) result.standardClause = input.standardClause
+    if (input.policyBasis) result.policyBasis = input.policyBasis
     return result
   },
 

@@ -170,6 +170,109 @@ function ruleConditionAgeProxy(
   return []
 }
 
+function ruleProcessCompleteness(
+  guide: Record<string, unknown>,
+  guideId: string,
+  rule: StandardRule,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const process = String(guide['办理流程'] ?? '')
+  if (!process) return []
+  const requiredSteps = rule.triggerKeywords
+  const missingSteps = requiredSteps.filter((kw) => !process.includes(kw))
+  if (missingSteps.length > 0) {
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '办理流程',
+          errorType: 'logical',
+          description: `办理流程缺失环节：${missingSteps.join('、')}，流程应包含受理/审核/审批/办结/送达五个环节。[条款:${rule.standardClause}]`,
+          suggestion: rule.suggestionTemplate,
+          dataSource: 'standard',
+          standardClause: rule.standardClause,
+        },
+        severityMapping,
+      ),
+    ]
+  }
+  return []
+}
+
+function ruleSiteVisitCount(
+  guide: Record<string, unknown>,
+  guideId: string,
+  rule: StandardRule,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const val = guide['到办事现场次数']
+  if (val === undefined || val === null) return []
+  const strVal = String(val).trim()
+  if (!strVal) return []
+  const num = parseInt(strVal, 10)
+  if (isNaN(num) || num < 0 || !/^\d+$/.test(strVal)) {
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '到办事现场次数',
+          errorType: 'logical',
+          description: `到办事现场次数值"${strVal}"不规范，必须为非负整数。[条款:${rule.standardClause}]`,
+          suggestion: rule.suggestionTemplate,
+          dataSource: 'standard',
+          standardClause: rule.standardClause,
+        },
+        severityMapping,
+      ),
+    ]
+  }
+  return []
+}
+
+function ruleSampleDownload(
+  guide: Record<string, unknown>,
+  guideId: string,
+  rule: StandardRule,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const details: ErrorDetail[] = []
+  const emptyForm = guide['空表下载']
+  const sampleForm = guide['样表下载']
+  if (emptyForm === undefined || emptyForm === null || String(emptyForm).trim() === '') {
+    details.push(
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '空表下载',
+          errorType: 'logical',
+          description: `事项未提供空表下载服务。[条款:${rule.standardClause}]`,
+          suggestion: rule.suggestionTemplate,
+          dataSource: 'standard',
+          standardClause: rule.standardClause,
+        },
+        severityMapping,
+      ),
+    )
+  }
+  if (sampleForm === undefined || sampleForm === null || String(sampleForm).trim() === '') {
+    details.push(
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '样表下载',
+          errorType: 'logical',
+          description: `事项未提供样表下载服务。[条款:${rule.standardClause}]`,
+          suggestion: rule.suggestionTemplate,
+          dataSource: 'standard',
+          standardClause: rule.standardClause,
+        },
+        severityMapping,
+      ),
+    )
+  }
+  return details
+}
+
 const RULE_DISPATCH: Record<
   string,
   (guide: Record<string, unknown>, guideId: string, rule: StandardRule, severityMapping?: Record<string, string>) => ErrorDetail[]
@@ -179,6 +282,9 @@ const RULE_DISPATCH: Record<
   LOG_CONDITION_PROXY_001: ruleConditionProxy,
   LOG_MATERIAL_CONDITION_001: ruleMaterialCondition,
   LOG_CONDITION_AGE_PROXY_001: ruleConditionAgeProxy,
+  LOG_PROCESS_COMPLETENESS_001: ruleProcessCompleteness,
+  LOG_SITE_VISIT_COUNT_001: ruleSiteVisitCount,
+  LOG_SAMPLE_DOWNLOAD_001: ruleSampleDownload,
 }
 
 export const LogicRuleEngine = {

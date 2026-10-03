@@ -1,9 +1,11 @@
 import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
+import { existsSync } from 'node:fs'
+import { loadJsonConfig } from '@liuhange/dsh-data-asset-shared'
 import type { ConfigPack } from './configPack.js'
 import { normalizeConfigPack } from './configPack.js'
 import { ConfigPackSchemaValidator } from './configPackSchemaValidator.js'
-import type { ConfigPackWarning, LoadSource } from './types.js'
+import type { ConfigPackWarning, LoadSource, ReferenceSystem } from './types.js'
 import defaultConfigPack from './default-config-pack.json' with { type: 'json' }
 
 export interface ConfigPackLoadResult {
@@ -108,17 +110,90 @@ function tryLoadDefault(warnings: ConfigPackWarning[]): ConfigPack {
   }
 }
 
+const FORBIDDEN_STANDARDS = ['DB1405/T 085-2025', 'GB/T 47949-2026', 'GB/T 47950-2026']
+const DEFAULT_REF_SYSTEM_PATH = 'config/reference-system.json'
+const SHARED_REF_SYSTEM_PATH = '@liuhange/dsh-data-asset-shared/config/reference-system.json'
+
+export interface ReferenceSystemLoadResult {
+  referenceSystem: ReferenceSystem | null
+  warnings: ConfigPackWarning[]
+}
+
+export const ReferenceSystemLoader = {
+  load(): ReferenceSystemLoadResult {
+    const warnings: ConfigPackWarning[] = []
+    const envPath = process.env.REFERENCE_SYSTEM_PATH
+    let raw: unknown
+
+    try {
+      if (envPath) {
+        if (!existsSync(envPath)) {
+          return { referenceSystem: null, warnings: [{ type: 'CONFIG_PACK_WARNING', code: 'REFERENCE_SYSTEM_MISSING', message: '四层参照系配置缺失，已降级至 v3.3.4 模式' }] }
+        }
+        raw = JSON.parse(readFileSync(envPath, 'utf-8'))
+      } else {
+        raw = loadJsonConfig('REFERENCE_SYSTEM_PATH', DEFAULT_REF_SYSTEM_PATH, SHARED_REF_SYSTEM_PATH)
+      }
+    } catch {
+      return { referenceSystem: null, warnings: [{ type: 'CONFIG_PACK_WARNING', code: 'REFERENCE_SYSTEM_MISSING', message: '四层参照系配置缺失，已降级至 v3.3.4 模式' }] }
+    }
+
+    if (typeof raw !== 'object' || raw === null) {
+      throw new Error('REFERENCE_SYSTEM_INVALID: 参照系配置格式校验失败')
+    }
+
+    const obj = raw as Record<string, unknown>
+    const layer1 = obj.layer1_govOrders
+    const layer2 = obj.layer2_nationalStandards
+    const layer3 = obj.layer3_provincialStandards
+    const layer4 = obj.layer4_evaluationIndicators
+
+    if (!Array.isArray(layer1) || !Array.isArray(layer2) || !Array.isArray(layer3) || typeof layer4 !== 'object' || layer4 === null) {
+      throw new Error('REFERENCE_SYSTEM_INVALID: 参照系配置格式校验失败')
+    }
+    if (layer1.length === 0 || layer2.length === 0 || layer3.length === 0) {
+      throw new Error('REFERENCE_SYSTEM_INVALID: 参照系配置格式校验失败')
+    }
+
+    if (layer1.length !== 22) {
+      warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'REFERENCE_ELEMENT_COUNT_MISMATCH', message: `layer1_govOrders 要素数量为 ${layer1.length}，期望 22` })
+    }
+    if (layer3.length !== 36) {
+      warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'REFERENCE_ELEMENT_COUNT_MISMATCH', message: `layer3_provincialStandards 要素数量为 ${layer3.length}，期望 36` })
+    }
+
+    const allSourceStrings = JSON.stringify(raw)
+    for (const forbidden of FORBIDDEN_STANDARDS) {
+      if (allSourceStrings.includes(forbidden)) {
+        throw new Error(`REFERENCE_SYSTEM_INVALID: 参照系配置包含禁止标准 ${forbidden}`)
+      }
+    }
+
+    return { referenceSystem: raw as ReferenceSystem, warnings }
+  },
+}
+
 export const ConfigPackLoader = {
   load(): ConfigPackLoadResult {
     const warnings: ConfigPackWarning[] = []
 
     const fromFile = tryLoadFromFilePath(warnings)
     if (fromFile) {
+      const refResult = ReferenceSystemLoader.load()
+      warnings.push(...refResult.warnings)
+      if (refResult.referenceSystem) {
+        fromFile.referenceSystem = refResult.referenceSystem
+      }
       return { configPack: fromFile, loadSource: 'file', warnings }
     }
 
     const fromNpm = tryLoadFromNpmPackage(warnings)
     if (fromNpm) {
+      const refResult = ReferenceSystemLoader.load()
+      warnings.push(...refResult.warnings)
+      if (refResult.referenceSystem) {
+        fromNpm.referenceSystem = refResult.referenceSystem
+      }
       return { configPack: fromNpm, loadSource: 'npm', warnings }
     }
 
@@ -131,6 +206,11 @@ export const ConfigPackLoader = {
     }
 
     const fromDefault = tryLoadDefault(warnings)
+    const refResult = ReferenceSystemLoader.load()
+    warnings.push(...refResult.warnings)
+    if (refResult.referenceSystem) {
+      fromDefault.referenceSystem = refResult.referenceSystem
+    }
     return { configPack: fromDefault, loadSource: 'default', warnings }
   },
 }

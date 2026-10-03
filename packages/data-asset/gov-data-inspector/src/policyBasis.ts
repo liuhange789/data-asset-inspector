@@ -1,6 +1,7 @@
 import { loadJsonConfig } from '@liuhange/dsh-data-asset-shared'
+import type { ErrorType, ReferenceSystem } from './types.js'
 
-interface PolicyDoc {
+export interface PolicyDoc {
   name: string
   docNumber: string
   coreRequirement: string
@@ -41,4 +42,47 @@ export function resolvePolicyBasis(
   } catch {
     return ['依据：政策依据配置加载失败']
   }
+}
+const ERROR_TYPE_DOC_MAP: Record<ErrorType, string> = {
+  missing: '国办发〔2017〕47号',
+  semantic: 'GB/T 36114-2018',
+  logical: '国办发〔2018〕45号',
+}
+
+function extractClauseNumber(standardClause: string): string {
+  const match = standardClause.match(/第[\d.]+[条节项]/)
+  return match ? match[0] : '待补充条'
+}
+
+export function resolveErrorDetailPolicyBasis(
+  errorType: ErrorType,
+  standardClause: string,
+  referenceSystem: ReferenceSystem | null,
+  policyReferences: PolicyDoc[],
+): string {
+  const docNumber = ERROR_TYPE_DOC_MAP[errorType]
+  const doc = policyReferences.find((d) => d.docNumber === docNumber)
+
+  if (!doc) {
+    return `依据：政策依据未配置（stage=${errorType}）`
+  }
+
+  const clauseNum = extractClauseNumber(standardClause)
+
+  if (referenceSystem) {
+    if (errorType === 'missing' || errorType === 'logical') {
+      const govOrder = referenceSystem.layer1_govOrders.find((e) => e.docNumber === docNumber)
+      if (govOrder) {
+        return `依据：《${doc.name}》（${docNumber}）${govOrder.clause}`
+      }
+    }
+    if (errorType === 'semantic') {
+      const std = referenceSystem.layer2_nationalStandards.find((s) => s.standardNumber === docNumber)
+      if (std && std.elements.length > 0) {
+        return `依据：《${std.standardName}》（${docNumber}）${std.elements[0]!.clause}`
+      }
+    }
+  }
+
+  return `依据：《${doc.name}》（${docNumber}）${clauseNum}`
 }

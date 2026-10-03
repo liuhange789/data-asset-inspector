@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-gov-data-inspector",
   "description": "Government data inspection plugin per GB/T 47949-2026 & GB/T 47950-2026: service guide quality check, public data asset classification, semantic & logic detection, compliance audit, data governance for digital government 一网通办",
-  "version": "3.3.4",
+  "version": "3.4.0",
   "publishConfig": {
     "access": "public"
   },

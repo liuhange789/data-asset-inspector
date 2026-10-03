@@ -25,6 +25,51 @@ export interface ErrorDetail {
   suggestion: string
   dataSource?: DataSource
   standardClause?: string
+  policyBasis?: string
+}
+
+export interface GovOrderElement {
+  elementName: string
+  sourceDoc: string
+  docNumber: string
+  clause: string
+}
+
+export interface StandardElement {
+  elementName: string
+  clause: string
+}
+
+export interface NationalStandard {
+  standardNumber: string
+  standardName: string
+  elements: StandardElement[]
+}
+
+export interface ProvincialElement {
+  elementName: string
+  nationalElementMapping: string
+}
+
+export interface EvaluationIndicator {
+  level: 'L1' | 'L2' | 'L3'
+  indicatorCode: string
+  description: string
+}
+
+export interface EvaluationIndicators {
+  E1: EvaluationIndicator[]
+  E2: EvaluationIndicator[]
+  E3: EvaluationIndicator[]
+  E4: EvaluationIndicator[]
+}
+
+export interface ReferenceSystem {
+  configVersion: string
+  layer1_govOrders: GovOrderElement[]
+  layer2_nationalStandards: NationalStandard[]
+  layer3_provincialStandards: ProvincialElement[]
+  layer4_evaluationIndicators: EvaluationIndicators
 }
 
 export interface FormatIssue {
@@ -217,6 +262,9 @@ export type ErrorCode =
   | 'GOV_CONFIG_PACK_FALLBACK'
   | 'GOV_CONFIG_RULE_EXEC_ERROR'
   | 'GOV_LOCAL_TERMS_EMPTY'
+  | 'REFERENCE_SYSTEM_MISSING'
+  | 'REFERENCE_SYSTEM_INVALID'
+  | 'REFERENCE_ELEMENT_COUNT_MISMATCH'
   | 'UNKNOWN_ERROR'
 export interface SemanticConflictRules {
   ageKeywords: string[]

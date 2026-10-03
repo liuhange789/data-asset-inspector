@@ -7,9 +7,9 @@ import { QualityMetricsCalculator } from './qualityMetricsCalculator.js'
 import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 import { mapGuideToStandard } from './mapping-layer.js'
 
-function deduplicateCrossEngine(errors: ErrorDetail[]): ErrorDetail[] {
-  const logicalFields = new Set(errors.filter((e) => e.errorType === 'logical').map((e) => e.field))
-  return errors.filter((e) => !(e.errorType === 'semantic' && logicalFields.has(e.field)))
+export function deduplicateCrossEngine(errors: ErrorDetail[]): ErrorDetail[] {
+  const logicalFieldKeys = new Set(errors.filter((e) => e.errorType === 'logical').map((e) => `${e.guideId}:${e.field}`))
+  return errors.filter((e) => !(e.errorType === 'semantic' && logicalFieldKeys.has(`${e.guideId}:${e.field}`)))
 }
 
 export interface OrchestrateConfig {
@@ -35,6 +35,7 @@ export interface OrchestrateOptions {
   localTermsPath?: string | undefined
   degradedSimilarityThreshold?: number | undefined
   inlineLocalTerms?: { materials: string[]; conditions: string[] } | undefined
+  referenceSystem?: import('./types.js').ReferenceSystem | null
 }
 
 export interface OrchestrateResult extends GuideInspectionResult {
@@ -105,8 +106,7 @@ export const InspectionOrchestrator = {
         config.severityMapping,
       )
 
-      const dedupedDetails = deduplicateCrossEngine([...semanticResult.details, ...logicalDetails])
-      allErrorDetails.push(...dedupedDetails)
+      allErrorDetails.push(...semanticResult.details, ...logicalDetails)
 
       const formatIssues = FormatValidator.validate(standardGuide, guideId, config.formatRules)
       allFormatIssues.push(...formatIssues)

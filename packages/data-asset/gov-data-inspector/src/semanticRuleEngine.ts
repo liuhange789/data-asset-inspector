@@ -535,14 +535,13 @@ export const SemanticRuleEngine = {
     const matchResult = matchItemType(guide, itemTypeMatching, options)
     const itemType = matchResult.itemType
 
-    const conflictDetails: ErrorDetail[] = []
-    if (options?.semanticConflictRules) {
-      conflictDetails.push(...checkConditionProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
-      conflictDetails.push(...checkMaterialConditionConflict(guide, guideId, options.semanticConflictRules, severityMapping))
-      conflictDetails.push(...checkTimeProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
-    }
-
     if (!itemType) {
+      const conflictDetails: ErrorDetail[] = []
+      if (options?.semanticConflictRules) {
+        conflictDetails.push(...checkConditionProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+        conflictDetails.push(...checkMaterialConditionConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+        conflictDetails.push(...checkTimeProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+      }
       const warning = UnmatchedWarningBuilder.build(guideId)
       return { details: conflictDetails, unmatched: true, warning }
     }
@@ -551,6 +550,12 @@ export const SemanticRuleEngine = {
     const hasKbData = !isKbMissing && (kb.timeLimits.length > 0 || kb.materials.length > 0 || kb.conditions.length > 0)
 
     if ((isKbMissing || !hasKbData) && options?.degradedMode) {
+      const conflictDetails: ErrorDetail[] = []
+      if (options?.semanticConflictRules) {
+        conflictDetails.push(...checkConditionProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+        conflictDetails.push(...checkMaterialConditionConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+        conflictDetails.push(...checkTimeProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+      }
       const structuralDetails: ErrorDetail[] = []
       structuralDetails.push(...checkConditionCompleteness(guide, guideId, severityMapping))
       structuralDetails.push(...checkMaterialCompleteness(guide, guideId, severityMapping))
@@ -563,6 +568,12 @@ export const SemanticRuleEngine = {
       throw new Error('GOV_DATA_KB_MISSING: 标准知识库不可用，语义错误检测已中止')
     }
 
+    const conflictDetails: ErrorDetail[] = []
+    if (options?.semanticConflictRules) {
+      conflictDetails.push(...checkConditionProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+      conflictDetails.push(...checkMaterialConditionConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+      conflictDetails.push(...checkTimeProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+    }
     const details: ErrorDetail[] = []
     details.push(...detectTimeLimit(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectMaterials(guide, guideId, itemType, kb, severityMapping))

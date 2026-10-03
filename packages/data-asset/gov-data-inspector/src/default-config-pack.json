@@ -43,7 +43,13 @@
     "办理时间",
     "网上办理深度",
     "表格下载",
-    "结果送达方式"
+    "结果送达方式",
+    "结果样本",
+    "通办范围",
+    "预约办理",
+    "网上支付",
+    "物流快递",
+    "中介机构或特殊环节"
   ],
   "formatRules": [
     {
@@ -91,6 +97,31 @@
         "周一至周五"
       ],
       "suggestionTemplate": "办理时间应注明工作日及上下午时段，如\"周一至周五 上午9:00-12:00 下午13:30-17:00\""
+    },
+    {
+      "field": "申请材料",
+      "pattern": "^(?!.*其他材料)(?!.*相关材料).*$",
+      "suggestionTemplate": "材料名称应明确具体，不应使用兜底性表述"
+    },
+    {
+      "field": "申请材料来源",
+      "pattern": "^.+$",
+      "suggestionTemplate": "每项申请材料的来源/出具单位必须非空"
+    },
+    {
+      "field": "纸质材料份数",
+      "pattern": "^[1-9]\\d*$",
+      "suggestionTemplate": "纸质材料份数必须为正整数"
+    },
+    {
+      "field": "联系电话",
+      "pattern": "^\\d{3,4}-\\d{7,8}$",
+      "suggestionTemplate": "联系电话应使用'区号-号码'格式，如 010-12345678"
+    },
+    {
+      "field": "办理时间",
+      "pattern": "【星期[一二三四五六日天].*】",
+      "suggestionTemplate": "办理时间应使用'【星期X至星期Y：上午HH:MM-HH:MM】'格式"
     }
   ],
   "localStandardTerms": {
@@ -756,6 +787,46 @@
         "未成年人代办",
         "法定代理人代办"
       ]
+    },
+    {
+      "ruleId": "LOG_PROCESS_COMPLETENESS_001",
+      "triggerFields": [
+        "办理流程"
+      ],
+      "condition": "办理流程应包含受理/审核/审批/办结/送达五个环节",
+      "threshold": null,
+      "suggestionTemplate": "办理流程应包含受理/审核/审批/办结/送达五个环节",
+      "standardClause": "国办发〔2018〕45号 流程环节完备性要求",
+      "triggerKeywords": [
+        "受理",
+        "审核",
+        "审批",
+        "办结",
+        "送达"
+      ]
+    },
+    {
+      "ruleId": "LOG_SITE_VISIT_COUNT_001",
+      "triggerFields": [
+        "到办事现场次数"
+      ],
+      "condition": "到办事现场次数必须为非负整数",
+      "threshold": null,
+      "suggestionTemplate": "到办事现场次数必须为非负整数",
+      "standardClause": "国办发〔2018〕45号 到办事现场次数要求",
+      "triggerKeywords": []
+    },
+    {
+      "ruleId": "LOG_SAMPLE_DOWNLOAD_001",
+      "triggerFields": [
+        "空表下载",
+        "样表下载"
+      ],
+      "condition": "事项应提供空表下载与样表下载服务",
+      "threshold": null,
+      "suggestionTemplate": "事项应提供空表下载与样表下载服务",
+      "standardClause": "国办发〔2017〕47号 样表下载服务要求",
+      "triggerKeywords": []
     }
   ],
   "scoringWeights": {

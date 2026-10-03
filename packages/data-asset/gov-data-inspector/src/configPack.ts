@@ -1,4 +1,4 @@
-import type { FormatRule, StandardRule } from './types.js'
+import type { FormatRule, StandardRule, ReferenceSystem } from './types.js'
 
 export interface PolicyDocument {
   name: string
@@ -64,6 +64,7 @@ export interface ConfigPack {
   inputLengthThreshold?: number
   fieldMapping?: Record<string, string>
   semanticConflictRules?: import('./types.js').SemanticConflictRules
+  referenceSystem?: ReferenceSystem
 }
 
 const REQUIRED_FIELDS: (keyof ConfigPack)[] = [

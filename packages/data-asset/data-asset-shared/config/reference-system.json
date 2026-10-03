@@ -1,0 +1,127 @@
+{
+  "configVersion": "1.0",
+  "layer1_govOrders": [
+    { "elementName": "事项名称", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第3条" },
+    { "elementName": "事项编码", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第3条" },
+    { "elementName": "实施主体", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第4条" },
+    { "elementName": "事项类型", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第3条" },
+    { "elementName": "设定依据", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第4条" },
+    { "elementName": "办理条件", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第5条" },
+    { "elementName": "申请材料", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第5条" },
+    { "elementName": "办理流程", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第6条" },
+    { "elementName": "办理时限", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第6条" },
+    { "elementName": "收费标准", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第7条" },
+    { "elementName": "办理地点", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第7条" },
+    { "elementName": "咨询电话", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第7条" },
+    { "elementName": "监督电话", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第7条" },
+    { "elementName": "办理时间", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第7条" },
+    { "elementName": "网上办理深度", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第8条" },
+    { "elementName": "表格下载", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第8条" },
+    { "elementName": "结果送达方式", "sourceDoc": "进一步深化互联网+政务服务推进一网一门一次改革实施方案", "docNumber": "国办发〔2018〕45号", "clause": "第8条" },
+    { "elementName": "结果样本", "sourceDoc": "政府网站发展指引", "docNumber": "国办发〔2017〕47号", "clause": "第4条" },
+    { "elementName": "通办范围", "sourceDoc": "政府网站发展指引", "docNumber": "国办发〔2017〕47号", "clause": "第5条" },
+    { "elementName": "预约办理", "sourceDoc": "政务信息资源共享管理暂行办法", "docNumber": "国务院令第716号", "clause": "第8条" },
+    { "elementName": "网上支付", "sourceDoc": "政务信息资源共享管理暂行办法", "docNumber": "国务院令第716号", "clause": "第8条" },
+    { "elementName": "中介机构或特殊环节", "sourceDoc": "政务信息资源共享管理暂行办法", "docNumber": "国务院令第716号", "clause": "第9条" }
+  ],
+  "layer2_nationalStandards": [
+    {
+      "standardNumber": "GB/T 36114-2018",
+      "standardName": "政务服务中心进驻事项服务指南编制规范",
+      "elements": [
+        { "elementName": "事项名称", "clause": "第5.1节" },
+        { "elementName": "实施主体", "clause": "第5.2节" },
+        { "elementName": "办理条件", "clause": "第5.3节" },
+        { "elementName": "申请材料", "clause": "第5.4节" },
+        { "elementName": "办理流程", "clause": "第5.5节" },
+        { "elementName": "办理时限", "clause": "第5.6节" },
+        { "elementName": "收费标准", "clause": "第5.7节" },
+        { "elementName": "结果送达方式", "clause": "第5.8节" }
+      ]
+    },
+    {
+      "standardNumber": "GB/T 44890-2024",
+      "standardName": "政务服务平台事项元数据规范",
+      "elements": [
+        { "elementName": "事项编码", "clause": "第4.1条" },
+        { "elementName": "事项类型", "clause": "第4.2条" },
+        { "elementName": "设定依据", "clause": "第4.3条" },
+        { "elementName": "网上办理深度", "clause": "第6.1条" },
+        { "elementName": "通办范围", "clause": "第6.2条" }
+      ]
+    },
+    {
+      "standardNumber": "国标（现行）",
+      "standardName": "行政许可事项办事指南编写规范",
+      "elements": [
+        { "elementName": "事项名称", "clause": "第4.1条" },
+        { "elementName": "办理条件", "clause": "第4.2条" },
+        { "elementName": "申请材料", "clause": "第4.3条" },
+        { "elementName": "办理流程", "clause": "第4.4条" },
+        { "elementName": "办理时限", "clause": "第4.5条" },
+        { "elementName": "表格下载", "clause": "第4.6条" },
+        { "elementName": "结果样本", "clause": "第4.7条" }
+      ]
+    }
+  ],
+  "layer3_provincialStandards": [
+    { "elementName": "事项名称_省级", "nationalElementMapping": "事项名称" },
+    { "elementName": "事项编码_省级", "nationalElementMapping": "事项编码" },
+    { "elementName": "实施主体_省级", "nationalElementMapping": "实施主体" },
+    { "elementName": "事项类型_省级", "nationalElementMapping": "事项类型" },
+    { "elementName": "设定依据_省级", "nationalElementMapping": "设定依据" },
+    { "elementName": "办理条件_省级", "nationalElementMapping": "办理条件" },
+    { "elementName": "申请材料_省级", "nationalElementMapping": "申请材料" },
+    { "elementName": "办理流程_省级", "nationalElementMapping": "办理流程" },
+    { "elementName": "办理时限_省级", "nationalElementMapping": "办理时限" },
+    { "elementName": "收费标准_省级", "nationalElementMapping": "收费标准" },
+    { "elementName": "办理地点_省级", "nationalElementMapping": "办理地点" },
+    { "elementName": "咨询电话_省级", "nationalElementMapping": "咨询电话" },
+    { "elementName": "监督电话_省级", "nationalElementMapping": "监督电话" },
+    { "elementName": "办理时间_省级", "nationalElementMapping": "办理时间" },
+    { "elementName": "网上办理深度_省级", "nationalElementMapping": "网上办理深度" },
+    { "elementName": "表格下载_省级", "nationalElementMapping": "表格下载" },
+    { "elementName": "结果送达方式_省级", "nationalElementMapping": "结果送达方式" },
+    { "elementName": "结果样本_省级", "nationalElementMapping": "结果样本" },
+    { "elementName": "通办范围_省级", "nationalElementMapping": "通办范围" },
+    { "elementName": "预约办理_省级", "nationalElementMapping": "预约办理" },
+    { "elementName": "网上支付_省级", "nationalElementMapping": "网上支付" },
+    { "elementName": "中介机构或特殊环节_省级", "nationalElementMapping": "中介机构或特殊环节" },
+    { "elementName": "材料来源_省级", "nationalElementMapping": "申请材料" },
+    { "elementName": "纸质材料份数_省级", "nationalElementMapping": "申请材料" },
+    { "elementName": "到办事现场次数_省级", "nationalElementMapping": "办理流程" },
+    { "elementName": "空表下载_省级", "nationalElementMapping": "表格下载" },
+    { "elementName": "样表下载_省级", "nationalElementMapping": "表格下载" },
+    { "elementName": "物流快递_省级", "nationalElementMapping": "结果送达方式" },
+    { "elementName": "办理渠道_省级", "nationalElementMapping": "网上办理深度" },
+    { "elementName": "服务对象_省级", "nationalElementMapping": "办理条件" },
+    { "elementName": "受理条件_省级", "nationalElementMapping": "办理条件" },
+    { "elementName": "审批标准_省级", "nationalElementMapping": "办理流程" },
+    { "elementName": "审批人员_省级", "nationalElementMapping": "实施主体" },
+    { "elementName": "特殊环节_省级", "nationalElementMapping": "中介机构或特殊环节" },
+    { "elementName": "数量限制_省级", "nationalElementMapping": "办理条件" },
+    { "elementName": "中介服务_省级", "nationalElementMapping": "中介机构或特殊环节" }
+  ],
+  "layer4_evaluationIndicators": {
+    "E1": [
+      { "level": "L1", "indicatorCode": "E1", "description": "完整性指标：办事指南要素覆盖国家/省级要素清单的程度" },
+      { "level": "L2", "indicatorCode": "E1", "description": "漏项检出率：缺失必填字段的检出比例" },
+      { "level": "L3", "indicatorCode": "E1", "description": "字段填充率：各必填字段实际填充非空值的比例" }
+    ],
+    "E2": [
+      { "level": "L1", "indicatorCode": "E2", "description": "准确性指标：办事指南内容与国家/省级标准的一致程度" },
+      { "level": "L2", "indicatorCode": "E2", "description": "语义检出率：语义错误检出比例（含降级模式）" },
+      { "level": "L3", "indicatorCode": "E2", "description": "逻辑检出率：逻辑矛盾检出比例" }
+    ],
+    "E3": [
+      { "level": "L1", "indicatorCode": "E3", "description": "合规性指标：办事指南格式与编写规范的符合程度" },
+      { "level": "L2", "indicatorCode": "E3", "description": "格式检出率：格式不规范检出比例" },
+      { "level": "L3", "indicatorCode": "E3", "description": "误报率：错误检出中误报的比例" }
+    ],
+    "E4": [
+      { "level": "L1", "indicatorCode": "E4", "description": "可用性指标：办事指南对公众办事的实际指导价值" },
+      { "level": "L2", "indicatorCode": "E4", "description": "政策依据可追溯率：检测结果标注policyBasis可追溯至法规条款的比例" },
+      { "level": "L3", "indicatorCode": "E4", "description": "服务便利度：网上办理深度、物流快递、预约办理等便民措施覆盖程度" }
+    ]
+  }
+}

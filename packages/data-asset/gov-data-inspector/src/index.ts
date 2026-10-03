@@ -4,6 +4,7 @@ export const inject = ['tools'] as const
 import { resolvePolicyBasis } from './policyBasis.js'
 import { KnowledgeBaseLoader } from './knowledgeBaseLoader.js'
 import { InspectionOrchestrator } from './inspectionOrchestrator.js'
+import { ReportGenerator } from './reportGenerator.js'
 import { StandardRuleSource } from './standardRuleSource.js'
 import { EncodingDetector } from './encodingDetector.js'
 import { DataScaleGuard } from './dataScaleGuard.js'
@@ -192,11 +193,37 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
               itemTypeOverride,
               degradedSimilarityThreshold: configPack.degradedSimilarityThreshold,
               inlineLocalTerms: configPack.localStandardTerms,
+              referenceSystem: configPack.referenceSystem ?? null,
             },
           )
           result.guideInspection = orchestrateResult
           if (orchestrateResult.warnings && orchestrateResult.warnings.length > 0) {
             allWarnings.push(...orchestrateResult.warnings)
+          }
+
+          const reportResult = ReportGenerator.generate({
+            rawErrorDetails: orchestrateResult.errorDetails,
+            formatIssues: orchestrateResult.formatIssues,
+            suspectedErrors: orchestrateResult.suspectedErrors,
+            detectionRates: orchestrateResult.detectionRates,
+            completeness: orchestrateResult.completeness,
+            missingFields: orchestrateResult.missingFields,
+            semanticErrors: orchestrateResult.semanticErrors,
+            logicalErrors: orchestrateResult.logicalErrors,
+            serviceConvenience: orchestrateResult.serviceConvenience,
+            totalGuidesChecked: orchestrateResult.totalGuidesChecked,
+            warnings: orchestrateResult.warnings,
+            referenceSystem: configPack.referenceSystem ?? null,
+            policyReferences: configPack.policyBasis as import('./policyBasis.js').PolicyDoc[],
+            severityMapping: configPack.severityMapping,
+          })
+          result.guideInspection = {
+            ...orchestrateResult,
+            errorDetails: reportResult.errorDetails,
+          }
+          result.policyBasis = reportResult.reportPolicyBasis
+          if (reportResult.metricsWarnings.length > 0) {
+            allWarnings.push(...reportResult.metricsWarnings)
           }
         }
 
