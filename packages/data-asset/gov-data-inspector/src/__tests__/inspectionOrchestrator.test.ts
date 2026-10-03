@@ -92,6 +92,7 @@ describe('InspectionOrchestrator 集成测试', () => {
         咨询电话: undefined,
         办理时限: '90个工作日',
         办理流程: '当场办理',
+        申请材料: '营业执照复印件、行政许可申请表、不存在的材料xyz',
       }),
     ]
     const result = InspectionOrchestrator.orchestrate(data, config, kb, standardRules)
