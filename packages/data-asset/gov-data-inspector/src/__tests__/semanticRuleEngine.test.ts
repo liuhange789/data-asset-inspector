@@ -103,69 +103,68 @@ describe('SemanticRuleEngine', () => {
     expect(SemanticRuleEngine.extractTimeLimitDays('大约两周')).toBeNull()
   })
 
-  it('SRE-01: 降级+空KB+本地词表含"身份证复印件"+材料含"身份证复" → 检出笔误', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复、申请表' }
+  it('SRE-01: 降级+空KB+办理条件过于简略(<10字) → 检出条件描述简略', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '符合条件' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
-    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('笔误'))).toBe(true)
+    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('过于简略'))).toBe(true)
   })
 
-  it('SRE-02: 降级+空KB+本地词表含"营业执照复印件"+材料含"营业执照复" → 检出笔误', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '营业执照复' }
+  it('SRE-02: 降级+空KB+办理条件为"无" → 检出条件描述简略', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '无' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
-    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('笔误'))).toBe(true)
+    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('过于简略'))).toBe(true)
   })
 
-  it('SRE-03: 降级+空KB+本地词表为空 → 返回空details不抛错', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复件' }
-    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, localTermsPath: '/nonexistent/path/terms.json' })
+  it('SRE-03: 降级+空KB+申请材料无标点且简短 → 检出材料清单不完整', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('不完整'))).toBe(true)
+  })
+
+  it('SRE-04: 降级+空KB+申请材料有标点 → 不报告材料不完整', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件、申请表' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.standardClause === '结构完整性校验·材料清单不完整')).toBe(false)
+  })
+
+  it('SRE-05: 降级+空KB+网上办理深度不规范 → 检出网办深度不规范', () => {
+    const guide = { 事项名称: '食品经营许可', 网上办理深度: '在线办理' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('不规范'))).toBe(true)
+  })
+
+  it('SRE-06: 降级结构校验错误standardClause含"结构完整性校验"', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '无' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.standardClause?.includes('结构完整性校验'))).toBe(true)
+  })
+
+  it('SRE-07: 降级+空KB+办理条件描述充分(>10字) → 不报告条件简略', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '申请人须年满18周岁且具有完全民事行为能力' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.standardClause === '结构完整性校验·条件描述简略')).toBe(false)
+  })
+
+  it('SRE-08: 降级+空KB+申请材料有标点且长度充分 → 不报告材料不完整', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件、营业执照复印件、申请表' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.standardClause === '结构完整性校验·材料清单不完整')).toBe(false)
+  })
+
+  it('SRE-09: 降级+空KB+网上办理深度为标准枚举值"全程网办" → 不报告', () => {
+    const guide = { 事项名称: '食品经营许可', 网上办理深度: '全程网办' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.standardClause === '结构完整性校验·网办深度不规范')).toBe(false)
+  })
+
+  it('SRE-10: 降级+空KB+所有字段结构完整 → 返回空details', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件、申请表', 办理条件: '申请人须年满18周岁且具有完全民事行为能力', 网上办理深度: '全程网办' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
     expect(result.details).toEqual([])
   })
 
-  it('SRE-04: 降级+空KB+材料与本地词表完全匹配 → 返回空details', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件' }
-    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
-    expect(result.details).toEqual([])
-  })
-
-  it('SRE-05: 降级+空KB+材料相似度=0.8 → 不报告(严格小于)', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件' }
-    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, degradedSimilarityThreshold: 0.8 })
-    const hasPenalty = result.details.some((d) => d.description.includes('笔误'))
-    expect(hasPenalty).toBe(false)
-  })
-
-  it('SRE-06: 降级保底错误明细standardClause含"降级模式·本地词表校验"', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复' }
-    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
-    expect(result.details.some((d) => d.standardClause === '降级模式·本地词表校验')).toBe(true)
-  })
-
-  it('SRE-07: 降级+空KB+材料完全无匹配(maxSim===0) → 输出"疑似错误"含"与本地词表无任何匹配"', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '$$$###' }
-    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
-    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('与本地词表无任何匹配') && d.description.includes('疑似错误'))).toBe(true)
-  })
-
-  it('SRE-08: 降级+空KB+办理条件含疑似笔误 → 输出semantic错误含"笔误"', () => {
-    const guide = { 事项名称: '食品经营许可', 办理条件: '年满周岁' }
-    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
-    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.description.includes('笔误'))).toBe(true)
-  })
-
-  it('SRE-09: 降级+空KB+办理条件完全无匹配 → 输出"疑似错误"含"与本地词表无任何匹配"', () => {
-    const guide = { 事项名称: '食品经营许可', 办理条件: '$$$###' }
-    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
-    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.description.includes('与本地词表无任何匹配'))).toBe(true)
-  })
-
-  it('SRE-10: 降级+空KB+localTerms加载失败 → 返回空不崩溃', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件', 办理条件: '年满18周岁' }
-    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, localTermsPath: '/nonexistent/path/terms.json' })
-    expect(result.details).toEqual([])
-  })
-
-  it('SRE-11: 降级+空KB+材料正确+条件正确 → 返回空details', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件', 办理条件: '年满18周岁' }
+  it('SRE-11: 降级+空KB+材料有标点+条件充分 → 返回空details', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件、申请表', 办理条件: '申请人须年满18周岁且具有完全民事行为能力' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
     expect(result.details).toEqual([])
   })
