@@ -994,6 +994,31 @@
           "实地核查"
         ],
         "codePrefix": "XC"
+      },
+      "登记类": {
+        "keywords": [
+          "登记",
+          "设立",
+          "注册",
+          "备案"
+        ],
+        "codePrefix": "DJ"
+      },
+      "延续类": {
+        "keywords": [
+          "延续",
+          "续期",
+          "换证"
+        ],
+        "codePrefix": "YX"
+      },
+      "变更类": {
+        "keywords": [
+          "变更",
+          "修改",
+          "调整"
+        ],
+        "codePrefix": "BG"
       }
     },
     "materialConciseThreshold": 5,
