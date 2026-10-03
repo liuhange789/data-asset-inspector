@@ -411,6 +411,123 @@ function checkOnlineDepthValidity(
   return []
 }
 
+function matchAndReport(
+  item: string,
+  terms: string[],
+  threshold: number,
+  field: '申请材料' | '办理条件',
+  guideId: string,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  if (terms.length === 0) return []
+  let maxSim = 0
+  let closestTerm = ''
+  for (const term of terms) {
+    const sim = levenshteinSimilarity(item, term)
+    if (sim > maxSim) {
+      maxSim = sim
+      closestTerm = term
+    }
+  }
+  if (item === closestTerm) return []
+  if (closestTerm !== '' && item.includes(closestTerm)) return []
+  if (maxSim >= 0.95) return []
+  if (maxSim >= threshold) {
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field,
+          errorType: 'semantic',
+          description: `${field}"${item}"与标准词表"${closestTerm}"高度相似（相似度${maxSim.toFixed(2)}），可能存在笔误。[降级模式·本地词表校验]`,
+          suggestion: `建议将"${item}"修改为标准名称"${closestTerm}"`,
+          dataSource: 'standard',
+          standardClause: '降级模式·本地词表校验',
+        },
+        severityMapping,
+      ),
+    ]
+  }
+  if (maxSim > 0.3 && levenshtein(item, closestTerm) <= 2) {
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field,
+          errorType: 'semantic',
+          description: `${field}"${item}"与标准词表"${closestTerm}"高度相似（相似度${maxSim.toFixed(2)}），可能存在笔误。[降级模式·本地词表校验]`,
+          suggestion: `建议将"${item}"修改为标准名称"${closestTerm}"`,
+          dataSource: 'standard',
+          standardClause: '降级模式·本地词表校验',
+        },
+        severityMapping,
+      ),
+    ]
+  }
+  if (maxSim === 0) {
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field,
+          errorType: 'semantic',
+          description: `${field}"${item}"与本地词表无任何匹配，疑似错误。[降级模式·本地词表校验]`,
+          suggestion: `建议核实"${item}"是否为标准${field}名称`,
+          dataSource: 'standard',
+          standardClause: '降级模式·本地词表校验',
+        },
+        severityMapping,
+      ),
+    ]
+  }
+  return [
+    ErrorDetailBuilder.build(
+      {
+        guideId,
+        field,
+        errorType: 'semantic',
+        description: `${field}"${item}"与本地词表匹配度极低（相似度${maxSim.toFixed(2)}），疑似错误。[降级模式·本地词表校验]`,
+        suggestion: `建议核实"${item}"是否为标准${field}名称`,
+        dataSource: 'standard',
+        standardClause: '降级模式·本地词表校验',
+      },
+      severityMapping,
+    ),
+  ]
+}
+
+function detectApproximateSubstring(
+  cond: string,
+  terms: string[],
+  guideId: string,
+  severityMapping?: Record<string, string>,
+): ErrorDetail | null {
+  if (terms.length === 0 || !cond) return null
+  if (terms.some((t) => cond.includes(t))) return null
+  for (const term of terms) {
+    if (cond.length < term.length) continue
+    for (let i = 0; i <= cond.length - term.length; i++) {
+      const w = cond.substring(i, i + term.length)
+      if (w === term) continue
+      if (levenshtein(w, term) <= 2) {
+        return ErrorDetailBuilder.build(
+          {
+            guideId,
+            field: '办理条件',
+            errorType: 'semantic',
+            description: `办理条件段中"${w}"与标准表述"${term}"高度相似，可能存在笔误。[降级模式·本地词表校验]`,
+            suggestion: `建议将"${w}"修改为标准表述"${term}"`,
+            dataSource: 'standard',
+            standardClause: '降级模式·本地词表校验',
+          },
+          severityMapping,
+        )
+      }
+    }
+  }
+  return null
+}
+
 function detectLocalTermsMismatch(
   guide: Record<string, unknown>,
   guideId: string,
@@ -427,96 +544,24 @@ function detectLocalTermsMismatch(
   if (materialStr && localTerms.materials.length > 0) {
     const materials = materialStr.split(/[、,，;；\n]/).map((s) => s.trim()).filter(Boolean)
     for (const mat of materials) {
-      let maxSim = 0
-      let closestTerm = ''
-      for (const term of localTerms.materials) {
-        const sim = levenshteinSimilarity(mat, term)
-        if (sim > maxSim) {
-          maxSim = sim
-          closestTerm = term
-        }
-      }
-      if (maxSim === 0) {
-        details.push(
-          ErrorDetailBuilder.build(
-            {
-              guideId,
-              field: '申请材料',
-              errorType: 'semantic',
-              description: `申请材料"${mat}"与本地词表无任何匹配，疑似错误。[降级模式·本地词表校验]`,
-              suggestion: `建议核实"${mat}"是否为标准申请材料名称`,
-              dataSource: 'standard',
-              standardClause: '降级模式·本地词表校验',
-            },
-            severityMapping,
-          ),
-        )
-      } else if (maxSim < threshold && maxSim > 0.3 && levenshtein(mat, closestTerm) <= 2) {
-        details.push(
-          ErrorDetailBuilder.build(
-            {
-              guideId,
-              field: '申请材料',
-              errorType: 'semantic',
-              description: `申请材料"${mat}"与标准词表"${closestTerm}"高度相似（相似度${maxSim.toFixed(2)}），可能存在笔误。[降级模式·本地词表校验]`,
-              suggestion: `建议将"${mat}"修改为标准名称"${closestTerm}"`,
-              dataSource: 'standard',
-              standardClause: '降级模式·本地词表校验',
-            },
-            severityMapping,
-          ),
-        )
-      }
+      details.push(...matchAndReport(mat, localTerms.materials, threshold, '申请材料', guideId, severityMapping))
     }
   }
   const conditionStr = String(guide['办理条件'] ?? '')
   if (conditionStr && localTerms.conditions.length > 0) {
     const condParts = conditionStr.split(/[、,，;；\n。]/).map((s) => s.trim()).filter(Boolean)
     for (const cond of condParts) {
-      let maxSim = 0
-      let closestTerm = ''
-      for (const term of localTerms.conditions) {
-        const sim = levenshteinSimilarity(cond, term)
-        if (sim > maxSim) {
-          maxSim = sim
-          closestTerm = term
-        }
-      }
-      if (maxSim === 0) {
-        details.push(
-          ErrorDetailBuilder.build(
-            {
-              guideId,
-              field: '办理条件',
-              errorType: 'semantic',
-              description: `办理条件"${cond}"与本地词表无任何匹配，疑似错误。[降级模式·本地词表校验]`,
-              suggestion: `建议核实"${cond}"是否为标准办理条件表述`,
-              dataSource: 'standard',
-              standardClause: '降级模式·本地词表校验',
-            },
-            severityMapping,
-          ),
-        )
-      } else if (maxSim < threshold && maxSim > 0.3 && levenshtein(cond, closestTerm) <= 2) {
-        details.push(
-          ErrorDetailBuilder.build(
-            {
-              guideId,
-              field: '办理条件',
-              errorType: 'semantic',
-              description: `办理条件"${cond}"与标准词表"${closestTerm}"高度相似（相似度${maxSim.toFixed(2)}），可能存在笔误。[降级模式·本地词表校验]`,
-              suggestion: `建议将"${cond}"修改为标准表述"${closestTerm}"`,
-              dataSource: 'standard',
-              standardClause: '降级模式·本地词表校验',
-            },
-            severityMapping,
-          ),
-        )
+      const condDetails = matchAndReport(cond, localTerms.conditions, threshold, '办理条件', guideId, severityMapping)
+      details.push(...condDetails)
+      if (condDetails.length === 0) {
+        const sub = detectApproximateSubstring(cond, localTerms.conditions, guideId, severityMapping)
+        if (sub) details.push(sub)
       }
     }
   }
   return details
 }
+
 
 function deduplicateErrors(errors: ErrorDetail[]): ErrorDetail[] {
   const logicalFields = new Set(errors.filter((e) => e.errorType === 'logical').map((e) => e.field))
