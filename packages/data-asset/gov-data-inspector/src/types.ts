@@ -159,6 +159,8 @@ export interface StandardRule {
   threshold: number | undefined
   suggestionTemplate: string
   triggerKeywords: string[]
+  scanMode?: 'anyField'
+  anyFieldKeywords?: string[]
 }
 
 export interface LogicRule {
@@ -169,6 +171,8 @@ export interface LogicRule {
   suggestionTemplate: string
   standardClause?: string
   triggerKeywords?: string[]
+  scanMode?: 'anyField'
+  anyFieldKeywords?: string[]
 }
 
 export interface FormatRule {
@@ -214,3 +218,10 @@ export type ErrorCode =
   | 'GOV_CONFIG_RULE_EXEC_ERROR'
   | 'GOV_LOCAL_TERMS_EMPTY'
   | 'UNKNOWN_ERROR'
+export interface SemanticConflictRules {
+  ageKeywords: string[]
+  proxyKeywords: string[]
+  proofKeywords: string[]
+  siteInspectionThreshold: number
+  instantHandleThreshold: number
+}

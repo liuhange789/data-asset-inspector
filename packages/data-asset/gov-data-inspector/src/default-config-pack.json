@@ -4,14 +4,9 @@
   "configPackVersion": "2026.1.0",
   "policyBasis": [
     {
-      "name": "资产管理 数据资产分类与代码",
-      "docNumber": "GB/T 47949-2026",
-      "coreRequirement": "数据资产分为结构化、半结构化、非结构化三小类，16项具体细类"
-    },
-    {
-      "name": "资产管理 数据资产登记指南",
-      "docNumber": "GB/T 47950-2026",
-      "coreRequirement": "明确初始、变更和注销登记流程"
+      "name": "行政许可事项办事指南编写规范",
+      "docNumber": "国标（现行）",
+      "coreRequirement": "规范行政许可事项办事指南的编写要求，明确事项名称、实施主体、办理条件、申请材料、办理流程、办理时限等核心要素的编写标准与准确完整要求"
     },
     {
       "name": "进一步深化互联网+政务服务推进一网一门一次改革实施方案",
@@ -743,17 +738,20 @@
     },
     {
       "ruleId": "LOG_CONDITION_AGE_PROXY_001",
-      "standardClause": "国办发〔2017〕47号 第5.6条",
+      "standardClause": "国办发〔2018〕45号 逻辑一致性要求",
       "triggerFields": [
         "办理条件"
       ],
-      "condition": "办理条件含年龄限制且含代办要求",
+      "condition": "办理条件含年龄限制且任意字段含代办要求",
       "threshold": null,
       "suggestionTemplate": "建议明确：未成年人由监护人代办，或删除年龄限制",
+      "scanMode": "anyField",
       "triggerKeywords": [
         "年满18周岁",
         "年满十八周岁",
-        "须为成年人",
+        "须为成年人"
+      ],
+      "anyFieldKeywords": [
         "监护人代办",
         "未成年人代办",
         "法定代理人代办"
@@ -849,5 +847,25 @@
   "materialConciseThreshold": 5,
   "missingFieldStandardClause": "国办发〔2017〕47号 第4.1条",
   "degradedSimilarityThreshold": 0.6,
-  "inputLengthThreshold": 50000
+  "inputLengthThreshold": 50000,
+  "fieldMapping": {
+    "申报条件": "办理条件",
+    "审批条件": "办理条件",
+    "不见面审批": "网上办理深度",
+    "办事流程": "办理流程",
+    "申报材料": "申请材料",
+    "承诺时限": "办理时限",
+    "经办机构": "实施主体",
+    "咨询电话号码": "咨询电话",
+    "投诉电话": "监督电话",
+    "办公地址": "办理地点",
+    "办公时间": "办理时间"
+  },
+  "semanticConflictRules": {
+    "ageKeywords": ["年满18周岁", "年满十八周岁", "须为成年人"],
+    "proxyKeywords": ["监护人代办", "未成年人代办", "法定代理人代办"],
+    "proofKeywords": ["收入证明", "产权证明", "资质证明", "无犯罪记录证明", "健康证明", "社保证明", "纳税证明", "卫生检测报告"],
+    "siteInspectionThreshold": 5,
+    "instantHandleThreshold": 1
+  }
 }

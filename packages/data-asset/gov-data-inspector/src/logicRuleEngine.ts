@@ -143,14 +143,14 @@ function ruleConditionAgeProxy(
   severityMapping?: Record<string, string>,
 ): ErrorDetail[] {
   const condition = String(guide['办理条件'] ?? '')
-  const process = String(guide['办理流程'] ?? '')
   if (!condition) return []
   if (!rule.triggerKeywords || rule.triggerKeywords.length === 0) return []
   const ageKeywords = rule.triggerKeywords.filter((kw) => !kw.includes('代办'))
-  const proxyKeywords = rule.triggerKeywords.filter((kw) => kw.includes('代办'))
+  const proxyKeywords = rule.anyFieldKeywords ?? rule.triggerKeywords.filter((kw) => kw.includes('代办'))
   if (ageKeywords.length === 0 || proxyKeywords.length === 0) return []
   const ageHit = ageKeywords.some((kw) => condition.includes(kw))
-  const proxyHit = proxyKeywords.some((kw) => process.includes(kw) || condition.includes(kw))
+  const guideValues = Object.values(guide).filter((v): v is string => typeof v === 'string')
+  const proxyHit = proxyKeywords.some((kw) => guideValues.some((v) => v.includes(kw)))
   if (ageHit && proxyHit) {
     return [
       ErrorDetailBuilder.build(
@@ -195,11 +195,13 @@ export const LogicRuleEngine = {
     for (const rule of rules) {
       const handler = RULE_DISPATCH[rule.ruleId]
       if (!handler) continue
-      const hasAllFields = rule.triggerFields.every((f) => {
-        const val = guide[f]
-        return val !== undefined && val !== null && (typeof val !== 'string' || val.trim() !== '')
-      })
-      if (!hasAllFields) continue
+      if (rule.scanMode !== 'anyField') {
+        const hasAllFields = rule.triggerFields.every((f) => {
+          const val = guide[f]
+          return val !== undefined && val !== null && (typeof val !== 'string' || val.trim() !== '')
+        })
+        if (!hasAllFields) continue
+      }
       details.push(...handler(guide, guideId, rule, severityMapping))
     }
     return details

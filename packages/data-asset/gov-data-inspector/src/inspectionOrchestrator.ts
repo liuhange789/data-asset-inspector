@@ -5,6 +5,7 @@ import { LogicRuleEngine } from './logicRuleEngine.js'
 import { FormatValidator } from './formatValidator.js'
 import { QualityMetricsCalculator } from './qualityMetricsCalculator.js'
 import { ErrorDetailBuilder } from './errorDetailBuilder.js'
+import { mapGuideToStandard } from './mapping-layer.js'
 
 export interface OrchestrateConfig {
   guideRequiredElements?: string[]
@@ -19,6 +20,8 @@ export interface OrchestrateConfig {
   missingFieldStandardClause: string
   gbt47949Mapping?: Record<string, string>
   gbtMapping?: Record<string, string>
+  fieldMapping?: Record<string, string> | undefined
+  semanticConflictRules?: import('./types.js').SemanticConflictRules | undefined
 }
 
 export interface OrchestrateOptions {
@@ -57,8 +60,12 @@ export const InspectionOrchestrator = {
       const guide = row as Record<string, unknown>
       const guideId = String(guide['事项名称'] ?? `指南${i + 1}`)
 
+      const standardGuide = config.fieldMapping
+        ? mapGuideToStandard(guide, config.fieldMapping)
+        : guide
+
       const missingDetails = MissingFieldDetector.detect(
-        guide,
+        standardGuide,
         guideId,
         requiredFields,
         config.severityMapping,
@@ -71,12 +78,12 @@ export const InspectionOrchestrator = {
       if (isComplete) completeCount++
 
       const semanticResult = SemanticRuleEngine.detect(
-        guide,
+        standardGuide,
         guideId,
         kb,
         config.itemTypeMatching,
         config.severityMapping,
-        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold, inlineLocalTerms: options?.inlineLocalTerms },
+        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold, inlineLocalTerms: options?.inlineLocalTerms, semanticConflictRules: config.semanticConflictRules },
       )
       allErrorDetails.push(...semanticResult.details)
       const suspected = semanticResult.details.filter(
@@ -88,23 +95,23 @@ export const InspectionOrchestrator = {
       }
 
       const logicalDetails = LogicRuleEngine.detect(
-        guide,
+        standardGuide,
         guideId,
         standardRules,
         config.severityMapping,
       )
       allErrorDetails.push(...logicalDetails)
 
-      const formatIssues = FormatValidator.validate(guide, guideId, config.formatRules)
+      const formatIssues = FormatValidator.validate(standardGuide, guideId, config.formatRules)
       allFormatIssues.push(...formatIssues)
 
-      if (guide['办理时限'] && typeof guide['办理时限'] === 'string' && (guide['办理时限'] as string).includes('工作日')) {
+      if (standardGuide['办理时限'] && typeof standardGuide['办理时限'] === 'string' && (standardGuide['办理时限'] as string).includes('工作日')) {
         serviceConvenience += config.convenienceWeights.timeLimit ?? 0.3
       }
-      if (guide.onlineCapable === true) {
+      if (standardGuide.onlineCapable === true) {
         serviceConvenience += config.convenienceWeights.onlineCapable ?? 0.4
       }
-      const materialStr = String(guide['申请材料'] ?? '')
+      const materialStr = String(standardGuide['申请材料'] ?? '')
       if (materialStr) {
         const materialCount = materialStr.split(/[、,，;；\n]/).filter(Boolean).length
         if (materialCount <= (config.materialConciseThreshold ?? 5)) {

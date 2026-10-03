@@ -62,6 +62,8 @@ export interface ConfigPack {
   missingFieldStandardClause?: string
   degradedSimilarityThreshold?: number
   inputLengthThreshold?: number
+  fieldMapping?: Record<string, string>
+  semanticConflictRules?: import('./types.js').SemanticConflictRules
 }
 
 const REQUIRED_FIELDS: (keyof ConfigPack)[] = [

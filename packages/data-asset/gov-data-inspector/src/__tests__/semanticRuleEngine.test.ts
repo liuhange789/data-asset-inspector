@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { SemanticRuleEngine } from '../semanticRuleEngine.js'
-import type { KnowledgeBase } from '../types.js'
+import type { KnowledgeBase, SemanticConflictRules } from '../types.js'
 
 const kb: KnowledgeBase = {
   timeLimits: [
@@ -168,5 +168,61 @@ describe('SemanticRuleEngine', () => {
     const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件', 办理条件: '年满18周岁' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
     expect(result.details).toEqual([])
+  })
+
+  const conflictRules: SemanticConflictRules = {
+    ageKeywords: ['年满18周岁', '年满十八周岁', '须为成年人'],
+    proxyKeywords: ['监护人代办', '未成年人代办', '法定代理人代办'],
+    proofKeywords: ['收入证明', '产权证明', '资质证明', '无犯罪记录证明', '健康证明', '社保证明', '纳税证明'],
+    siteInspectionThreshold: 5,
+    instantHandleThreshold: 1,
+  }
+
+  it('SEM-01: 条件含年龄限制+代办表述 → 检出条件流程矛盾', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '申请人须年满18周岁', 办理流程: '可由监护人代办' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching, undefined, { semanticConflictRules: conflictRules })
+    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('语义矛盾'))).toBe(true)
+  })
+
+  it('SEM-02: 条件含年龄限制但无代办表述 → 不报告条件流程矛盾', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '申请人须年满18周岁', 办理流程: '受理→审批→发证' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching, undefined, { semanticConflictRules: conflictRules })
+    expect(result.details.some((d) => d.standardClause === '语义矛盾检测·条件流程冲突')).toBe(false)
+  })
+
+  it('SEM-03: 条件要求收入证明+材料清单缺失 → 检出材料条件矛盾', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '需提供收入证明', 申请材料: '身份证、申请表' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching, undefined, { semanticConflictRules: conflictRules })
+    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('收入证明'))).toBe(true)
+  })
+
+  it('SEM-04: 条件要求收入证明+材料清单包含 → 不报告材料条件矛盾', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '需提供收入证明', 申请材料: '身份证、收入证明' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching, undefined, { semanticConflictRules: conflictRules })
+    expect(result.details.some((d) => d.standardClause === '语义矛盾检测·材料条件冲突')).toBe(false)
+  })
+
+  it('SEM-05: 流程含现场勘查+时限<5 → 检出时限流程矛盾', () => {
+    const guide = { 事项名称: '食品经营许可', 办理流程: '受理→现场勘查→审批', 办理时限: '3个工作日' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching, undefined, { semanticConflictRules: conflictRules })
+    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('现场勘查'))).toBe(true)
+  })
+
+  it('SEM-06: 流程含当场办理+时限>1 → 检出时限流程矛盾', () => {
+    const guide = { 事项名称: '食品经营许可', 办理流程: '当场办理', 办理时限: '5个工作日' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching, undefined, { semanticConflictRules: conflictRules })
+    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('当场办理'))).toBe(true)
+  })
+
+  it('SEM-07: 无semanticConflictRules → 不执行矛盾检测(向后兼容)', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '申请人须年满18周岁', 办理流程: '可由监护人代办' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching)
+    expect(result.details.some((d) => d.standardClause?.includes('语义矛盾检测'))).toBe(false)
+  })
+
+  it('SEM-08: 降级模式+空KB+矛盾检测仍生效', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '申请人须年满18周岁', 办理流程: '可由监护人代办' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, semanticConflictRules: conflictRules })
+    expect(result.details.some((d) => d.errorType === 'semantic' && d.description.includes('语义矛盾'))).toBe(true)
   })
 })

@@ -17,8 +17,8 @@ describe('缺省配置包完整性', () => {
     expect(defaultPack.region).toBe('通用')
   })
 
-  it('policyBasis 含 6 条且包含广东省政务服务事项管理系统', () => {
-    expect(defaultPack.policyBasis.length).toBe(6)
+  it('policyBasis 含 5 条且包含广东省政务服务事项管理系统', () => {
+    expect(defaultPack.policyBasis.length).toBe(5)
     expect(defaultPack.policyBasis.some((d: { name: string }) => d.name.includes('广东省政务服务事项管理系统'))).toBe(true)
   })
 

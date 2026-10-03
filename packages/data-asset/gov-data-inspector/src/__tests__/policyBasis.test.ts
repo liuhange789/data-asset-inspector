@@ -1,15 +1,15 @@
 import { describe, it, expect } from 'vitest'
-import { resolvePolicyBasis } from '../policyBasis.js'
+import { resolvePolicyBasis, filterPolicyBasis } from '../policyBasis.js'
 
 describe('政策依据配置', () => {
-  it('读取GOV_DATA_INSPECTION段 → 含6个条目(4政策文件+2数据源来源说明)', () => {
+  it('读取GOV_DATA_INSPECTION段 → 含5个条目(3政策文件+2数据源来源说明)', () => {
     const basis = resolvePolicyBasis('GOV_DATA_INSPECTION')
-    expect(basis.length).toBe(6)
+    expect(basis.length).toBe(5)
   })
 
-  it('policyBasis含国办发〔2015〕46号与国办发〔2017〕47号', () => {
+  it('policyBasis含国办发〔2018〕45号与国办发〔2017〕47号', () => {
     const basis = resolvePolicyBasis('GOV_DATA_INSPECTION')
-    expect(basis.some((b) => b.includes('国办发〔2015〕46号'))).toBe(true)
+    expect(basis.some((b) => b.includes('国办发〔2018〕45号'))).toBe(true)
     expect(basis.some((b) => b.includes('国办发〔2017〕47号'))).toBe(true)
   })
 
@@ -24,19 +24,36 @@ describe('政策依据配置', () => {
     expect(basis.some((b) => b.includes('〔') && b.includes('〕'))).toBe(true)
   })
 
-  it('P2-2: policyBasis不含河北省地方标准DB1405/T 085-2025', () => {
+  it('REQ-019: policyBasis不含河北省地方标准DB1405/T 085-2025', () => {
     const basis = resolvePolicyBasis('GOV_DATA_INSPECTION')
     expect(basis.some((b) => b.includes('DB1405/T 085-2025'))).toBe(false)
   })
 
-  it('P2-2: policyBasis含国家层面权威标准国办发〔2015〕46号', () => {
+  it('REQ-020: policyBasis不含GB/T 47949-2026与GB/T 47950-2026', () => {
     const basis = resolvePolicyBasis('GOV_DATA_INSPECTION')
-    expect(basis.some((b) => b.includes('国办发〔2015〕46号'))).toBe(true)
+    expect(basis.some((b) => b.includes('GB/T 47949-2026'))).toBe(false)
+    expect(basis.some((b) => b.includes('GB/T 47950-2026'))).toBe(false)
   })
 
-  it('P2-2: 保留GB/T 47949-2026与GB/T 47950-2026不变', () => {
+  it('REQ-021: policyBasis不含国办发〔2015〕46号', () => {
     const basis = resolvePolicyBasis('GOV_DATA_INSPECTION')
-    expect(basis.some((b) => b.includes('GB/T 47949-2026'))).toBe(true)
-    expect(basis.some((b) => b.includes('GB/T 47950-2026'))).toBe(true)
+    expect(basis.some((b) => b.includes('国办发〔2015〕46号'))).toBe(false)
+  })
+
+  it('REQ-021+: policyBasis含国标（现行）', () => {
+    const basis = resolvePolicyBasis('GOV_DATA_INSPECTION')
+    expect(basis.some((b) => b.includes('国标（现行）'))).toBe(true)
+  })
+
+  it('filterPolicyBasis单元测试: 过滤GB/T 47949-2026、GB/T 47950-2026、国办发〔2015〕46号', () => {
+    const input = [
+      '依据：《资产管理 数据资产分类与代码》（GB/T 47949-2026）—数据资产分类',
+      '依据：《资产管理 数据资产登记指南》（GB/T 47950-2026）—登记流程',
+      '依据：《行政许可事项办事指南编写规范》（国办发〔2015〕46号）—编写要求',
+      '依据：《政府网站发展指引》（国办发〔2017〕47号）—规范公开',
+    ]
+    const filtered = filterPolicyBasis(input)
+    expect(filtered.length).toBe(1)
+    expect(filtered[0]).toContain('国办发〔2017〕47号')
   })
 })

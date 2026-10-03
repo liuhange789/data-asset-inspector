@@ -132,4 +132,72 @@ describe('InspectionOrchestrator 集成测试', () => {
       expect(d.suggestion).toBeTruthy()
     }
   })
+
+  const fieldMapping = {
+    '申报条件': '办理条件',
+    '审批条件': '办理条件',
+    '不见面审批': '网上办理深度',
+    '办事流程': '办理流程',
+    '申报材料': '申请材料',
+    '承诺时限': '办理时限',
+    '经办机构': '实施主体',
+    '咨询电话号码': '咨询电话',
+    '投诉电话': '监督电话',
+    '办公地址': '办理地点',
+    '办公时间': '办理时间',
+  }
+
+  const configWithMapping = {
+    ...config,
+    requiredFields: [
+      '事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限',
+      '收费标准', '办理地点', '咨询电话', '监督电话', '办理时间', '网上办理深度',
+      '表格下载', '结果送达方式',
+    ],
+    fieldMapping,
+  }
+
+  it('ORCH-MAP-01: 非标字段名经映射后 → 漏项检测使用标准字段名 → 无误报漏项', () => {
+    const data = [{
+      事项名称: '食品经营许可',
+      经办机构: '市场监管局',
+      申报条件: '符合法定条件',
+      申报材料: '营业执照复印件、行政许可申请表',
+      办事流程: '受理→审查→决定',
+      承诺时限: '20个工作日',
+      收费标准: '不收费',
+      办公地址: '某市某区某路1号',
+      咨询电话号码: '010-12345678',
+      投诉电话: '010-87654321',
+      办公时间: '工作日上午9-12点',
+      不见面审批: '全流程网办',
+      表格下载: '可下载',
+      结果送达方式: '邮寄',
+    }]
+    const result = InspectionOrchestrator.orchestrate(data, configWithMapping, kb, standardRules)
+    expect(result.missingFields).toBe(0)
+    expect(result.completeness).toBe(100)
+  })
+
+  it('ORCH-MAP-02: 非标字段名经映射后 → 逻辑检测使用标准字段名 → 正确检出逻辑错误', () => {
+    const data = [{
+      事项名称: '食品经营许可',
+      经办机构: '市场监管局',
+      申报条件: '符合法定条件',
+      申报材料: '营业执照复印件、行政许可申请表',
+      办事流程: '受理→现场勘查→决定',
+      承诺时限: '3个工作日',
+      收费标准: '不收费',
+      办公地址: '某市某区某路1号',
+      咨询电话号码: '010-12345678',
+      投诉电话: '010-87654321',
+      办公时间: '工作日上午9-12点',
+      不见面审批: '全流程网办',
+      表格下载: '可下载',
+      结果送达方式: '邮寄',
+    }]
+    const result = InspectionOrchestrator.orchestrate(data, configWithMapping, kb, standardRules)
+    expect(result.logicalErrors).toBeGreaterThan(0)
+    expect(result.errorDetails.some((d) => d.errorType === 'logical' && d.description.includes('现场勘查'))).toBe(true)
+  })
 })

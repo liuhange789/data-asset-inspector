@@ -1,4 +1,4 @@
-import type { ErrorDetail, KnowledgeBase, StandardTimeLimit, StandardMaterial, StandardCondition, ItemTypeMatchResult, UnmatchedWarning } from './types.js'
+import type { ErrorDetail, KnowledgeBase, StandardTimeLimit, StandardMaterial, StandardCondition, ItemTypeMatchResult, UnmatchedWarning, SemanticConflictRules } from './types.js'
 import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 import { UnmatchedWarningBuilder } from './unmatchedWarningBuilder.js'
 import { LocalTermsLoader } from './local-terms-loader.js'
@@ -13,6 +13,7 @@ interface DetectOptions {
   localTermsPath?: string | undefined
   degradedSimilarityThreshold?: number | undefined
   inlineLocalTerms?: { materials: string[]; conditions: string[] } | undefined
+  semanticConflictRules?: SemanticConflictRules | undefined
 }
 
 export interface SemanticDetectResult {
@@ -220,6 +221,115 @@ function detectConditions(
   return details
 }
 
+function checkConditionProcessConflict(
+  guide: Record<string, unknown>,
+  guideId: string,
+  rules: SemanticConflictRules,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const condition = String(guide['办理条件'] ?? '')
+  if (!condition) return []
+  const ageHit = rules.ageKeywords.some((kw) => condition.includes(kw))
+  if (!ageHit) return []
+  const guideValues = Object.values(guide).filter((v): v is string => typeof v === 'string')
+  const proxyHit = rules.proxyKeywords.some((kw) => guideValues.some((v) => v.includes(kw)))
+  if (proxyHit) {
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '办理流程',
+          errorType: 'semantic',
+          description: `办理条件含年龄限制，但指南中存在代办表述，存在语义矛盾。[语义矛盾检测]`,
+          suggestion: `建议明确：未成年人由监护人代办，或删除年龄限制`,
+          dataSource: 'standard',
+          standardClause: '语义矛盾检测·条件流程冲突',
+        },
+        severityMapping,
+      ),
+    ]
+  }
+  return []
+}
+
+function checkMaterialConditionConflict(
+  guide: Record<string, unknown>,
+  guideId: string,
+  rules: SemanticConflictRules,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const condition = String(guide['办理条件'] ?? '')
+  const materialStr = String(guide['申请材料'] ?? '')
+  if (!condition || !materialStr) return []
+  const requiredProofs = rules.proofKeywords.filter((kw) => condition.includes(kw))
+  if (requiredProofs.length === 0) return []
+  const missingMaterials = requiredProofs.filter((proof) => !materialStr.includes(proof))
+  if (missingMaterials.length > 0) {
+    return missingMaterials.map((mat) =>
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '申请材料',
+          errorType: 'semantic',
+          description: `办理条件要求"${mat}"，但申请材料清单中未列入该证明材料，条件与材料清单不匹配。[语义矛盾检测]`,
+          suggestion: `建议在申请材料清单中补充"${mat}"，或调整办理条件中对该证明的要求`,
+          dataSource: 'standard',
+          standardClause: '语义矛盾检测·材料条件冲突',
+        },
+        severityMapping,
+      ),
+    )
+  }
+  return []
+}
+
+function checkTimeProcessConflict(
+  guide: Record<string, unknown>,
+  guideId: string,
+  rules: SemanticConflictRules,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const process = String(guide['办理流程'] ?? '')
+  const timeLimitStr = String(guide['办理时限'] ?? '')
+  if (!process || !timeLimitStr) return []
+  const days = extractTimeLimitDays(timeLimitStr)
+  if (days === null) return []
+  const details: ErrorDetail[] = []
+  if (process.includes('现场勘查') && days < rules.siteInspectionThreshold) {
+    details.push(
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '办理时限',
+          errorType: 'semantic',
+          description: `办理流程含"现场勘查"环节，但办理时限仅为${days}个工作日，少于${rules.siteInspectionThreshold}个工作日，存在语义矛盾。[语义矛盾检测]`,
+          suggestion: `建议将办理时限调整为不少于${rules.siteInspectionThreshold}个工作日`,
+          dataSource: 'standard',
+          standardClause: '语义矛盾检测·时限流程冲突',
+        },
+        severityMapping,
+      ),
+    )
+  }
+  if (process.includes('当场办理') && days > rules.instantHandleThreshold) {
+    details.push(
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '办理时限',
+          errorType: 'semantic',
+          description: `办理流程含"当场办理"环节，但办理时限为${days}个工作日，与当场办理语义矛盾。[语义矛盾检测]`,
+          suggestion: `建议将办理流程改为非当场办理，或将办理时限调整为${rules.instantHandleThreshold}个工作日以内`,
+          dataSource: 'standard',
+          standardClause: '语义矛盾检测·时限流程冲突',
+        },
+        severityMapping,
+      ),
+    )
+  }
+  return details
+}
+
 export const SemanticRuleEngine = {
   detect(
     guide: Record<string, unknown>,
@@ -237,9 +347,16 @@ export const SemanticRuleEngine = {
       return { details: [], unmatched: true, warning }
     }
 
+    const conflictDetails: ErrorDetail[] = []
+    if (options?.semanticConflictRules) {
+      conflictDetails.push(...checkConditionProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+      conflictDetails.push(...checkMaterialConditionConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+      conflictDetails.push(...checkTimeProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
+    }
+
     if (!kb || !kb.timeLimits || !kb.materials || !kb.conditions) {
       if (options?.degradedMode) {
-        return { details: [] }
+        return { details: conflictDetails }
       }
       throw new Error('GOV_DATA_KB_MISSING: 标准知识库不可用，语义错误检测已中止')
     }
@@ -248,7 +365,7 @@ export const SemanticRuleEngine = {
     if (!hasKbData && options?.degradedMode) {
       const localTerms = LocalTermsLoader.load(options.localTermsPath, options.inlineLocalTerms)
       if (localTerms.materials.length === 0 && localTerms.conditions.length === 0) {
-        return { details: [] }
+        return { details: conflictDetails }
       }
       const threshold = options.degradedSimilarityThreshold ?? 0.8
       const details: ErrorDetail[] = []
@@ -344,14 +461,14 @@ export const SemanticRuleEngine = {
           }
         }
       }
-      return { details }
+      return { details: [...conflictDetails, ...details] }
     }
 
     const details: ErrorDetail[] = []
     details.push(...detectTimeLimit(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectMaterials(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectConditions(guide, guideId, itemType, kb, severityMapping))
-    return { details }
+    return { details: [...conflictDetails, ...details] }
   },
 
   matchItemType,

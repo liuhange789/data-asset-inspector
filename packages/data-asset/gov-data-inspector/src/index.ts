@@ -182,6 +182,8 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
               materialConciseThreshold: configPack.materialConciseThreshold ?? 5,
               missingFieldStandardClause: configPack.missingFieldStandardClause ?? '标准规范条款',
               gbtMapping: configPack.gbtMapping,
+              fieldMapping: configPack.fieldMapping,
+              semanticConflictRules: configPack.semanticConflictRules,
             },
             kb,
             standardRules,
