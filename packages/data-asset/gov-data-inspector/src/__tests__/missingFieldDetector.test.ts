@@ -57,3 +57,66 @@ describe('MissingFieldDetector', () => {
     expect(details.length).toBe(0)
   })
 })
+describe('MissingFieldDetector.detectGraded', () => {
+  const coreFields = ['事项名称', '实施主体', '办理条件']
+  const extendedFields = ['结果样本', '网上支付', '物流快递']
+  const severityMapping = { missing: 'major', semantic: 'critical', logical: 'critical' }
+
+  it('8.1 核心字段缺失 → coreDetails产出missing明细，severity经映射为major', () => {
+    const guide: Record<string, unknown> = { 事项名称: '测试', 办理条件: '条件' }
+    const result = MissingFieldDetector.detectGraded(
+      guide, 'g1', coreFields, extendedFields, severityMapping, undefined, '国办发〔2015〕46号 第4.1条',
+    )
+    expect(result.coreDetails.length).toBe(1)
+    expect(result.coreDetails[0]!.field).toBe('实施主体')
+    expect(result.coreDetails[0]!.errorType).toBe('missing')
+    expect(result.coreDetails[0]!.severity).toBe('major')
+    expect(result.coreDetails[0]!.description).toContain('核心要素')
+    expect(result.coreDetails[0]!.standardClause).toContain('国办发〔2015〕46号 第4.1条')
+  })
+
+  it('8.2 扩展字段缺失 → extendedDetails产出warning明细，severity固定warning', () => {
+    const guide: Record<string, unknown> = {
+      事项名称: '测试', 实施主体: '部门', 办理条件: '条件',
+      结果样本: '样本',
+    }
+    const result = MissingFieldDetector.detectGraded(
+      guide, 'g1', coreFields, extendedFields, severityMapping,
+    )
+    expect(result.coreDetails.length).toBe(0)
+    expect(result.extendedDetails.length).toBe(2)
+    for (const d of result.extendedDetails) {
+      expect(d.errorType).toBe('warning')
+      expect(d.severity).toBe('warning')
+      expect(d.description).toContain('扩展要素')
+    }
+  })
+
+  it('8.3 coreRequiredFields为空数组 → 抛出GOV_DATA_RULES_MISSING异常', () => {
+    expect(() =>
+      MissingFieldDetector.detectGraded({}, 'g1', [], extendedFields, severityMapping),
+    ).toThrow('GOV_DATA_RULES_MISSING')
+  })
+
+  it('8.4 extendedRequiredFields为空数组 → 不抛异常，extendedDetails为空', () => {
+    const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: '部门', 办理条件: '条件' }
+    const result = MissingFieldDetector.detectGraded(
+      guide, 'g1', coreFields, [], severityMapping,
+    )
+    expect(result.coreDetails.length).toBe(0)
+    expect(result.extendedDetails).toEqual([])
+  })
+
+  it('8.5 checkFieldOverlap返回交集；detectGraded剔除重叠项', () => {
+    const overlap = MissingFieldDetector.checkFieldOverlap(['A', 'B', 'C'], ['B', 'C', 'D'])
+    expect(overlap).toEqual(['B', 'C'])
+
+    const guide: Record<string, unknown> = { 事项名称: '测试' }
+    const result = MissingFieldDetector.detectGraded(
+      guide, 'g1', ['事项名称', '实施主体'], ['事项名称', '网上支付'], severityMapping,
+    )
+    expect(result.coreDetails.some((d) => d.field === '事项名称')).toBe(false)
+    expect(result.extendedDetails.some((d) => d.field === '事项名称')).toBe(false)
+    expect(result.extendedDetails.some((d) => d.field === '网上支付')).toBe(true)
+  })
+})

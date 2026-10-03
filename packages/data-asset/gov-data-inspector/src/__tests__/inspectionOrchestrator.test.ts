@@ -202,3 +202,94 @@ describe('InspectionOrchestrator 集成测试', () => {
     expect(result.errorDetails.some((d) => d.errorType === 'logical' && d.description.includes('现场勘查'))).toBe(true)
   })
 })
+describe('InspectionOrchestrator 分级调度', () => {
+  const coreRequiredFields = [
+    '事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限',
+    '收费标准', '办理地点', '咨询电话', '监督电话', '办理时间', '网上办理深度',
+    '表格下载', '结果送达方式',
+  ]
+  const extendedRequiredFields = ['结果样本', '通办范围', '预约办理', '网上支付', '物流快递', '中介机构']
+
+  const gradedConfig = {
+    coreRequiredFields,
+    extendedRequiredFields,
+    formatRules,
+    severityMapping: { missing: 'major', semantic: 'critical', logical: 'critical' },
+    scoringWeights: { completeness: 0.3, accuracy: 0.4, traceability: 0.3 },
+    convenienceWeights: { timeLimit: 0.3, onlineCapable: 0.4, materialConcise: 0.3 },
+    itemTypeMatching: {
+      行政许可: { keywords: ['许可', '审批', '核准'], codePrefix: 'XK' },
+      现场勘查类: { keywords: ['现场勘查', '实地核查'], codePrefix: 'XC' },
+    },
+    materialConciseThreshold: 5,
+    missingFieldStandardClause: '国办发〔2015〕46号 第4.1条',
+  }
+
+  function makeCompleteGuideGraded(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+    return {
+      事项名称: '食品经营许可',
+      实施主体: '市场监管局',
+      办理条件: '符合法定条件',
+      申请材料: '营业执照复印件、行政许可申请表',
+      办理流程: '受理→审查→决定',
+      办理时限: '20个工作日',
+      收费标准: '不收费',
+      办理地点: '某市某区某路1号',
+      咨询电话: '010-12345678',
+      监督电话: '010-87654321',
+      办理时间: '工作日上午9-12点',
+      网上办理深度: '全流程网办',
+      表格下载: '可下载',
+      结果送达方式: '邮寄',
+      结果样本: '许可证',
+      通办范围: '全市',
+      预约办理: '支持',
+      网上支付: '支持',
+      物流快递: '支持',
+      中介机构: '不涉及',
+      ...overrides,
+    }
+  }
+
+  it('9.1 分级调度：核心缺失+扩展缺失 → errorDetails含missing与warning，统计独立', () => {
+    const data = [makeCompleteGuideGraded({ 实施主体: undefined, 网上支付: undefined })]
+    const result = InspectionOrchestrator.orchestrate(data, gradedConfig, kb, standardRules)
+    const missingDetails = result.errorDetails.filter((d) => d.errorType === 'missing')
+    const warningDetails = result.errorDetails.filter((d) => d.errorType === 'warning')
+    expect(missingDetails.length).toBeGreaterThan(0)
+    expect(warningDetails.length).toBeGreaterThan(0)
+    expect(result.coreMissingCount).toBe(missingDetails.length)
+    expect(result.extendedMissingCount).toBe(warningDetails.length)
+    expect(result.completeness).toBe(0)
+  })
+
+  it('9.2 回退路径：仅含requiredFields → 行为与v3.4.1一致，extendedMissingCount为0', () => {
+    const fallbackConfig = {
+      requiredFields: coreRequiredFields,
+      formatRules,
+      severityMapping: { missing: 'major', semantic: 'critical', logical: 'critical' },
+      scoringWeights: { completeness: 0.3, accuracy: 0.4, traceability: 0.3 },
+      convenienceWeights: { timeLimit: 0.3, onlineCapable: 0.4, materialConcise: 0.3 },
+      itemTypeMatching: {
+        行政许可: { keywords: ['许可', '审批', '核准'], codePrefix: 'XK' },
+        现场勘查类: { keywords: ['现场勘查', '实地核查'], codePrefix: 'XC' },
+      },
+      materialConciseThreshold: 5,
+      missingFieldStandardClause: '国办发〔2015〕46号 第4.1条',
+    }
+    const data = [makeCompleteGuideGraded({ 实施主体: undefined })]
+    const result = InspectionOrchestrator.orchestrate(data, fallbackConfig, kb, standardRules)
+    expect(result.extendedMissingCount).toBe(0)
+    expect(result.missingFields).toBeGreaterThan(0)
+    expect(result.errorDetails.filter((d) => d.errorType === 'warning').length).toBe(0)
+  })
+
+  it('9.3 仅扩展字段缺失（无核心缺失）→ 通过判定为true，warning不计入误报', () => {
+    const data = [makeCompleteGuideGraded({ 网上支付: undefined, 物流快递: undefined })]
+    const result = InspectionOrchestrator.orchestrate(data, gradedConfig, kb, standardRules)
+    expect(result.completeness).toBe(100)
+    expect(result.coreMissingCount).toBe(0)
+    expect(result.extendedMissingCount).toBe(2)
+    expect(result.missingFields).toBe(0)
+  })
+})

@@ -51,6 +51,30 @@
     "物流快递",
     "中介机构或特殊环节"
   ],
+  "coreRequiredFields": [
+    "事项名称",
+    "实施主体",
+    "办理条件",
+    "申请材料",
+    "办理流程",
+    "办理时限",
+    "收费标准",
+    "办理地点",
+    "咨询电话",
+    "监督电话",
+    "网上办理深度",
+    "结果送达方式",
+    "表格下载",
+    "办理时间"
+  ],
+  "extendedRequiredFields": [
+    "结果样本",
+    "通办范围",
+    "预约办理",
+    "网上支付",
+    "物流快递",
+    "中介机构"
+  ],
   "formatRules": [
     {
       "field": "办理时限",
@@ -916,7 +940,7 @@
     "materialConcise": 0.3
   },
   "materialConciseThreshold": 5,
-  "missingFieldStandardClause": "国办发〔2017〕47号 第4.1条",
+  "missingFieldStandardClause": "国办发〔2015〕46号 第4.1条",
   "degradedSimilarityThreshold": 0.6,
   "inputLengthThreshold": 50000,
   "fieldMapping": {

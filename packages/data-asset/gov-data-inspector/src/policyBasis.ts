@@ -47,6 +47,7 @@ const ERROR_TYPE_DOC_MAP: Record<ErrorType, string> = {
   missing: '国办发〔2017〕47号',
   semantic: 'GB/T 36114-2018',
   logical: '国办发〔2018〕45号',
+  warning: '',
 }
 
 function extractClauseNumber(standardClause: string): string {
@@ -60,6 +61,9 @@ export function resolveErrorDetailPolicyBasis(
   referenceSystem: ReferenceSystem | null,
   policyReferences: PolicyDoc[],
 ): string {
+  if (errorType === 'warning') {
+    return '依据：服务完善性建议（非法定强制要素）'
+  }
   const docNumber = ERROR_TYPE_DOC_MAP[errorType]
   const doc = policyReferences.find((d) => d.docNumber === docNumber)
 

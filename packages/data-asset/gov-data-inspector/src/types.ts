@@ -1,6 +1,6 @@
-export type ErrorType = 'missing' | 'semantic' | 'logical'
+export type ErrorType = 'missing' | 'semantic' | 'logical' | 'warning'
 
-export type Severity = 'critical' | 'major' | 'minor'
+export type Severity = 'critical' | 'major' | 'minor' | 'warning'
 
 export type DataSource = 'national' | 'provincial' | 'standard'
 

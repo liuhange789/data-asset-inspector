@@ -13,7 +13,7 @@ const REQUIRED_TOP_FIELDS = [
   'region',
   'configPackVersion',
   'policyBasis',
-  'requiredFields',
+
   'formatRules',
   'localStandardTerms',
   'logicErrorRules',
@@ -103,9 +103,30 @@ export const ConfigPackSchemaValidator = {
       }
     }
 
+    if (pack.requiredFields === undefined && pack.coreRequiredFields === undefined) {
+      errors.push({ path: 'requiredFields/coreRequiredFields', message: 'requiredFields 与 coreRequiredFields 至少需存在其一' })
+    }
+
     if (isArray(pack.requiredFields) && pack.requiredFields.length < 1) {
       errors.push({ path: 'requiredFields', message: 'requiredFields 应至少含 1 个条目' })
     }
+
+    if (isArray(pack.coreRequiredFields) && pack.coreRequiredFields.length < 1) {
+      errors.push({ path: 'coreRequiredFields', message: 'coreRequiredFields 应至少含 1 个条目' })
+    }
+
+    if (pack.extendedRequiredFields !== undefined && !isArray(pack.extendedRequiredFields)) {
+      errors.push({ path: 'extendedRequiredFields', message: 'extendedRequiredFields 应为数组' })
+    }
+
+    if (isArray(pack.coreRequiredFields) && isArray(pack.extendedRequiredFields)) {
+      const coreSet = new Set(pack.coreRequiredFields as string[])
+      const overlap = (pack.extendedRequiredFields as string[]).filter((f) => coreSet.has(f))
+      if (overlap.length > 0) {
+        errors.push({ path: 'coreRequiredFields/extendedRequiredFields', message: `字段重叠告警(不阻塞): ${overlap.join(', ')}，核心优先剔除重叠项` })
+      }
+    }
+
 
     if (isArray(pack.formatRules)) {
       for (let i = 0; i < pack.formatRules.length; i++) {
@@ -181,7 +202,7 @@ export const ConfigPackSchemaValidator = {
     }
 
     if (isObject(pack.severityMapping)) {
-      const validValues = ['critical', 'major', 'minor']
+      const validValues = ['critical', 'major', 'minor', 'warning']
       for (const [key, val] of Object.entries(pack.severityMapping)) {
         if (!validValues.includes(val as string)) {
           errors.push({ path: `severityMapping.${key}`, message: `应为 critical/major/minor，实际为 ${val}` })
@@ -213,7 +234,8 @@ export const ConfigPackSchemaValidator = {
       }
     }
 
-    return { valid: errors.length === 0, errors }
+    const hardErrors = errors.filter((e) => !e.message.includes('告警(不阻塞)'))
+    return { valid: hardErrors.length === 0, errors }
   },
 
   checkRegexSafety(pattern: string): boolean {

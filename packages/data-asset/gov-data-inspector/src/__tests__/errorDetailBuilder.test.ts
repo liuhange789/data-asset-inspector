@@ -104,4 +104,29 @@ describe('ErrorDetailBuilder', () => {
     expect(counts.semantic).toBe(1)
     expect(counts.logical).toBe(1)
   })
+
+  it('8.6 warning类型不指定severity → severity恒为warning且不被severityMapping映射', () => {
+    const detail = ErrorDetailBuilder.build(
+      {
+        guideId: 'g1',
+        field: '网上支付',
+        errorType: 'warning',
+        description: '缺失扩展要素',
+        suggestion: '建议补充',
+      },
+      { missing: 'critical', semantic: 'critical', logical: 'critical' },
+    )
+    expect(detail.severity).toBe('warning')
+  })
+
+  it('8.6 countByType含warning计数字段且累加正确', () => {
+    const details: ErrorDetail[] = [
+      { guideId: 'g1', field: 'f1', errorType: 'missing', severity: 'major', description: 'd', suggestion: 's' },
+      { guideId: 'g1', field: 'f2', errorType: 'warning', severity: 'warning', description: 'd', suggestion: 's' },
+      { guideId: 'g1', field: 'f3', errorType: 'warning', severity: 'warning', description: 'd', suggestion: 's' },
+    ]
+    const counts = ErrorDetailBuilder.countByType(details)
+    expect(counts.warning).toBe(2)
+    expect(counts.missing).toBe(1)
+  })
 })

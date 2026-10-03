@@ -68,6 +68,28 @@ describe('Schema 校验器', () => {
     expect(result.valid).toBe(false)
     expect(result.errors.some((e) => e.path === 'dataSourcePriority[0]')).toBe(true)
   })
+
+  it('8.8 coreRequiredFields为空数组 → 校验失败', () => {
+    const pack = { ...defaultPack, coreRequiredFields: [] }
+    const result = ConfigPackSchemaValidator.validate(pack)
+    expect(result.errors.some((e) => e.path === 'coreRequiredFields')).toBe(true)
+  })
+
+  it('8.8 core与extended含交集 → 产出告警但valid仍为true', () => {
+    const pack = { ...defaultPack, coreRequiredFields: ['A', 'B'], extendedRequiredFields: ['B', 'C'] }
+    const result = ConfigPackSchemaValidator.validate(pack)
+    expect(result.errors.some((e) => e.path === 'coreRequiredFields/extendedRequiredFields')).toBe(true)
+    expect(result.valid).toBe(true)
+  })
+
+  it('8.8 requiredFields与coreRequiredFields均缺失 → 校验失败', () => {
+    const pack = { ...defaultPack }
+    delete (pack as Record<string, unknown>).requiredFields
+    delete (pack as Record<string, unknown>).coreRequiredFields
+    const result = ConfigPackSchemaValidator.validate(pack)
+    expect(result.valid).toBe(false)
+    expect(result.errors.some((e) => e.path === 'requiredFields/coreRequiredFields')).toBe(true)
+  })
 })
 
 describe('正则 ReDoS 安全预检', () => {

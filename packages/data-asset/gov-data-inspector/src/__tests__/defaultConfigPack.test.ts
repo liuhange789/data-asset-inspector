@@ -28,4 +28,29 @@ describe('缺省配置包完整性', () => {
       expect((defaultPack as Record<string, unknown>)[field]).toBeDefined()
     }
   })
+
+  it('9.4 coreRequiredFields长度为14且内容与spec 6.1一致', () => {
+    const expected = [
+      '事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限',
+      '收费标准', '办理地点', '咨询电话', '监督电话', '网上办理深度', '结果送达方式',
+      '表格下载', '办理时间',
+    ]
+    expect(defaultPack.coreRequiredFields).toEqual(expected)
+  })
+
+  it('9.4 extendedRequiredFields长度为6且内容与spec 6.2一致', () => {
+    const expected = ['结果样本', '通办范围', '预约办理', '网上支付', '物流快递', '中介机构']
+    expect(defaultPack.extendedRequiredFields).toEqual(expected)
+  })
+
+  it('9.4 core与extended集合交集为空', () => {
+    const core = new Set(defaultPack.coreRequiredFields as string[])
+    const extended = defaultPack.extendedRequiredFields as string[]
+    const intersection = extended.filter((f) => core.has(f))
+    expect(intersection).toEqual([])
+  })
+
+  it('9.4 missingFieldStandardClause为国办发〔2015〕46号 第4.1条', () => {
+    expect(defaultPack.missingFieldStandardClause).toBe('国办发〔2015〕46号 第4.1条')
+  })
 })

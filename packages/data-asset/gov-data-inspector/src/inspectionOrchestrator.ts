@@ -15,6 +15,8 @@ export function deduplicateCrossEngine(errors: ErrorDetail[]): ErrorDetail[] {
 export interface OrchestrateConfig {
   guideRequiredElements?: string[]
   requiredFields?: string[]
+  coreRequiredFields?: string[]
+  extendedRequiredFields?: string[]
   formatRules: FormatRule[]
   severityMapping: Record<string, string>
   scoreWeights?: { completeness: number; accuracy: number; traceability: number }
@@ -40,6 +42,8 @@ export interface OrchestrateOptions {
 
 export interface OrchestrateResult extends GuideInspectionResult {
   warnings: UnmatchedWarning[]
+  coreMissingCount?: number
+  extendedMissingCount?: number
 }
 
 export const InspectionOrchestrator = {
@@ -56,9 +60,14 @@ export const InspectionOrchestrator = {
     const allWarnings: UnmatchedWarning[] = []
     let completeCount = 0
     let serviceConvenience = 0
+    let coreMissingCount = 0
+    let extendedMissingCount = 0
 
     const requiredFields = config.requiredFields ?? config.guideRequiredElements ?? []
+    const coreRequiredFields = config.coreRequiredFields ?? config.requiredFields ?? config.guideRequiredElements ?? []
+    const extendedRequiredFields = config.extendedRequiredFields ?? []
     const scoringWeights = config.scoringWeights ?? config.scoreWeights
+    const useGraded = config.coreRequiredFields !== undefined && config.coreRequiredFields.length > 0
 
     for (let i = 0; i < data.length; i++) {
       const row = data[i]
@@ -70,18 +79,35 @@ export const InspectionOrchestrator = {
         ? mapGuideToStandard(guide, config.fieldMapping)
         : guide
 
-      const missingDetails = MissingFieldDetector.detect(
-        standardGuide,
-        guideId,
-        requiredFields,
-        config.severityMapping,
-        undefined,
-        config.missingFieldStandardClause,
-      )
-      allErrorDetails.push(...missingDetails)
-
-      const isComplete = missingDetails.length === 0
-      if (isComplete) completeCount++
+      if (useGraded) {
+        const graded = MissingFieldDetector.detectGraded(
+          standardGuide,
+          guideId,
+          coreRequiredFields,
+          extendedRequiredFields,
+          config.severityMapping,
+          undefined,
+          config.missingFieldStandardClause,
+        )
+        allErrorDetails.push(...graded.coreDetails, ...graded.extendedDetails)
+        coreMissingCount += graded.coreDetails.length
+        extendedMissingCount += graded.extendedDetails.length
+        const isComplete = graded.coreDetails.length === 0
+        if (isComplete) completeCount++
+      } else {
+        const missingDetails = MissingFieldDetector.detect(
+          standardGuide,
+          guideId,
+          requiredFields,
+          config.severityMapping,
+          undefined,
+          config.missingFieldStandardClause,
+        )
+        allErrorDetails.push(...missingDetails)
+        coreMissingCount += missingDetails.length
+        const isComplete = missingDetails.length === 0
+        if (isComplete) completeCount++
+      }
 
       const semanticResult = SemanticRuleEngine.detect(
         standardGuide,
@@ -127,15 +153,16 @@ export const InspectionOrchestrator = {
     }
 
     const counts = ErrorDetailBuilder.countByType(allErrorDetails)
-    const totalFieldCount = data.length * requiredFields.length
+    const effectiveFieldCount = useGraded ? coreRequiredFields.length : requiredFields.length
+    const totalFieldCount = data.length * effectiveFieldCount
 
     const detectionRates: DetectionRates = QualityMetricsCalculator.calculate({
       semanticErrorCount: counts.semantic,
       logicalErrorCount: counts.logical,
-      missingFieldCount: counts.missing,
+      missingFieldCount: coreMissingCount,
       formatIssueCount: allFormatIssues.length,
       totalGuides: data.length,
-      requiredFieldCount: requiredFields.length,
+      requiredFieldCount: effectiveFieldCount,
       totalFieldCount: totalFieldCount > 0 ? totalFieldCount : 1,
       errorDetails: allErrorDetails,
       scoreWeights: scoringWeights!,
@@ -143,7 +170,7 @@ export const InspectionOrchestrator = {
 
     return {
       completeness: data.length > 0 ? Math.round((completeCount / data.length) * 100) : 0,
-      missingFields: counts.missing,
+      missingFields: coreMissingCount,
       semanticErrors: counts.semantic,
       logicalErrors: counts.logical,
       errorDetails: allErrorDetails,
@@ -153,6 +180,8 @@ export const InspectionOrchestrator = {
       totalGuidesChecked: data.length,
       detectionRates,
       warnings: allWarnings,
+      coreMissingCount,
+      extendedMissingCount,
     }
   },
 }

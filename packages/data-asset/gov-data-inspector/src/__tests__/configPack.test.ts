@@ -84,4 +84,16 @@ describe('ConfigPack 类型与字段名映射', () => {
     const result = normalizeConfigPack(defaultPack)
     expect(result.configPackId).toBe('default')
   })
+
+  it('8.7 仅含requiredFields旧版配置 → coreRequiredFields回退为requiredFields', () => {
+    const result = normalizeConfigPack({ ...basePack })
+    expect(result.coreRequiredFields).toEqual(['事项名称', '办理条件'])
+  })
+
+  it('8.7 同时含coreRequiredFields与requiredFields → 以core为准', () => {
+    const pack = { ...basePack, coreRequiredFields: ['核心字段1', '核心字段2'], extendedRequiredFields: ['扩展字段1'] }
+    const result = normalizeConfigPack(pack)
+    expect(result.coreRequiredFields).toEqual(['核心字段1', '核心字段2'])
+    expect(result.extendedRequiredFields).toEqual(['扩展字段1'])
+  })
 })

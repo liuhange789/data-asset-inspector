@@ -48,6 +48,8 @@ export interface ConfigPack {
   configPackVersion: string
   policyBasis: PolicyDocument[]
   requiredFields: string[]
+  coreRequiredFields?: string[]
+  extendedRequiredFields?: string[]
   formatRules: FormatRule[]
   localStandardTerms: LocalStandardTerms
   logicErrorRules: StandardRule[]
@@ -72,7 +74,7 @@ const REQUIRED_FIELDS: (keyof ConfigPack)[] = [
   'region',
   'configPackVersion',
   'policyBasis',
-  'requiredFields',
+
   'formatRules',
   'localStandardTerms',
   'logicErrorRules',
@@ -86,12 +88,16 @@ const REQUIRED_FIELDS: (keyof ConfigPack)[] = [
 
 export function normalizeConfigPack(raw: Record<string, unknown>): ConfigPack {
   const requiredFields = (raw.requiredFields ?? raw.guideRequiredElements) as string[] | undefined
+  const coreRequiredFields = (raw.coreRequiredFields ?? raw.requiredFields ?? raw.guideRequiredElements) as string[] | undefined
+  const extendedRequiredFields = raw.extendedRequiredFields as string[] | undefined
   const scoringWeights = (raw.scoringWeights ?? raw.scoreWeights) as ScoringWeights | undefined
   const gbtMapping = (raw.gbtMapping ?? raw.gbt47949Mapping) as GbtMapping | undefined
 
   const partial: Record<string, unknown> = { ...raw }
 
   if (requiredFields !== undefined) partial.requiredFields = requiredFields
+  if (coreRequiredFields !== undefined) partial.coreRequiredFields = coreRequiredFields
+  if (extendedRequiredFields !== undefined) partial.extendedRequiredFields = extendedRequiredFields
   if (scoringWeights !== undefined) partial.scoringWeights = scoringWeights
   if (gbtMapping !== undefined) partial.gbtMapping = gbtMapping
 
@@ -103,6 +109,10 @@ export function normalizeConfigPack(raw: Record<string, unknown>): ConfigPack {
     if (partial[field] === undefined || partial[field] === null) {
       throw new Error(`GOV_CONFIG_PACK_INVALID: 必填字段 "${field}" 缺失`)
     }
+  }
+
+  if (partial.requiredFields === undefined && partial.coreRequiredFields === undefined) {
+    throw new Error('GOV_CONFIG_PACK_INVALID: requiredFields 与 coreRequiredFields 至少需存在其一')
   }
 
   return partial as unknown as ConfigPack
