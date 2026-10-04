@@ -97,4 +97,26 @@ describe('FormatValidator', () => {
     const issues = FormatValidator.validate({ 办理时间: '周一至周五 上午9:00-12:00 下午13:30-17:00' }, 'g1', rules)
     expect(issues.some((i) => i.field === '办理时间')).toBe(false)
   })
+
+  it('FV-10: 字段缺失 → 报告格式问题（非跳过）', () => {
+    const issues = FormatValidator.validate({}, 'g1', formatRules)
+    expect(issues.length).toBeGreaterThan(0)
+    expect(issues.some((i) => i.field === '办理时限' && i.issue.includes('缺失'))).toBe(true)
+    expect(issues.some((i) => i.field === '咨询电话' && i.issue.includes('缺失'))).toBe(true)
+  })
+
+  it('FV-11: 字段值为空字符串 → 报告格式问题（非跳过）', () => {
+    const issues = FormatValidator.validate({ 办理时限: '  ' }, 'g1', formatRules)
+    expect(issues.some((i) => i.field === '办理时限' && i.issue.includes('缺失'))).toBe(true)
+  })
+
+  it('FV-12: 字段缺失时仅报一条格式问题（不因多规则重复报）', () => {
+    const rules: FormatRule[] = [
+      { field: '办理时间', requiredKeywords: ['工作日', '上午', '下午', '周一至周五'], suggestionTemplate: '应含工作日时段', matchMode: 'any' },
+      { field: '办理时间', pattern: '【星期[一二三四五六日天].*】', suggestionTemplate: '应含星期格式', matchMode: 'any' },
+    ]
+    const issues = FormatValidator.validate({}, 'g1', rules)
+    const timeIssues = issues.filter((i) => i.field === '办理时间')
+    expect(timeIssues.length).toBe(1)
+  })
 })

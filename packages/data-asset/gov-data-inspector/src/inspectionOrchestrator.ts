@@ -8,8 +8,14 @@ import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 import { mapGuideToStandard } from './mapping-layer.js'
 
 export function deduplicateCrossEngine(errors: ErrorDetail[]): ErrorDetail[] {
-  const logicalFieldKeys = new Set(errors.filter((e) => e.errorType === 'logical').map((e) => `${e.guideId}:${e.field}`))
-  return errors.filter((e) => !(e.errorType === 'semantic' && logicalFieldKeys.has(`${e.guideId}:${e.field}`)))
+  const logicalKeys = new Set(
+    errors
+      .filter((e) => e.errorType === 'logical')
+      .map((e) => `${e.guideId}:${e.field}:${e.standardClause ?? ''}`),
+  )
+  return errors.filter(
+    (e) => !(e.errorType === 'semantic' && logicalKeys.has(`${e.guideId}:${e.field}:${e.standardClause ?? ''}`)),
+  )
 }
 
 export interface OrchestrateConfig {

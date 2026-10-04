@@ -119,4 +119,15 @@ describe('MissingFieldDetector.detectGraded', () => {
     expect(result.extendedDetails.some((d) => d.field === '事项名称')).toBe(false)
     expect(result.extendedDetails.some((d) => d.field === '网上支付')).toBe(true)
   })
+
+  it('8.6 扩展占位符值（不适用/无此项/空白等）→ 判定为漏项', () => {
+    const placeholders = ['不适用', '无此项', '无内容', '空白', '未指定', '未确定', '未知', '不详', '无限制', '不需要', '无规定', '无特殊要求', '暂不适用', '暂无规定']
+    for (const ph of placeholders) {
+      const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: ph, 办理条件: '条件' }
+      const result = MissingFieldDetector.detectGraded(
+        guide, 'g1', coreFields, extendedFields, severityMapping,
+      )
+      expect(result.coreDetails.some((d) => d.field === '实施主体')).toBe(true)
+    }
+  })
 })

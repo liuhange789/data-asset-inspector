@@ -547,16 +547,29 @@ function detectLocalTermsMismatch(
       details.push(...matchAndReport(mat, localTerms.materials, threshold, '申请材料', guideId, severityMapping))
     }
   }
+  details.push(...detectConditionTermsMismatch(guide, guideId, options, severityMapping))
+  return details
+}
+
+function detectConditionTermsMismatch(
+  guide: Record<string, unknown>,
+  guideId: string,
+  options: DetectOptions,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const localTerms = LocalTermsLoader.load(options.localTermsPath, options.inlineLocalTerms)
+  if (localTerms.conditions.length === 0) return []
+  const threshold = options.degradedSimilarityThreshold ?? 0.80
   const conditionStr = String(guide['办理条件'] ?? '')
-  if (conditionStr && localTerms.conditions.length > 0) {
-    const condParts = conditionStr.split(/[、,，;；\n。]/).map((s) => s.trim()).filter(Boolean)
-    for (const cond of condParts) {
-      const condDetails = matchAndReport(cond, localTerms.conditions, threshold, '办理条件', guideId, severityMapping)
-      details.push(...condDetails)
-      if (condDetails.length === 0) {
-        const sub = detectApproximateSubstring(cond, localTerms.conditions, guideId, severityMapping)
-        if (sub) details.push(sub)
-      }
+  if (!conditionStr) return []
+  const details: ErrorDetail[] = []
+  const condParts = conditionStr.split(/[、,，;；\n。]/).map((s) => s.trim()).filter(Boolean)
+  for (const cond of condParts) {
+    const condDetails = matchAndReport(cond, localTerms.conditions, threshold, '办理条件', guideId, severityMapping)
+    details.push(...condDetails)
+    if (condDetails.length === 0) {
+      const sub = detectApproximateSubstring(cond, localTerms.conditions, guideId, severityMapping)
+      if (sub) details.push(sub)
     }
   }
   return details
@@ -587,8 +600,9 @@ export const SemanticRuleEngine = {
         conflictDetails.push(...checkMaterialConditionConflict(guide, guideId, options.semanticConflictRules, severityMapping))
         conflictDetails.push(...checkTimeProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
       }
+      const conditionTermDetails = detectConditionTermsMismatch(guide, guideId, options ?? {}, severityMapping)
       const warning = UnmatchedWarningBuilder.build(guideId)
-      return { details: conflictDetails, unmatched: true, warning }
+      return { details: deduplicateErrors([...conflictDetails, ...conditionTermDetails]), unmatched: true, warning }
     }
 
     const isKbMissing = !kb || !kb.timeLimits || !kb.materials || !kb.conditions
@@ -623,6 +637,7 @@ export const SemanticRuleEngine = {
     details.push(...detectTimeLimit(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectMaterials(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectConditions(guide, guideId, itemType, kb, severityMapping))
+    details.push(...detectConditionTermsMismatch(guide, guideId, options ?? {}, severityMapping))
     return { details: deduplicateErrors([...conflictDetails, ...details]) }
   },
 

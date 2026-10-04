@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { InspectionOrchestrator } from '../inspectionOrchestrator.js'
+import { InspectionOrchestrator, deduplicateCrossEngine } from '../inspectionOrchestrator.js'
 import type { KnowledgeBase, StandardRule, FormatRule } from '../types.js'
 
 const kb: KnowledgeBase = {
@@ -291,5 +291,25 @@ describe('InspectionOrchestrator 分级调度', () => {
     expect(result.coreMissingCount).toBe(0)
     expect(result.extendedMissingCount).toBe(2)
     expect(result.missingFields).toBe(0)
+  })
+})
+describe('deduplicateCrossEngine 按字段+根因去重', () => {
+  it('同一字段同根因 → 保留logical删除semantic', () => {
+    const errors = [
+      { guideId: 'g1', field: '办理条件', errorType: 'logical' as const, description: '逻辑矛盾', suggestion: '建议', dataSource: 'standard' as const, standardClause: '语义矛盾检测·条件流程冲突', severity: 'critical' as const },
+      { guideId: 'g1', field: '办理条件', errorType: 'semantic' as const, description: '语义不匹配', suggestion: '建议', dataSource: 'standard' as const, standardClause: '语义矛盾检测·条件流程冲突', severity: 'critical' as const },
+    ]
+    const result = deduplicateCrossEngine(errors)
+    expect(result.length).toBe(1)
+    expect(result[0]!.errorType).toBe('logical')
+  })
+
+  it('同一字段不同根因 → 两者均保留', () => {
+    const errors = [
+      { guideId: 'g1', field: '办理条件', errorType: 'logical' as const, description: '逻辑矛盾', suggestion: '建议', dataSource: 'standard' as const, standardClause: '语义矛盾检测·条件流程冲突', severity: 'critical' as const },
+      { guideId: 'g1', field: '办理条件', errorType: 'semantic' as const, description: '要素缺失', suggestion: '建议', dataSource: 'standard' as const, standardClause: '行政许可法第十二条', severity: 'critical' as const },
+    ]
+    const result = deduplicateCrossEngine(errors)
+    expect(result.length).toBe(2)
   })
 })

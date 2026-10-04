@@ -301,4 +301,28 @@ describe('SemanticRuleEngine', () => {
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: ['学籍证明'], conditions: [] } })
     expect(result.details.some((d) => d.field === '申请材料' && d.errorType === 'semantic')).toBe(true)
   })
+
+  it('非降级模式：办理条件含非标准表述 → 通过本地词表检出semantic错误', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '申请人须年满十八周岁且具有完全民事行为能力' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching, undefined, {
+      inlineLocalTerms: { materials: [], conditions: ['年满18周岁', '具有完全民事行为能力'] },
+    })
+    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic')).toBe(true)
+  })
+
+  it('非降级模式：办理条件匹配本地词表 → 不报semantic错误', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '年满18周岁且具有完全民事行为能力' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching, undefined, {
+      inlineLocalTerms: { materials: [], conditions: ['年满18周岁', '具有完全民事行为能力'] },
+    })
+    expect(result.details.some((d) => d.field === '办理条件' && d.standardClause === '降级模式·本地词表校验')).toBe(false)
+  })
+
+  it('itemType未匹配时：办理条件含非标准表述 → 仍通过本地词表检出', () => {
+    const guide = { 事项名称: '未知事项', 办理条件: '申请人须年满十八周岁' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching, undefined, {
+      inlineLocalTerms: { materials: [], conditions: ['年满18周岁', '具有完全民事行为能力'] },
+    })
+    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic')).toBe(true)
+  })
 })
