@@ -10,12 +10,32 @@ function isMissing(val: unknown): boolean {
     (typeof val === 'string' && PLACEHOLDER_VALUES.includes(val.trim()))
 }
 
+const INVALID_CONTENT_TEMPLATES = new Set([
+  '符合条件', '符合要求', '按规定执行', '按相关要求',
+  '详见', '另见', '参见', '附后',
+  '其他', '其它', '相关材料', '相关证明',
+])
+
+const SUBSTANTIVE_WORDS = [
+  '办理', '申请', '提交', '审核', '许可', '登记', '备案', '审批', '受理',
+  '送达', '邮寄', '下载', '网上', '网办', '现场', '窗口', '具备', '拥有', '符合', '提供',
+  '证书', '报告', '工作日', '电话', '地址', '街道', '收费', '免费', '时间',
+  '深度', '全程', '原件', '复印件', '身份', '营业', '法人', '预约', '支付',
+  '快递', '物流', '监督', '监管', '市场', '服务', '中心', '大厅', '执照',
+  '证明', '材料', '流程', '条件', '时限', '地点', '标准', '方式', '发证',
+  '审查', '核查', '验收', '认定', '认证', '批准', '注册', '签字', '盖章',
+]
+
 function isInvalidContent(val: unknown): string | null {
   if (typeof val !== 'string') return null
   const trimmed = val.trim()
   if (trimmed.length === 0) return null
   if (trimmed.length < 2) return '内容过于简略，无法指导办事'
   if (trimmed.replace(/[^\p{L}\p{N}]/gu, '').length === 0) return '内容仅含标点符号，无有效信息'
+  if (INVALID_CONTENT_TEMPLATES.has(trimmed)) return '内容为无效模板语，无实质信息'
+  if (trimmed.length < 4 && !SUBSTANTIVE_WORDS.some((w) => trimmed.includes(w))) {
+    return '内容缺乏实质性动词或名词，无法指导办事'
+  }
   return null
 }
 
@@ -155,24 +175,7 @@ export const MissingFieldDetector = {
             severityMapping,
           ),
         )
-      } else {
-        const invalidReason = isInvalidContent(val)
-        if (invalidReason) {
-          extendedDetails.push(
-            ErrorDetailBuilder.build(
-              {
-                guideId,
-                field: elem,
-                errorType: 'warning',
-                description: `办事指南"${guideId}"字段"${elem}"${invalidReason}，建议补充有效内容以提升服务完整性`,
-                suggestion: `建议补充"${elem}"字段的有效内容`,
-                dataSource: 'standard',
-                standardClause: '扩展要素·内容合规性建议',
-              },
-              severityMapping,
-            ),
-          )
-        }
+
       }
     }
     return { coreDetails, extendedDetails }

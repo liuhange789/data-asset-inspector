@@ -42,7 +42,7 @@ describe('MissingFieldDetector', () => {
 
   it('字段齐备的指南 → 返回空数组', () => {
     const guide: Record<string, unknown> = {}
-    for (const elem of requiredElements) guide[elem] = '有值'
+    for (const elem of requiredElements) guide[elem] = '有效内容值'
     const details = MissingFieldDetector.detect(guide, 'g1', requiredElements)
     expect(details.length).toBe(0)
   })
@@ -52,7 +52,7 @@ describe('MissingFieldDetector', () => {
   })
 
   it('源码中不存在硬编码政策依据文本', () => {
-    const guide: Record<string, unknown> = { 事项名称: '测试' }
+    const guide: Record<string, unknown> = { 事项名称: '食品经营许可' }
     const details = MissingFieldDetector.detect(guide, 'g1', ['事项名称'])
     expect(details.length).toBe(0)
   })
@@ -63,7 +63,7 @@ describe('MissingFieldDetector.detectGraded', () => {
   const severityMapping = { missing: 'major', semantic: 'critical', logical: 'critical' }
 
   it('8.1 核心字段缺失 → coreDetails产出missing明细，severity经映射为major', () => {
-    const guide: Record<string, unknown> = { 事项名称: '测试', 办理条件: '条件' }
+    const guide: Record<string, unknown> = { 事项名称: '食品经营许可', 办理条件: '条件' }
     const result = MissingFieldDetector.detectGraded(
       guide, 'g1', coreFields, extendedFields, severityMapping, undefined, '国办发〔2015〕46号 第4.1条',
     )
@@ -77,8 +77,8 @@ describe('MissingFieldDetector.detectGraded', () => {
 
   it('8.2 扩展字段缺失 → extendedDetails产出warning明细，severity固定warning', () => {
     const guide: Record<string, unknown> = {
-      事项名称: '测试', 实施主体: '部门', 办理条件: '条件',
-      结果样本: '样本',
+      事项名称: '食品经营许可', 实施主体: '市场监管部门', 办理条件: '条件',
+      结果样本: '许可证样本',
     }
     const result = MissingFieldDetector.detectGraded(
       guide, 'g1', coreFields, extendedFields, severityMapping,
@@ -99,7 +99,7 @@ describe('MissingFieldDetector.detectGraded', () => {
   })
 
   it('8.4 extendedRequiredFields为空数组 → 不抛异常，extendedDetails为空', () => {
-    const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: '部门', 办理条件: '条件' }
+    const guide: Record<string, unknown> = { 事项名称: '食品经营许可', 实施主体: '市场监管部门', 办理条件: '条件' }
     const result = MissingFieldDetector.detectGraded(
       guide, 'g1', coreFields, [], severityMapping,
     )
@@ -111,7 +111,7 @@ describe('MissingFieldDetector.detectGraded', () => {
     const overlap = MissingFieldDetector.checkFieldOverlap(['A', 'B', 'C'], ['B', 'C', 'D'])
     expect(overlap).toEqual(['B', 'C'])
 
-    const guide: Record<string, unknown> = { 事项名称: '测试' }
+    const guide: Record<string, unknown> = { 事项名称: '食品经营许可' }
     const result = MissingFieldDetector.detectGraded(
       guide, 'g1', ['事项名称', '实施主体'], ['事项名称', '网上支付'], severityMapping,
     )
@@ -159,17 +159,15 @@ describe('MissingFieldDetector.detectGraded', () => {
     expect(result.coreDetails.some((d) => d.field === '实施主体')).toBe(false)
   })
 
-  it('8.10 扩展字段内容过于简略 → 报warning非missing', () => {
+  it('8.10 扩展字段内容过于简略 → 不报内容合规性错误（仅core字段检查）', () => {
     const guide: Record<string, unknown> = {
-      事项名称: '测试', 实施主体: '部门', 办理条件: '条件',
+      事项名称: '食品经营许可', 实施主体: '市场监管部门', 办理条件: '条件',
       结果样本: 'X',
     }
     const result = MissingFieldDetector.detectGraded(
       guide, 'g1', coreFields, extendedFields, severityMapping,
     )
     const detail = result.extendedDetails.find((d) => d.field === '结果样本')
-    expect(detail).toBeDefined()
-    expect(detail!.errorType).toBe('warning')
-    expect(detail!.description).toContain('内容过于简略')
+    expect(detail).toBeUndefined()
   })
 })
