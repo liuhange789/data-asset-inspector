@@ -3,7 +3,7 @@ import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 
 function extractTimeLimitDays(timeLimit: unknown): number | null {
   const str = String(timeLimit ?? '')
-  const match = str.match(/(\d+)\s*个?\s*工作日/)
+  const match = str.match(/(\d+)\s*个?\s*(?:工作日|天)/)
   if (!match || !match[1]) return null
   return parseInt(match[1], 10)
 }

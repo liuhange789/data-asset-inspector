@@ -27,8 +27,8 @@ const kb: KnowledgeBase = {
 }
 
 const standardRules: StandardRule[] = [
-  { ruleId: 'LOG_SITE_001', standardClause: 'DB1405/T 085-2025 第5.2条', triggerFields: ['办理流程', '办理时限'], condition: '现场勘查且时限<5', threshold: 5, suggestionTemplate: '建议调整', triggerKeywords: ['现场勘查'] },
-  { ruleId: 'LOG_INSTANT_001', standardClause: 'DB1405/T 085-2025 第5.3条', triggerFields: ['办理流程', '办理时限'], condition: '当场办理且时限>1', threshold: 1, suggestionTemplate: '建议调整', triggerKeywords: ['当场办理'] },
+  { ruleId: 'LOG_SITE_INSPECTION_001', standardClause: 'DB1405/T 085-2025 第5.2条', triggerFields: ['办理流程', '办理时限'], condition: '现场勘查且时限<5', threshold: 5, suggestionTemplate: '建议调整', triggerKeywords: ['现场勘查'] },
+  { ruleId: 'LOG_INSTANT_HANDLE_001', standardClause: 'DB1405/T 085-2025 第5.3条', triggerFields: ['办理流程', '办理时限'], condition: '当场办理且时限>1', threshold: 1, suggestionTemplate: '建议调整', triggerKeywords: ['当场办理'] },
 ]
 
 const formatRules: FormatRule[] = [
@@ -80,7 +80,7 @@ const realSamples = [
 ]
 
 function runInspection(guides: Record<string, unknown>[]) {
-  return InspectionOrchestrator.orchestrate(guides, config as Record<string, unknown>, kb, standardRules)
+  return InspectionOrchestrator.orchestrate(guides, config as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1], kb, standardRules)
 }
 
 describe('第二十四次验收测试 v3.4.13', () => {
@@ -92,7 +92,7 @@ describe('第二十四次验收测试 v3.4.13', () => {
     for (let i = 0; i < realSamples.length; i++) {
       const guide = realSamples[i]!
       const guideId = String(guide['事项名称'])
-      const matchResult = (result as Record<string, unknown>)
+
       console.log(`[样本 ${i + 1}] ${guideId}`)
       console.log(`  completeness: ${result.completeness}`)
       console.log(`  coreMissing: ${result.coreMissingCount}, extendedMissing: ${result.extendedMissingCount}`)
@@ -156,8 +156,8 @@ describe('第二十四次验收测试 v3.4.13', () => {
     }
 
     const formatErrors: [number, string, string][] = [
-      [0, '办理时限', '3天'], [1, '办理时限', '5天'], [2, '办理时限', '3天'],
-      [3, '办理时限', '7天'], [4, '办理时限', '1天'], [5, '办理时限', '20天'],
+      [0, '收费标准', '免费'], [1, '办理时限', '5天'], [2, '办理时限', '3天'],
+      [3, '办理时限', '7天'], [4, '收费标准', '免费'], [5, '办理地点', '福田区'],
       [6, '办理时限', '15天'], [7, '办理时限', '5天'], [8, '办理时限', '3天'], [9, '办理时限', '15天'],
       [0, '咨询电话', '02012345678'], [1, '咨询电话', '22223333'], [2, '咨询电话', '075512345678'],
       [3, '咨询电话', '83115725'], [4, '咨询电话', '12345678'], [5, '收费标准', '免费'],
@@ -175,7 +175,7 @@ describe('第二十四次验收测试 v3.4.13', () => {
 
     const result = runInspection(planted)
 
-    const errorDetails = (result as Record<string, unknown>).errorDetails as Array<{ field: string; errorType: string; description: string; suggestion?: string }> | undefined
+    const errorDetails = (result as unknown as Record<string, unknown>).errorDetails as Array<{ field: string; errorType: string; description: string; suggestion?: string }> | undefined
 
     let detectedMissing = 0, detectedSemantic = 0, detectedLogical = 0, detectedFormat = 0
     let totalDetected = 0

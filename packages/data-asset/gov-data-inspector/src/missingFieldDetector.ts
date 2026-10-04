@@ -48,8 +48,18 @@ function isInvalidContent(val: unknown): string | null {
   if (trimmed.length === 0) return null
   if (trimmed.length < 2) return '内容过于简略，无法指导办事'
   if (trimmed.replace(/[^\p{L}\p{N}]/gu, '').length === 0) return '内容仅含标点符号，无有效信息'
+
+  const hasSubstantiveContent = SUBSTANTIVE_WORDS.some((w) => trimmed.includes(w))
+  const hasNumberedItems = /[一二三四五六七八九十]+\s*[、.．]|[\d]+\s*[.、．]/.test(trimmed)
+  const separatedItems = trimmed.split(/[；;，,、\n]/).filter((s) => s.trim().length > 0)
+  const hasMultipleItems = separatedItems.length > 1
+
+  if (trimmed.length > 10 && (hasNumberedItems || (hasMultipleItems && hasSubstantiveContent))) {
+    return null
+  }
+
   if (INVALID_CONTENT_TEMPLATES.has(trimmed)) return '内容为无效模板语，无实质信息'
-  if (trimmed.length < 4 && !SUBSTANTIVE_WORDS.some((w) => trimmed.includes(w))) {
+  if (trimmed.length < 4 && !hasSubstantiveContent) {
     return '内容缺乏实质性动词或名词，无法指导办事'
   }
   return null
