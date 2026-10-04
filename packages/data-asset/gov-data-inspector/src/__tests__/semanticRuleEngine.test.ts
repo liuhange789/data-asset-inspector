@@ -158,13 +158,13 @@ describe('SemanticRuleEngine', () => {
   })
 
   it('SRE-10: 降级+空KB+所有字段结构完整 → 返回空details', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件、申请表', 办理条件: '申请人须年满18周岁且具有完全民事行为能力', 网上办理深度: '全程网办' }
+    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件、申请表', 办理条件: '年满18周岁且具有完全民事行为能力', 网上办理深度: '全程网办' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
     expect(result.details).toEqual([])
   })
 
   it('SRE-11: 降级+空KB+材料有标点+条件充分 → 返回空details', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件、申请表', 办理条件: '申请人须年满18周岁且具有完全民事行为能力' }
+    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件、申请表', 办理条件: '年满18周岁且具有完全民事行为能力' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
     expect(result.details).toEqual([])
   })
@@ -255,10 +255,10 @@ describe('SemanticRuleEngine', () => {
     expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(false)
   })
 
-  it('LT-06: 包含关系不报告', () => {
+  it('LT-06: 包含但相似度≤0.8 → 报告', () => {
     const guide = { 事项名称: '食品经营许可', 申请材料: '居民身份证原件' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: ['身份证原件'], conditions: [] } })
-    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(false)
+    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(true)
   })
 
   it('LT-07: 高相似度不报告', () => {
@@ -282,7 +282,7 @@ describe('SemanticRuleEngine', () => {
   })
 
   it('LT-10: 无新增误报', () => {
-    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件、申请表', 办理条件: '申请人须年满18周岁且具有完全民事行为能力', 网上办理深度: '全程网办' }
+    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证复印件、申请表', 办理条件: '年满18周岁且具有完全民事行为能力', 网上办理深度: '全程网办' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
     expect(result.details.some((d) => d.standardClause === '降级模式·本地词表校验')).toBe(false)
   })

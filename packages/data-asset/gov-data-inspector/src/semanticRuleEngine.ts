@@ -430,7 +430,7 @@ function matchAndReport(
     }
   }
   if (item === closestTerm) return []
-  if (closestTerm !== '' && item.includes(closestTerm)) return []
+  if (closestTerm !== '' && levenshteinSimilarity(item, closestTerm) > 0.8) return []
   if (maxSim >= 0.95) return []
   if (maxSim >= threshold) {
     return [
@@ -563,7 +563,7 @@ function detectConditionTermsMismatch(
   const conditionStr = String(guide['办理条件'] ?? '')
   if (!conditionStr) return []
   const details: ErrorDetail[] = []
-  const condParts = conditionStr.split(/[、,，;；\n。]/).map((s) => s.trim()).filter(Boolean)
+  const condParts = conditionStr.split(/[、,，;；\n。且并和与并]/).map((s) => s.trim()).filter(Boolean)
   for (const cond of condParts) {
     const condDetails = matchAndReport(cond, localTerms.conditions, threshold, '办理条件', guideId, severityMapping)
     details.push(...condDetails)
