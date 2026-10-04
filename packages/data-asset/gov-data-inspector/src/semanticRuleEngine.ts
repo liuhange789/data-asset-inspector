@@ -521,14 +521,18 @@ function detectApproximateSubstring(
   return null
 }
 
-function isStandardMultiContent(value: string): { hit: boolean; reason: string } {
-  if (!value || !value.trim()) return { hit: false, reason: '' }
+function splitMultiContent(value: string): string[] {
+  if (!value || !value.trim()) return []
   const trimmed = value.trim()
-  const hasNumbered = /[一二三四五六七八九十]+\s*[、.．]|[\d]+\s*[.、．]/.test(trimmed)
-  if (hasNumbered) return { hit: true, reason: '编号组织' }
-  const separatedItems = trimmed.split(/[；;，,、\n]/).filter((s) => s.trim().length > 0)
-  if (separatedItems.length > 2 && trimmed.length > 20) return { hit: true, reason: '分隔多条' }
-  return { hit: false, reason: '' }
+  const numberedRegex = /[一二三四五六七八九十]+\s*[、.．]|[\d]+\s*[.、．]/
+  const sepRegex = /[；;，,、\n。且并和与]/
+  if (numberedRegex.test(trimmed)) {
+    const parts = trimmed.split(numberedRegex)
+    return parts
+      .map((s) => s.trim().replace(/^[；;，,、\n。且并和与]+|[；;，,、\n。且并和与]+$/g, '').trim())
+      .filter((s) => s.length > 0)
+  }
+  return trimmed.split(sepRegex).map((s) => s.trim()).filter(Boolean)
 }
 
 function detectLocalTermsMismatch(
@@ -545,12 +549,9 @@ function detectLocalTermsMismatch(
   const details: ErrorDetail[] = []
   const materialStr = String(guide['申请材料'] ?? '')
   if (materialStr && localTerms.materials.length > 0) {
-    const multiCheck = isStandardMultiContent(materialStr)
-    if (!multiCheck.hit) {
-      const materials = materialStr.split(/[、,，;；\n]/).map((s) => s.trim()).filter(Boolean)
-      for (const mat of materials) {
-        details.push(...matchAndReport(mat, localTerms.materials, threshold, '申请材料', guideId, severityMapping))
-      }
+    const materials = splitMultiContent(materialStr)
+    for (const mat of materials) {
+      details.push(...matchAndReport(mat, localTerms.materials, threshold, '申请材料', guideId, severityMapping))
     }
   }
   details.push(...detectConditionTermsMismatch(guide, guideId, options, severityMapping))
@@ -568,10 +569,8 @@ function detectConditionTermsMismatch(
   const threshold = options.degradedSimilarityThreshold ?? 0.80
   const conditionStr = String(guide['办理条件'] ?? '')
   if (!conditionStr) return []
-  const condMultiCheck = isStandardMultiContent(conditionStr)
-  if (condMultiCheck.hit) return []
   const details: ErrorDetail[] = []
-  const condParts = conditionStr.split(/[、,，;；\n。且并和与并]/).map((s) => s.trim()).filter(Boolean)
+  const condParts = splitMultiContent(conditionStr)
   for (const cond of condParts) {
     const condDetails = matchAndReport(cond, localTerms.conditions, threshold, '办理条件', guideId, severityMapping)
     details.push(...condDetails)

@@ -1,6 +1,10 @@
 import type { ErrorDetail, StandardRule } from './types.js'
 import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 
+function isLogicDebug(): boolean {
+  return process.env.GOV_LOGIC_DEBUG === '1' || process.env.GOV_LOGIC_DEBUG === 'true'
+}
+
 function extractTimeLimitDays(timeLimit: unknown): number | null {
   const str = String(timeLimit ?? '')
   const match = str.match(/(\d+)\s*个?\s*(?:工作日|天)/)
@@ -14,12 +18,27 @@ function ruleSiteInspection(
   rule: StandardRule,
   severityMapping?: Record<string, string>,
 ): ErrorDetail[] {
+  const debug = isLogicDebug()
   const process = String(guide['办理流程'] ?? '')
   const timeLimit = String(guide['办理时限'] ?? '')
   const triggerKw = rule.triggerKeywords[0]
-  if (!triggerKw || !process.includes(triggerKw) || !timeLimit) return []
+  if (!triggerKw) {
+    if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=triggerKeywordMissing`)
+    return []
+  }
+  if (!process.includes(triggerKw)) {
+    if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=processNotContainTrigger`)
+    return []
+  }
+  if (!timeLimit) {
+    if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=timeLimitEmpty`)
+    return []
+  }
   const days = extractTimeLimitDays(timeLimit)
-  if (days === null) return []
+  if (days === null) {
+    if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=timeParseFail timeLimit=${timeLimit}`)
+    return []
+  }
   const threshold = rule.threshold ?? 5
   if (days < threshold) {
     return [
@@ -37,6 +56,7 @@ function ruleSiteInspection(
       ),
     ]
   }
+  if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=belowThreshold days=${days} threshold=${threshold}`)
   return []
 }
 
@@ -46,12 +66,27 @@ function ruleInstantHandle(
   rule: StandardRule,
   severityMapping?: Record<string, string>,
 ): ErrorDetail[] {
+  const debug = isLogicDebug()
   const process = String(guide['办理流程'] ?? '')
   const timeLimit = String(guide['办理时限'] ?? '')
   const triggerKw = rule.triggerKeywords[0]
-  if (!triggerKw || !process.includes(triggerKw) || !timeLimit) return []
+  if (!triggerKw) {
+    if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=triggerKeywordMissing`)
+    return []
+  }
+  if (!process.includes(triggerKw)) {
+    if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=processNotContainTrigger`)
+    return []
+  }
+  if (!timeLimit) {
+    if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=timeLimitEmpty`)
+    return []
+  }
   const days = extractTimeLimitDays(timeLimit)
-  if (days === null) return []
+  if (days === null) {
+    if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=timeParseFail timeLimit=${timeLimit}`)
+    return []
+  }
   const threshold = rule.threshold ?? 1
   if (days > threshold) {
     return [
@@ -69,6 +104,7 @@ function ruleInstantHandle(
       ),
     ]
   }
+  if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=withinThreshold days=${days} threshold=${threshold}`)
   return []
 }
 
@@ -397,18 +433,35 @@ export const LogicRuleEngine = {
     if (!rules || rules.length === 0) {
       throw new Error('GOV_DATA_LOGIC_RULES_MISSING: logicErrorRules配置缺失，逻辑检测已中止')
     }
+    const debug = isLogicDebug()
     const details: ErrorDetail[] = []
     for (const rule of rules) {
       const handler = RULE_DISPATCH[rule.ruleId]
-      if (!handler) continue
+      if (!handler) {
+        if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=skip reason=handlerNotRegistered`)
+        continue
+      }
       if (rule.scanMode !== 'anyField') {
         const hasAllFields = rule.triggerFields.every((f) => {
           const val = guide[f]
           return val !== undefined && val !== null && (typeof val !== 'string' || val.trim() !== '')
         })
-        if (!hasAllFields) continue
+        if (!hasAllFields) {
+          if (debug) {
+            const missingFields = rule.triggerFields.filter((f) => {
+              const val = guide[f]
+              return val === undefined || val === null || (typeof val === 'string' && val.trim() === '')
+            })
+            console.log(`[logic-debug] ruleId=${rule.ruleId} event=skip reason=fieldMissing fields=${missingFields.join(',')}`)
+          }
+          continue
+        }
       }
-      details.push(...handler(guide, guideId, rule, severityMapping))
+      const handlerResults = handler(guide, guideId, rule, severityMapping)
+      if (debug && handlerResults.length === 0) {
+        console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=notTriggered`)
+      }
+      details.push(...handlerResults)
     }
     return details
   },
