@@ -72,7 +72,15 @@
     "data-governance",
     "data-quality",
     "plugin",
-    "open-source"
+    "open-source",
+    "data-management",
+    "visualization",
+    "chart",
+    "graph",
+    "dashboard",
+    "reporting",
+    "analytics",
+    "data-viz"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme",
   "dsh": {

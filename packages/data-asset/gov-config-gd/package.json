@@ -30,7 +30,27 @@
     "public-data",
     "digital-government",
     "typescript",
-    "npm"
+    "npm",
+    "deepseek-harness",
+    "dsh",
+    "data-asset",
+    "data-governance",
+    "compliance",
+    "government-data",
+    "public-data",
+    "plugin",
+    "typescript",
+    "nodejs",
+    "data-quality",
+    "data-management",
+    "audit",
+    "automation",
+    "open-source",
+    "gd",
+    "provincial",
+    "config",
+    "regulation",
+    "government"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

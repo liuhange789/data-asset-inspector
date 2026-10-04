@@ -68,7 +68,13 @@
     "data-governance",
     "data-quality",
     "plugin",
-    "open-source"
+    "open-source",
+    "data-management",
+    "regulatory",
+    "legal",
+    "standard",
+    "policy",
+    "rule-checking"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

@@ -70,7 +70,13 @@
     "data-governance",
     "data-quality",
     "plugin",
-    "open-source"
+    "open-source",
+    "data-management",
+    "inventory",
+    "catalog",
+    "index",
+    "registry",
+    "metadata"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

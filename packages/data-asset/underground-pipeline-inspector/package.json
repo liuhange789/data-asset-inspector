@@ -95,7 +95,18 @@
     "城市测绘",
     "urban-surveying",
     "policy-basis",
-    "zero-hardcoding"
+    "zero-hardcoding",
+    "data-quality",
+    "data-governance",
+    "data-management",
+    "pipeline",
+    "underground",
+    "utility",
+    "infrastructure",
+    "gas",
+    "water",
+    "sewer",
+    "subsurface"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

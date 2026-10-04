@@ -4,6 +4,7 @@ import { resolve } from 'node:path'
 
 const patchPath = resolve(__dirname, '..', '..', 'cordis.patch.yml')
 const patchContent = readFileSync(patchPath, 'utf-8')
+const pkgVersion = JSON.parse(readFileSync(resolve(__dirname, '..', '..', 'package.json'), 'utf-8')).version
 
 describe('cordis.patch.yml 安装阻塞修复', () => {
   it('P0-1: plugin字段值用双引号包裹', () => {
@@ -11,7 +12,7 @@ describe('cordis.patch.yml 安装阻塞修复', () => {
   })
 
   it('P0-1: version字段用双引号包裹', () => {
-    expect(patchContent).toContain('version: "3.1.8"')
+    expect(patchContent).toContain(`version: "${pkgVersion}"`)
   })
 
   it('P0-2: 顶层数组结构(以- target开头)', () => {

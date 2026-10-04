@@ -104,7 +104,18 @@
     "测绘地理信息",
     "GIS",
     "policy-basis",
-    "zero-hardcoding"
+    "zero-hardcoding",
+    "data-quality",
+    "data-governance",
+    "data-management",
+    "geo",
+    "geographic",
+    "spatial",
+    "gis",
+    "topology",
+    "geometry",
+    "coordinate",
+    "mapping"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

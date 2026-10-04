@@ -2,7 +2,7 @@
 # This file declares the plugin's runtime patch for the Cordis framework.
 # Used by DSH plugin manager to apply framework-level patches during installation.
 plugin: @liuhange/dsh-data-visualization
-version: 2.0.3
+version: "2.0.5"
 patch:
   - target: tools
     action: register

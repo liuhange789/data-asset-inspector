@@ -89,7 +89,16 @@
     "建筑央企",
     "中铁一局",
     "policy-basis",
-    "zero-hardcoding"
+    "zero-hardcoding",
+    "data-quality",
+    "data-management",
+    "construction",
+    "infrastructure",
+    "building",
+    "engineering",
+    "bim",
+    "civil",
+    "urban-planning"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

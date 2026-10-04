@@ -88,7 +88,12 @@
     "科学数据共享",
     "research-data-sharing",
     "policy-basis",
-    "zero-hardcoding"
+    "zero-hardcoding",
+    "data-management",
+    "research",
+    "scientific",
+    "academic",
+    "rda"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

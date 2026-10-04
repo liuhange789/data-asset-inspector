@@ -86,7 +86,16 @@
     "监管报送",
     "regulatory-reporting",
     "policy-basis",
-    "zero-hardcoding"
+    "zero-hardcoding",
+    "data-quality",
+    "data-governance",
+    "data-management",
+    "aml",
+    "finance",
+    "fintech",
+    "kyc",
+    "suspicious-transaction",
+    "compliance-finance"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

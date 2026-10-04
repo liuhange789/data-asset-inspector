@@ -68,7 +68,13 @@
     "data-governance",
     "data-quality",
     "plugin",
-    "open-source"
+    "open-source",
+    "data-management",
+    "valuation",
+    "appraisal",
+    "worth",
+    "pricing",
+    "economic-value"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

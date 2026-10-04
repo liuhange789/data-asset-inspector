@@ -98,7 +98,14 @@
     "audit",
     "compliance",
     "plugin",
-    "open-source"
+    "open-source",
+    "data-management",
+    "orchestration",
+    "workflow",
+    "pipeline",
+    "coordination",
+    "scheduling",
+    "automation-pipeline"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }
