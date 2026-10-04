@@ -10,6 +10,15 @@ function isMissing(val: unknown): boolean {
     (typeof val === 'string' && PLACEHOLDER_VALUES.includes(val.trim()))
 }
 
+function isInvalidContent(val: unknown): string | null {
+  if (typeof val !== 'string') return null
+  const trimmed = val.trim()
+  if (trimmed.length === 0) return null
+  if (trimmed.length < 2) return '内容过于简略，无法指导办事'
+  if (trimmed.replace(/[^\p{L}\p{N}]/gu, '').length === 0) return '内容仅含标点符号，无有效信息'
+  return null
+}
+
 export const MissingFieldDetector = {
   detect(
     guide: Record<string, unknown>,
@@ -41,6 +50,24 @@ export const MissingFieldDetector = {
             severityMapping,
           ),
         )
+      } else {
+        const invalidReason = isInvalidContent(val)
+        if (invalidReason) {
+          details.push(
+            ErrorDetailBuilder.build(
+              {
+                guideId,
+                field: elem,
+                errorType: 'missing',
+                description: `办事指南"${guideId}"字段"${elem}"${invalidReason}，该字段为办事指南核心要素`,
+                suggestion: `请补充"${elem}"字段的有效内容。${basisText}`,
+                dataSource: 'standard',
+                standardClause: standardClause ?? '',
+              },
+              severityMapping,
+            ),
+          )
+        }
       }
     }
     return details
@@ -83,6 +110,24 @@ export const MissingFieldDetector = {
             severityMapping,
           ),
         )
+      } else {
+        const invalidReason = isInvalidContent(val)
+        if (invalidReason) {
+          coreDetails.push(
+            ErrorDetailBuilder.build(
+              {
+                guideId,
+                field: elem,
+                errorType: 'missing',
+                description: `办事指南"${guideId}"字段"${elem}"${invalidReason}，该字段为办事指南核心要素`,
+                suggestion: `请补充"${elem}"字段的有效内容。${basisText}`,
+                dataSource: 'standard',
+                standardClause: stdClause,
+              },
+              severityMapping,
+            ),
+          )
+        }
       }
     }
     const extendedDetails: ErrorDetail[] = []
@@ -110,6 +155,24 @@ export const MissingFieldDetector = {
             severityMapping,
           ),
         )
+      } else {
+        const invalidReason = isInvalidContent(val)
+        if (invalidReason) {
+          extendedDetails.push(
+            ErrorDetailBuilder.build(
+              {
+                guideId,
+                field: elem,
+                errorType: 'warning',
+                description: `办事指南"${guideId}"字段"${elem}"${invalidReason}，建议补充有效内容以提升服务完整性`,
+                suggestion: `建议补充"${elem}"字段的有效内容`,
+                dataSource: 'standard',
+                standardClause: '扩展要素·内容合规性建议',
+              },
+              severityMapping,
+            ),
+          )
+        }
       }
     }
     return { coreDetails, extendedDetails }

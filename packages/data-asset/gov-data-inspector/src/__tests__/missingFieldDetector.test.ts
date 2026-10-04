@@ -130,4 +130,46 @@ describe('MissingFieldDetector.detectGraded', () => {
       expect(result.coreDetails.some((d) => d.field === '实施主体')).toBe(true)
     }
   })
+
+  it('8.7 字段值长度<2个字符 → 判定为内容过于简略，报missing', () => {
+    const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: 'X', 办理条件: '条件' }
+    const result = MissingFieldDetector.detectGraded(
+      guide, 'g1', coreFields, extendedFields, severityMapping,
+    )
+    const detail = result.coreDetails.find((d) => d.field === '实施主体')
+    expect(detail).toBeDefined()
+    expect(detail!.description).toContain('内容过于简略')
+  })
+
+  it('8.8 字段值仅含标点符号 → 判定为无效内容，报missing', () => {
+    const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: '。。。', 办理条件: '条件' }
+    const result = MissingFieldDetector.detectGraded(
+      guide, 'g1', coreFields, extendedFields, severityMapping,
+    )
+    const detail = result.coreDetails.find((d) => d.field === '实施主体')
+    expect(detail).toBeDefined()
+    expect(detail!.description).toContain('标点符号')
+  })
+
+  it('8.9 字段值正常（≥2字符且含字母/数字）→ 不报内容合规性错误', () => {
+    const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: '市场监管局', 办理条件: '符合法定条件' }
+    const result = MissingFieldDetector.detectGraded(
+      guide, 'g1', coreFields, extendedFields, severityMapping,
+    )
+    expect(result.coreDetails.some((d) => d.field === '实施主体')).toBe(false)
+  })
+
+  it('8.10 扩展字段内容过于简略 → 报warning非missing', () => {
+    const guide: Record<string, unknown> = {
+      事项名称: '测试', 实施主体: '部门', 办理条件: '条件',
+      结果样本: 'X',
+    }
+    const result = MissingFieldDetector.detectGraded(
+      guide, 'g1', coreFields, extendedFields, severityMapping,
+    )
+    const detail = result.extendedDetails.find((d) => d.field === '结果样本')
+    expect(detail).toBeDefined()
+    expect(detail!.errorType).toBe('warning')
+    expect(detail!.description).toContain('内容过于简略')
+  })
 })
