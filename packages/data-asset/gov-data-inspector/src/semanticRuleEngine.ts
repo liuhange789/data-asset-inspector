@@ -448,24 +448,8 @@ function matchAndReport(
           guideId,
           field,
           errorType: 'semantic',
-          description: `${field}"${item}"与标准词表"${closestTerm}"高度相似（相似度${maxSim.toFixed(2)}），可能存在笔误。[降级模式·本地词表校验]`,
-          suggestion: `建议将"${item}"修改为标准名称"${closestTerm}"`,
-          dataSource: 'standard',
-          standardClause: '降级模式·本地词表校验',
-        },
-        severityMapping,
-      ),
-    ]
-  }
-  if (maxSim > 0.3 && levenshtein(item, closestTerm) <= 2) {
-    return [
-      ErrorDetailBuilder.build(
-        {
-          guideId,
-          field,
-          errorType: 'semantic',
-          description: `${field}"${item}"与标准词表"${closestTerm}"高度相似（相似度${maxSim.toFixed(2)}），可能存在笔误。[降级模式·本地词表校验]`,
-          suggestion: `建议将"${item}"修改为标准名称"${closestTerm}"`,
+          description: `${field}"${item}"与标准词表存在差异，疑似错误。[降级模式·本地词表校验]`,
+          suggestion: `建议核实"${item}"是否为标准${field}名称`,
           dataSource: 'standard',
           standardClause: '降级模式·本地词表校验',
         },

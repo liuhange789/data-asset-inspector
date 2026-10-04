@@ -47,7 +47,7 @@ export const FormatValidator = {
     requiredFields?: string[],
   ): FormatIssue[] {
     if (!formatRules || formatRules.length === 0) return []
-    const requiredSet = new Set(requiredFields ?? [])
+    void requiredFields
     const fieldGroups = new Map<string, FormatRule[]>()
     for (const rule of formatRules) {
       if (!fieldGroups.has(rule.field)) fieldGroups.set(rule.field, [])
@@ -57,14 +57,7 @@ export const FormatValidator = {
     for (const [field, rules] of fieldGroups) {
       const val = guide[field]
       if (val === undefined || val === null || (typeof val === 'string' && val.trim() === '')) {
-        if (requiredSet.has(field)) {
-          issues.push({
-            guideId,
-            field,
-            issue: `字段"${field}"缺失或为空，无法执行格式校验`,
-            suggestion: rules[0]!.suggestionTemplate,
-          })
-        }
+
         continue
       }
       const isAnyMode = rules.length > 1 && rules.some((r) => r.matchMode === 'any')

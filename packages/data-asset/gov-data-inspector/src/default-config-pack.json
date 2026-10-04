@@ -49,7 +49,7 @@
     "预约办理",
     "网上支付",
     "物流快递",
-    "中介机构或特殊环节"
+    "中介机构"
   ],
   "coreRequiredFields": [
     "事项名称",
@@ -63,9 +63,9 @@
     "咨询电话",
     "监督电话",
     "网上办理深度",
+    "办理时间",
     "结果送达方式",
-    "表格下载",
-    "办理时间"
+    "表格下载"
   ],
   "extendedRequiredFields": [
     "结果样本",
@@ -971,6 +971,53 @@
       "suggestionTemplate": "事项应提供空表下载与样表下载服务",
       "standardClause": "国办发〔2017〕47号 样表下载服务要求",
       "triggerKeywords": []
+    },
+    {
+      "ruleId": "LOG_CONDITION_FIELD_MISPLACED_001",
+      "triggerFields": [
+        "办理条件"
+      ],
+      "condition": "受理条件字段包含材料名称",
+      "threshold": null,
+      "suggestionTemplate": "受理条件字段不应包含材料名称，请核对字段内容归属",
+      "standardClause": "GB/T 36114-2018 第6.3条 字段内容归属要求",
+      "triggerKeywords": [
+        "申请表",
+        "身份证明",
+        "身体条件证明",
+        "身份证复印件",
+        "营业执照复印件"
+      ]
+    },
+    {
+      "ruleId": "LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001",
+      "triggerFields": [
+        "办理流程",
+        "办理时限"
+      ],
+      "condition": "流程步骤时限合计不等于承诺办结时限",
+      "threshold": null,
+      "suggestionTemplate": "办理流程各步骤时限合计应与承诺办结时限一致，请核对",
+      "standardClause": "GB/T 36114-2018 第6.4条 办理时限一致性要求",
+      "triggerKeywords": [
+        "工作日"
+      ]
+    },
+    {
+      "ruleId": "LOG_INSTANT_TIME_LIMIT_CONTRADICTION_001",
+      "triggerFields": [
+        "办理流程",
+        "办理时限"
+      ],
+      "condition": "即办件承诺时限大于0个工作日",
+      "threshold": 0,
+      "suggestionTemplate": "即办件承诺时限应为0个工作日（当场办结），请核对办理流程与办理时限",
+      "standardClause": "国办发〔2018〕45号 第三条 即办件时限要求",
+      "triggerKeywords": [
+        "当场办理",
+        "即办",
+        "即办即取"
+      ]
     }
   ],
   "scoringWeights": {

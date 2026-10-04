@@ -228,7 +228,7 @@ describe('SemanticRuleEngine', () => {
   it('LT-01: E43 条件笔误（短句）', () => {
     const guide = { 事项名称: '食品经营许可', 办理条件: '年满16周岁' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: [], conditions: ['年满18周岁'] } })
-    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.description.includes('笔误'))).toBe(true)
+    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.description.includes('疑似错误'))).toBe(true)
   })
 
   it('LT-02: E43 条件笔误（带前缀整句）', () => {
@@ -246,7 +246,7 @@ describe('SemanticRuleEngine', () => {
   it('LT-04: E44 材料笔误', () => {
     const guide = { 事项名称: '食品经营许可', 申请材料: '健康证' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: ['健康证明'], conditions: [] } })
-    expect(result.details.some((d) => d.field === '申请材料' && d.errorType === 'semantic' && d.description.includes('笔误'))).toBe(true)
+    expect(result.details.some((d) => d.field === '申请材料' && d.errorType === 'semantic' && d.description.includes('疑似错误'))).toBe(true)
   })
 
   it('LT-05: 精确匹配不报告', () => {

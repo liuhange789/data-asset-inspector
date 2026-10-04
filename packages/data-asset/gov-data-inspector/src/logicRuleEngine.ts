@@ -273,6 +273,103 @@ function ruleSampleDownload(
   return details
 }
 
+function ruleConditionFieldMisplaced(
+  guide: Record<string, unknown>,
+  guideId: string,
+  rule: StandardRule,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const condition = String(guide['办理条件'] ?? guide['受理条件'] ?? '')
+  if (!condition) return []
+  for (const kw of rule.triggerKeywords) {
+    if (condition.includes(kw)) {
+      return [
+        ErrorDetailBuilder.build(
+          {
+            guideId,
+            field: '办理条件',
+            errorType: 'logical',
+            description: `办理条件字段内容错位：包含材料名称"${kw}"，疑似材料清单误填入条件字段。${rule.standardClause ?? ''}`,
+            suggestion: rule.suggestionTemplate,
+            dataSource: 'standard',
+            standardClause: rule.standardClause,
+          },
+          severityMapping,
+        ),
+      ]
+    }
+  }
+  return []
+}
+
+function ruleProcessTimeLimitInconsistent(
+  guide: Record<string, unknown>,
+  guideId: string,
+  rule: StandardRule,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const process = String(guide['办理流程'] ?? '')
+  const timeLimit = guide['办理时限']
+  if (!process || !timeLimit) return []
+  const stepMatches = process.matchAll(/(\d+)\s*个?\s*(?:工作日|天)/g)
+  let sumDays = 0
+  for (const m of stepMatches) {
+    if (m[1]) sumDays += parseInt(m[1], 10)
+  }
+  if (sumDays === 0) return []
+  const commitDays = extractTimeLimitDays(timeLimit)
+  if (commitDays === null) return []
+  if (sumDays !== commitDays) {
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '办理时限',
+          errorType: 'logical',
+          description: `时限不一致：流程步骤时限合计${sumDays}个工作日，承诺办结时限${commitDays}个工作日。${rule.standardClause ?? ''}`,
+          suggestion: rule.suggestionTemplate,
+          dataSource: 'standard',
+          standardClause: rule.standardClause,
+        },
+        severityMapping,
+      ),
+    ]
+  }
+  return []
+}
+
+function ruleInstantTimeLimitContradiction(
+  guide: Record<string, unknown>,
+  guideId: string,
+  rule: StandardRule,
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const process = String(guide['办理流程'] ?? '')
+  const timeLimit = guide['办理时限']
+  if (!process) return []
+  const isInstant = rule.triggerKeywords.some((kw) => process.includes(kw))
+  if (!isInstant) return []
+  const days = extractTimeLimitDays(timeLimit)
+  if (days === null) return []
+  if (days > 0) {
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '办理时限',
+          errorType: 'logical',
+          description: `即办件时限矛盾：办理流程含即办标记，但承诺时限为${days}个工作日（应当场办结）。${rule.standardClause ?? ''}`,
+          suggestion: rule.suggestionTemplate,
+          dataSource: 'standard',
+          standardClause: rule.standardClause,
+        },
+        severityMapping,
+      ),
+    ]
+  }
+  return []
+}
+
 const RULE_DISPATCH: Record<
   string,
   (guide: Record<string, unknown>, guideId: string, rule: StandardRule, severityMapping?: Record<string, string>) => ErrorDetail[]
@@ -285,6 +382,9 @@ const RULE_DISPATCH: Record<
   LOG_PROCESS_COMPLETENESS_001: ruleProcessCompleteness,
   LOG_SITE_VISIT_COUNT_001: ruleSiteVisitCount,
   LOG_SAMPLE_DOWNLOAD_001: ruleSampleDownload,
+  LOG_CONDITION_FIELD_MISPLACED_001: ruleConditionFieldMisplaced,
+  LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001: ruleProcessTimeLimitInconsistent,
+  LOG_INSTANT_TIME_LIMIT_CONTRADICTION_001: ruleInstantTimeLimitContradiction,
 }
 
 export const LogicRuleEngine = {
