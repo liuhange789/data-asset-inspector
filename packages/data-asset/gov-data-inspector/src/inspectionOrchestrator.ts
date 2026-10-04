@@ -13,9 +13,18 @@ export function deduplicateCrossEngine(errors: ErrorDetail[]): ErrorDetail[] {
       .filter((e) => e.errorType === 'logical')
       .map((e) => `${e.guideId}:${e.field}:${e.standardClause ?? ''}`),
   )
-  return errors.filter(
-    (e) => !(e.errorType === 'semantic' && logicalKeys.has(`${e.guideId}:${e.field}:${e.standardClause ?? ''}`)),
-  )
+  const seenLogicalFields = new Set<string>()
+  return errors.filter((e) => {
+    if (e.errorType === 'semantic' && logicalKeys.has(`${e.guideId}:${e.field}:${e.standardClause ?? ''}`)) {
+      return false
+    }
+    if (e.errorType === 'logical') {
+      const fieldKey = `${e.guideId}:${e.field}`
+      if (seenLogicalFields.has(fieldKey)) return false
+      seenLogicalFields.add(fieldKey)
+    }
+    return true
+  })
 }
 
 export interface OrchestrateConfig {
@@ -140,7 +149,7 @@ export const InspectionOrchestrator = {
 
       allErrorDetails.push(...semanticResult.details, ...logicalDetails)
 
-      const formatIssues = FormatValidator.validate(standardGuide, guideId, config.formatRules)
+      const formatIssues = FormatValidator.validate(standardGuide, guideId, config.formatRules, useGraded ? [...coreRequiredFields, ...extendedRequiredFields] : requiredFields)
       allFormatIssues.push(...formatIssues)
 
       if (standardGuide['办理时限'] && typeof standardGuide['办理时限'] === 'string' && (standardGuide['办理时限'] as string).includes('工作日')) {

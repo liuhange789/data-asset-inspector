@@ -312,4 +312,14 @@ describe('deduplicateCrossEngine 按字段+根因去重', () => {
     const result = deduplicateCrossEngine(errors)
     expect(result.length).toBe(2)
   })
+
+  it('同一字段两条logical → 仅保留第一条', () => {
+    const errors = [
+      { guideId: 'g1', field: '办理流程', errorType: 'logical' as const, description: '逻辑矛盾A', suggestion: '建议', dataSource: 'standard' as const, standardClause: '规则A', severity: 'critical' as const },
+      { guideId: 'g1', field: '办理流程', errorType: 'logical' as const, description: '逻辑矛盾B', suggestion: '建议', dataSource: 'standard' as const, standardClause: '规则B', severity: 'critical' as const },
+    ]
+    const result = deduplicateCrossEngine(errors)
+    expect(result.length).toBe(1)
+    expect(result[0]!.description).toBe('逻辑矛盾A')
+  })
 })

@@ -273,12 +273,12 @@ describe('SemanticRuleEngine', () => {
     expect(result.details.some((d) => d.standardClause === '降级模式·本地词表校验')).toBe(false)
   })
 
-  it('LT-09: 去重规则', () => {
+  it('LT-09: 去重规则——同字段不同根因的logical与semantic均保留', () => {
     const lt09Rules: SemanticConflictRules = { ageKeywords: ['年满18周岁'], proxyKeywords: ['监护人代办'], proofKeywords: [], siteInspectionThreshold: 5, instantHandleThreshold: 1 }
     const guide = { 事项名称: '食品经营许可', 办理条件: '年满18周岁', 办理流程: '可由监护人代办' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, semanticConflictRules: lt09Rules, inlineLocalTerms: { materials: [], conditions: ['年满十六周岁'] } })
     expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'logical')).toBe(true)
-    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.standardClause === '降级模式·本地词表校验')).toBe(false)
+    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.standardClause === '降级模式·本地词表校验')).toBe(true)
   })
 
   it('LT-10: 无新增误报', () => {

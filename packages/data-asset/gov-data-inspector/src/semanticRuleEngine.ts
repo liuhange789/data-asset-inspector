@@ -577,8 +577,8 @@ function detectConditionTermsMismatch(
 
 
 function deduplicateErrors(errors: ErrorDetail[]): ErrorDetail[] {
-  const logicalFields = new Set(errors.filter((e) => e.errorType === 'logical').map((e) => e.field))
-  return errors.filter((e) => !(e.errorType === 'semantic' && logicalFields.has(e.field)))
+  const logicalKeys = new Set(errors.filter((e) => e.errorType === 'logical').map((e) => `${e.field}:${e.standardClause ?? ''}`))
+  return errors.filter((e) => !(e.errorType === 'semantic' && logicalKeys.has(`${e.field}:${e.standardClause ?? ''}`)))
 }
 
 export const SemanticRuleEngine = {

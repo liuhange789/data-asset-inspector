@@ -98,25 +98,34 @@ describe('FormatValidator', () => {
     expect(issues.some((i) => i.field === '办理时间')).toBe(false)
   })
 
-  it('FV-10: 字段缺失 → 报告格式问题（非跳过）', () => {
-    const issues = FormatValidator.validate({}, 'g1', formatRules)
+  it('FV-10: 必填字段缺失 → 报告格式问题（非跳过）', () => {
+    const issues = FormatValidator.validate({}, 'g1', formatRules, ['办理时限', '咨询电话', '收费标准', '办理地点'])
     expect(issues.length).toBeGreaterThan(0)
     expect(issues.some((i) => i.field === '办理时限' && i.issue.includes('缺失'))).toBe(true)
     expect(issues.some((i) => i.field === '咨询电话' && i.issue.includes('缺失'))).toBe(true)
   })
 
-  it('FV-11: 字段值为空字符串 → 报告格式问题（非跳过）', () => {
-    const issues = FormatValidator.validate({ 办理时限: '  ' }, 'g1', formatRules)
+  it('FV-11: 必填字段值为空字符串 → 报告格式问题（非跳过）', () => {
+    const issues = FormatValidator.validate({ 办理时限: '  ' }, 'g1', formatRules, ['办理时限'])
     expect(issues.some((i) => i.field === '办理时限' && i.issue.includes('缺失'))).toBe(true)
   })
 
-  it('FV-12: 字段缺失时仅报一条格式问题（不因多规则重复报）', () => {
+  it('FV-12: 必填字段缺失时仅报一条格式问题（不因多规则重复报）', () => {
     const rules: FormatRule[] = [
       { field: '办理时间', requiredKeywords: ['工作日', '上午', '下午', '周一至周五'], suggestionTemplate: '应含工作日时段', matchMode: 'any' },
       { field: '办理时间', pattern: '【星期[一二三四五六日天].*】', suggestionTemplate: '应含星期格式', matchMode: 'any' },
     ]
-    const issues = FormatValidator.validate({}, 'g1', rules)
+    const issues = FormatValidator.validate({}, 'g1', rules, ['办理时间'])
     const timeIssues = issues.filter((i) => i.field === '办理时间')
     expect(timeIssues.length).toBe(1)
+  })
+
+  it('FV-13: 非必填字段缺失 → 静默跳过（不报格式误报）', () => {
+    const rules: FormatRule[] = [
+      { field: '联系电话', pattern: '^\\d{3,4}-\\d{7,8}$', suggestionTemplate: '应使用区号-号码格式' },
+      { field: '办理时限', pattern: '^\\d+个工作日$', suggestionTemplate: '应使用X个工作日格式' },
+    ]
+    const issues = FormatValidator.validate({ 办理时限: '20个工作日' }, 'g1', rules, ['办理时限'])
+    expect(issues.some((i) => i.field === '联系电话')).toBe(false)
   })
 })
