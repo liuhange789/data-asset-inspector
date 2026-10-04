@@ -16,6 +16,11 @@ const INVALID_CONTENT_TEMPLATES = new Set([
   '其他', '其它', '相关材料', '相关证明',
   '符合', '合格', '达标', '同意', '通过', '正常', '有效', '可行',
   '适当', '相关', '视情况', '酌情', '妥当', '可以', '可行',
+  '满足条件', '满足要求', '按标准执行', '参照执行', '依规执行',
+  '按规定', '按要求', '依规定', '照规定', '按规范', '依规范', '照规范',
+  '按法规', '依法规', '照法规', '按照规定', '依照规定', '按照要求', '依照要求',
+  '符合规定', '符合规范', '符合标准', '视相关规定', '按相关规定', '参照相关规定',
+  '满足规定', '满足规范', '满足标准', '执行规定', '执行标准', '执行规范',
 ])
 
 const SUBSTANTIVE_WORDS = [
@@ -27,6 +32,29 @@ const SUBSTANTIVE_WORDS = [
   '证明', '材料', '流程', '条件', '时限', '地点', '标准', '方式', '发证',
   '审查', '核查', '验收', '认定', '认证', '批准', '注册', '签字', '盖章',
 ]
+
+const FIELD_CLASSIFICATION: Record<string, 'required' | 'optional'> = {
+  '事项名称': 'required',
+  '实施主体': 'required',
+  '办理条件': 'required',
+  '申请材料': 'required',
+  '办理流程': 'required',
+  '办理时限': 'required',
+  '收费标准': 'required',
+  '办理地点': 'required',
+  '咨询电话': 'required',
+  '监督电话': 'required',
+  '办理时间': 'required',
+  '网上办理深度': 'required',
+  '结果送达方式': 'required',
+  '表格下载': 'required',
+  '结果样本': 'optional',
+  '通办范围': 'optional',
+  '预约办理': 'optional',
+  '网上支付': 'optional',
+  '物流快递': 'optional',
+  '中介机构': 'optional',
+}
 
 function isInvalidContent(val: unknown): string | null {
   if (typeof val !== 'string') return null
@@ -115,7 +143,9 @@ export const MissingFieldDetector = {
     const basisText = policyBasisText ?? '办事指南应包含完整核心要素'
     const stdClause = standardClause ?? ''
     const coreDetails: ErrorDetail[] = []
-    for (const elem of coreRequiredFields) {
+    const extendedDetails: ErrorDetail[] = []
+
+    const processRequiredField = (elem: string) => {
       const val = guide[elem]
       if (isMissing(val)) {
         coreDetails.push(
@@ -152,15 +182,8 @@ export const MissingFieldDetector = {
         }
       }
     }
-    const extendedDetails: ErrorDetail[] = []
-    if (!extendedRequiredFields || extendedRequiredFields.length === 0) {
-      return { coreDetails, extendedDetails }
-    }
-    const overlap = this.checkFieldOverlap(coreRequiredFields, extendedRequiredFields)
-    const effectiveExtended = overlap.length > 0
-      ? extendedRequiredFields.filter((f) => !new Set(overlap).has(f))
-      : extendedRequiredFields
-    for (const elem of effectiveExtended) {
+
+    const processOptionalField = (elem: string) => {
       const val = guide[elem]
       if (isMissing(val)) {
         extendedDetails.push(
@@ -177,7 +200,31 @@ export const MissingFieldDetector = {
             severityMapping,
           ),
         )
+      }
+    }
 
+    for (const elem of coreRequiredFields) {
+      const classification = FIELD_CLASSIFICATION[elem] ?? 'required'
+      if (classification === 'required') {
+        processRequiredField(elem)
+      } else {
+        processOptionalField(elem)
+      }
+    }
+
+    if (!extendedRequiredFields || extendedRequiredFields.length === 0) {
+      return { coreDetails, extendedDetails }
+    }
+    const overlap = this.checkFieldOverlap(coreRequiredFields, extendedRequiredFields)
+    const effectiveExtended = overlap.length > 0
+      ? extendedRequiredFields.filter((f) => !new Set(overlap).has(f))
+      : extendedRequiredFields
+    for (const elem of effectiveExtended) {
+      const classification = FIELD_CLASSIFICATION[elem] ?? 'optional'
+      if (classification === 'required') {
+        processRequiredField(elem)
+      } else {
+        processOptionalField(elem)
       }
     }
     return { coreDetails, extendedDetails }

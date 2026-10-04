@@ -430,7 +430,7 @@ function matchAndReport(
     }
   }
   if (item === closestTerm) return []
-  if (closestTerm !== '' && levenshteinSimilarity(item, closestTerm) > 0.8) return []
+
   if (maxSim >= 0.95) return []
   if (maxSim >= threshold) {
     return [
