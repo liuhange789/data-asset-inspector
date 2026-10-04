@@ -964,7 +964,22 @@
       "keywords": [
         "许可",
         "审批",
-        "核准"
+        "核准",
+        "批准",
+        "注册",
+        "认证",
+        "发证",
+        "换证",
+        "补办",
+        "延续",
+        "变更",
+        "注销",
+        "吊销",
+        "撤销",
+        "报建",
+        "选址",
+        "立项",
+        "年检"
       ],
       "codePrefix": "XK"
     },
@@ -972,7 +987,20 @@
       "keywords": [
         "确认",
         "认定",
-        "证明"
+        "证明",
+        "核查",
+        "检验",
+        "检测",
+        "鉴定",
+        "评估",
+        "评价",
+        "验收",
+        "复核",
+        "审查",
+        "登记",
+        "备案",
+        "存档",
+        "公证"
       ],
       "codePrefix": "QR"
     },
@@ -980,7 +1008,13 @@
       "keywords": [
         "给付",
         "补贴",
-        "发放"
+        "发放",
+        "补助",
+        "资助",
+        "奖励",
+        "补偿",
+        "兑付",
+        "拨付"
       ],
       "codePrefix": "GF"
     },
@@ -988,21 +1022,30 @@
       "keywords": [
         "征收",
         "征用",
-        "收费"
+        "收费",
+        "征缴",
+        "收缴",
+        "催缴"
       ],
       "codePrefix": "ZS"
     },
     "当场办理类": {
       "keywords": [
         "当场办理",
-        "即办件"
+        "即办件",
+        "即办",
+        "马上办"
       ],
       "codePrefix": "DC"
     },
     "现场勘查类": {
       "keywords": [
         "现场勘查",
-        "实地核查"
+        "实地核查",
+        "现场检查",
+        "实地检查",
+        "勘验",
+        "勘查"
       ],
       "codePrefix": "XC"
     }
@@ -1055,7 +1098,55 @@
     "咨询电话号码": "咨询电话",
     "投诉电话": "监督电话",
     "办公地址": "办理地点",
-    "办公时间": "办理时间"
+    "办公时间": "办理时间",
+    "name": "事项名称",
+    "title": "事项名称",
+    "itemName": "事项名称",
+    "subject": "实施主体",
+    "agency": "实施主体",
+    "department": "实施主体",
+    "organizer": "实施主体",
+    "condition": "办理条件",
+    "conditions": "办理条件",
+    "requirements": "办理条件",
+    "materials": "申请材料",
+    "applicationMaterials": "申请材料",
+    "docs": "申请材料",
+    "process": "办理流程",
+    "workflow": "办理流程",
+    "procedure": "办理流程",
+    "timeLimit": "办理时限",
+    "deadline": "办理时限",
+    "processingTime": "办理时限",
+    "fee": "收费标准",
+    "cost": "收费标准",
+    "charge": "收费标准",
+    "fees": "收费标准",
+    "location": "办理地点",
+    "address": "办理地点",
+    "office": "办理地点",
+    "phone": "咨询电话",
+    "tel": "咨询电话",
+    "telephone": "咨询电话",
+    "contactPhone": "咨询电话",
+    "complaintPhone": "监督电话",
+    "supervisionPhone": "监督电话",
+    "hours": "办理时间",
+    "officeHours": "办理时间",
+    "workingHours": "办理时间",
+    "onlineCapable": "网上办理深度",
+    "onlineDepth": "网上办理深度",
+    "online": "网上办理深度",
+    "result": "结果样本",
+    "sample": "结果样本",
+    "delivery": "结果送达方式",
+    "deliveryMethod": "结果送达方式",
+    "download": "表格下载",
+    "formDownload": "表格下载",
+    "payment": "网上支付",
+    "onlinePayment": "网上支付",
+    "logistics": "物流快递",
+    "express": "物流快递"
   },
   "semanticConflictRules": {
     "ageKeywords": [

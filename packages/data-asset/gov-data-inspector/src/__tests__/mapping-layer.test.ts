@@ -45,4 +45,32 @@ describe('字段映射层', () => {
   it('MAP-09: 办事流程 → 办理流程', () => {
     expect(mapFieldName('办事流程', DEFAULT_FIELD_MAPPING)).toBe('办理流程')
   })
+
+  it('MAP-10: name → 事项名称', () => {
+    expect(mapFieldName('name', DEFAULT_FIELD_MAPPING)).toBe('事项名称')
+  })
+
+  it('MAP-11: timeLimit → 办理时限', () => {
+    expect(mapFieldName('timeLimit', DEFAULT_FIELD_MAPPING)).toBe('办理时限')
+  })
+
+  it('MAP-12: onlineCapable → 网上办理深度', () => {
+    expect(mapFieldName('onlineCapable', DEFAULT_FIELD_MAPPING)).toBe('网上办理深度')
+  })
+
+  it('MAP-13: materials → 申请材料', () => {
+    expect(mapFieldName('materials', DEFAULT_FIELD_MAPPING)).toBe('申请材料')
+  })
+
+  it('MAP-14: process → 办理流程', () => {
+    expect(mapFieldName('process', DEFAULT_FIELD_MAPPING)).toBe('办理流程')
+  })
+
+  it('MAP-15: 英文字段指南对象映射', () => {
+    const guide = { name: '食品经营许可', timeLimit: '20个工作日', onlineCapable: true }
+    const standard = mapGuideToStandard(guide, DEFAULT_FIELD_MAPPING)
+    expect(standard['事项名称']).toBe('食品经营许可')
+    expect(standard['办理时限']).toBe('20个工作日')
+    expect(standard['网上办理深度']).toBe(true)
+  })
 })

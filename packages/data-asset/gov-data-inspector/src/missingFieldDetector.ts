@@ -64,6 +64,7 @@ export const MissingFieldDetector = {
     policyBasisText?: string,
     standardClause?: string,
   ): ErrorDetail[] {
+
     if (!requiredElements || requiredElements.length === 0) {
       throw new Error('GOV_DATA_RULES_MISSING: guideRequiredElements配置缺失，无法执行漏项检测')
     }
@@ -124,6 +125,7 @@ export const MissingFieldDetector = {
     standardClause?: string,
     itemType?: string,
   ): { coreDetails: ErrorDetail[]; extendedDetails: ErrorDetail[] } {
+
     if (!coreRequiredFields || coreRequiredFields.length === 0) {
       throw new Error('GOV_DATA_RULES_MISSING: coreRequiredFields配置缺失，无法执行分级漏项检测')
     }
@@ -135,6 +137,8 @@ export const MissingFieldDetector = {
     const requiredFields = itemType && REQUIRED_FIELDS_BY_ITEM_TYPE[itemType]
       ? new Set(REQUIRED_FIELDS_BY_ITEM_TYPE[itemType]!)
       : null
+
+
 
 
     const processRequiredField = (elem: string) => {
