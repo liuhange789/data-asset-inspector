@@ -35,11 +35,20 @@ const SUBSTANTIVE_WORDS = [
   '审查', '核查', '验收', '认定', '认证', '批准', '注册', '签字', '盖章',
 ]
 
-const REQUIRED_FIELDS_BY_ITEM_TYPE: Record<string, string[]> = {
+const COMMON_REQUIRED_FIELDS = ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '办理地点', '咨询电话', '监督电话'] as const
+
+export const REQUIRED_FIELDS_BY_ITEM_TYPE: Record<string, string[]> = {
   '行政许可': ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '收费标准', '办理地点', '咨询电话', '监督电话', '办理时间', '网上办理深度', '结果送达方式', '表格下载'],
   '行政确认': ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '办理地点', '咨询电话', '监督电话', '办理时间'],
   '行政给付': ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '办理地点', '咨询电话', '监督电话'],
   '其他': ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '收费标准', '办理地点', '咨询电话', '监督电话', '办理时间', '网上办理深度', '结果送达方式', '表格下载'],
+}
+
+function getRequiredFieldsByItemType(itemType: string | null): string[] {
+  if (itemType && REQUIRED_FIELDS_BY_ITEM_TYPE[itemType]) {
+    return [...REQUIRED_FIELDS_BY_ITEM_TYPE[itemType]!]
+  }
+  return [...COMMON_REQUIRED_FIELDS]
 }
 
 function isInvalidContent(val: unknown): string | null {
@@ -125,6 +134,10 @@ export const MissingFieldDetector = {
     return extended.filter((f) => coreSet.has(f))
   },
 
+  COMMON_REQUIRED_FIELDS,
+  REQUIRED_FIELDS_BY_ITEM_TYPE,
+  getRequiredFieldsByItemType,
+
   detectGraded(
     guide: Record<string, unknown>,
     guideId: string,
@@ -146,7 +159,7 @@ export const MissingFieldDetector = {
 
     const requiredFields = itemType && REQUIRED_FIELDS_BY_ITEM_TYPE[itemType]
       ? new Set(REQUIRED_FIELDS_BY_ITEM_TYPE[itemType]!)
-      : null
+      : new Set(COMMON_REQUIRED_FIELDS)
 
 
 

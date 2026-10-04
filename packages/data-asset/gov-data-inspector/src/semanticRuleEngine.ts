@@ -30,23 +30,30 @@ function matchItemType(
   itemTypeMatching: ItemTypeMatchingConfig | undefined,
   options?: { itemTypeOverride?: string | undefined },
 ): ItemTypeMatchResult {
+  const itemName = String(guide['事项名称'] ?? '')
+  const itemCode = String(guide['事项编码'] ?? '')
+  console.log('[matchItemType] input:', { itemName, itemCode, hasOverride: !!options?.itemTypeOverride, hasConfig: !!itemTypeMatching })
+
   if (options?.itemTypeOverride) {
+    console.log('[matchItemType] matchSource=manual, itemType=', options.itemTypeOverride)
     return { itemType: options.itemTypeOverride, matchSource: 'manual' }
   }
 
-  if (!itemTypeMatching) return { itemType: null, matchSource: null }
-
-  const itemName = String(guide['事项名称'] ?? '')
-  const itemCode = String(guide['事项编码'] ?? '')
+  if (!itemTypeMatching) {
+    console.log('[matchItemType] no match: itemTypeMatching config missing')
+    return { itemType: null, matchSource: null }
+  }
 
   for (const [itemType, rule] of Object.entries(itemTypeMatching)) {
     if (rule.keywords.some((kw) => itemName.includes(kw))) {
+      console.log('[matchItemType] matchSource=name, itemType=', itemType)
       return { itemType, matchSource: 'name' }
     }
   }
 
   for (const [itemType, rule] of Object.entries(itemTypeMatching)) {
     if (itemCode && itemCode.startsWith(rule.codePrefix)) {
+      console.log('[matchItemType] matchSource=code, itemType=', itemType)
       return { itemType, matchSource: 'code' }
     }
   }
@@ -56,11 +63,13 @@ function matchItemType(
     if (!flowText) continue
     for (const [itemType, rule] of Object.entries(itemTypeMatching)) {
       if (rule.keywords.some((kw) => flowText.includes(kw))) {
+        console.log('[matchItemType] matchSource=flow, itemType=', itemType)
         return { itemType, matchSource: 'flow' }
       }
     }
   }
 
+  console.log('[matchItemType] no match: no keyword/codePrefix hit')
   return { itemType: null, matchSource: null }
 }
 
@@ -528,6 +537,16 @@ function detectApproximateSubstring(
   return null
 }
 
+function isStandardMultiContent(value: string): { hit: boolean; reason: string } {
+  if (!value || !value.trim()) return { hit: false, reason: '' }
+  const trimmed = value.trim()
+  const hasNumbered = /[一二三四五六七八九十]+\s*[、.．]|[\d]+\s*[.、．]/.test(trimmed)
+  if (hasNumbered) return { hit: true, reason: '编号组织' }
+  const separatedItems = trimmed.split(/[；;，,、\n]/).filter((s) => s.trim().length > 0)
+  if (separatedItems.length > 2 && trimmed.length > 20) return { hit: true, reason: '分隔多条' }
+  return { hit: false, reason: '' }
+}
+
 function detectLocalTermsMismatch(
   guide: Record<string, unknown>,
   guideId: string,
@@ -542,9 +561,12 @@ function detectLocalTermsMismatch(
   const details: ErrorDetail[] = []
   const materialStr = String(guide['申请材料'] ?? '')
   if (materialStr && localTerms.materials.length > 0) {
-    const materials = materialStr.split(/[、,，;；\n]/).map((s) => s.trim()).filter(Boolean)
-    for (const mat of materials) {
-      details.push(...matchAndReport(mat, localTerms.materials, threshold, '申请材料', guideId, severityMapping))
+    const multiCheck = isStandardMultiContent(materialStr)
+    if (!multiCheck.hit) {
+      const materials = materialStr.split(/[、,，;；\n]/).map((s) => s.trim()).filter(Boolean)
+      for (const mat of materials) {
+        details.push(...matchAndReport(mat, localTerms.materials, threshold, '申请材料', guideId, severityMapping))
+      }
     }
   }
   details.push(...detectConditionTermsMismatch(guide, guideId, options, severityMapping))
@@ -562,6 +584,8 @@ function detectConditionTermsMismatch(
   const threshold = options.degradedSimilarityThreshold ?? 0.80
   const conditionStr = String(guide['办理条件'] ?? '')
   if (!conditionStr) return []
+  const condMultiCheck = isStandardMultiContent(conditionStr)
+  if (condMultiCheck.hit) return []
   const details: ErrorDetail[] = []
   const condParts = conditionStr.split(/[、,，;；\n。且并和与并]/).map((s) => s.trim()).filter(Boolean)
   for (const cond of condParts) {

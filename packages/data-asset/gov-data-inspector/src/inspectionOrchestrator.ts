@@ -59,6 +59,7 @@ export interface OrchestrateResult extends GuideInspectionResult {
   warnings: UnmatchedWarning[]
   coreMissingCount?: number
   extendedMissingCount?: number
+  itemType?: string | null
 }
 
 export const InspectionOrchestrator = {
@@ -77,6 +78,7 @@ export const InspectionOrchestrator = {
     let serviceConvenience = 0
     let coreMissingCount = 0
     let extendedMissingCount = 0
+    let lastItemType: string | null = null
 
     const requiredFields = config.requiredFields ?? config.guideRequiredElements ?? []
     const coreRequiredFields = config.coreRequiredFields ?? config.requiredFields ?? config.guideRequiredElements ?? []
@@ -96,6 +98,7 @@ export const InspectionOrchestrator = {
 
       if (useGraded) {
         const matchResult = SemanticRuleEngine.matchItemType(standardGuide, config.itemTypeMatching, { itemTypeOverride: options?.itemTypeOverride })
+        lastItemType = matchResult.itemType
 
         const graded = MissingFieldDetector.detectGraded(
           standardGuide,
@@ -201,6 +204,7 @@ export const InspectionOrchestrator = {
       warnings: allWarnings,
       coreMissingCount,
       extendedMissingCount,
+      itemType: lastItemType,
     }
   },
 }
