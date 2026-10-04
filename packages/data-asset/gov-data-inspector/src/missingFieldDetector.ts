@@ -21,6 +21,8 @@ const INVALID_CONTENT_TEMPLATES = new Set([
   '按法规', '依法规', '照法规', '按照规定', '依照规定', '按照要求', '依照要求',
   '符合规定', '符合规范', '符合标准', '视相关规定', '按相关规定', '参照相关规定',
   '满足规定', '满足规范', '满足标准', '执行规定', '执行标准', '执行规范',
+  '视情', '待定', '待确认', '待核实', '待确定', '另行通知', '另行规定',
+  '参照办理', '参照执行', '参照管理', '参照管理', '参照标准',
 ])
 
 const SUBSTANTIVE_WORDS = [
@@ -33,27 +35,11 @@ const SUBSTANTIVE_WORDS = [
   '审查', '核查', '验收', '认定', '认证', '批准', '注册', '签字', '盖章',
 ]
 
-const FIELD_CLASSIFICATION: Record<string, 'required' | 'optional'> = {
-  '事项名称': 'required',
-  '实施主体': 'required',
-  '办理条件': 'required',
-  '申请材料': 'required',
-  '办理流程': 'required',
-  '办理时限': 'required',
-  '收费标准': 'required',
-  '办理地点': 'required',
-  '咨询电话': 'required',
-  '监督电话': 'required',
-  '办理时间': 'required',
-  '网上办理深度': 'required',
-  '结果送达方式': 'required',
-  '表格下载': 'required',
-  '结果样本': 'optional',
-  '通办范围': 'optional',
-  '预约办理': 'optional',
-  '网上支付': 'optional',
-  '物流快递': 'optional',
-  '中介机构': 'optional',
+const REQUIRED_FIELDS_BY_ITEM_TYPE: Record<string, string[]> = {
+  '行政许可': ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '收费标准', '办理地点', '咨询电话', '监督电话', '办理时间', '网上办理深度', '结果送达方式', '表格下载'],
+  '行政确认': ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '办理地点', '咨询电话', '监督电话', '办理时间'],
+  '行政给付': ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '办理地点', '咨询电话', '监督电话'],
+  '其他': ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '收费标准', '办理地点', '咨询电话', '监督电话', '办理时间', '网上办理深度', '结果送达方式', '表格下载'],
 }
 
 function isInvalidContent(val: unknown): string | null {
@@ -136,6 +122,7 @@ export const MissingFieldDetector = {
     severityMapping?: Record<string, string>,
     policyBasisText?: string,
     standardClause?: string,
+    itemType?: string,
   ): { coreDetails: ErrorDetail[]; extendedDetails: ErrorDetail[] } {
     if (!coreRequiredFields || coreRequiredFields.length === 0) {
       throw new Error('GOV_DATA_RULES_MISSING: coreRequiredFields配置缺失，无法执行分级漏项检测')
@@ -144,6 +131,11 @@ export const MissingFieldDetector = {
     const stdClause = standardClause ?? ''
     const coreDetails: ErrorDetail[] = []
     const extendedDetails: ErrorDetail[] = []
+
+    const requiredFields = itemType && REQUIRED_FIELDS_BY_ITEM_TYPE[itemType]
+      ? new Set(REQUIRED_FIELDS_BY_ITEM_TYPE[itemType]!)
+      : null
+
 
     const processRequiredField = (elem: string) => {
       const val = guide[elem]
@@ -204,8 +196,7 @@ export const MissingFieldDetector = {
     }
 
     for (const elem of coreRequiredFields) {
-      const classification = FIELD_CLASSIFICATION[elem] ?? 'required'
-      if (classification === 'required') {
+      if (!requiredFields || requiredFields.has(elem)) {
         processRequiredField(elem)
       } else {
         processOptionalField(elem)
@@ -220,8 +211,7 @@ export const MissingFieldDetector = {
       ? extendedRequiredFields.filter((f) => !new Set(overlap).has(f))
       : extendedRequiredFields
     for (const elem of effectiveExtended) {
-      const classification = FIELD_CLASSIFICATION[elem] ?? 'optional'
-      if (classification === 'required') {
+      if (requiredFields && requiredFields.has(elem)) {
         processRequiredField(elem)
       } else {
         processOptionalField(elem)

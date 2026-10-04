@@ -431,7 +431,7 @@ function matchAndReport(
   }
   if (item === closestTerm) return []
 
-  if (maxSim >= 0.95) return []
+  if (maxSim >= 0.99) return []
   if (maxSim >= threshold) {
     return [
       ErrorDetailBuilder.build(

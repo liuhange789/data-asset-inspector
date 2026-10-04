@@ -95,6 +95,7 @@ export const InspectionOrchestrator = {
         : guide
 
       if (useGraded) {
+        const matchResult = SemanticRuleEngine.matchItemType(standardGuide, config.itemTypeMatching, { itemTypeOverride: options?.itemTypeOverride })
         const graded = MissingFieldDetector.detectGraded(
           standardGuide,
           guideId,
@@ -103,6 +104,7 @@ export const InspectionOrchestrator = {
           config.severityMapping,
           undefined,
           config.missingFieldStandardClause,
+          matchResult.itemType ?? undefined,
         )
         allErrorDetails.push(...graded.coreDetails, ...graded.extendedDetails)
         coreMissingCount += graded.coreDetails.length
