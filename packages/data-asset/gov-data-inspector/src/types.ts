@@ -224,6 +224,7 @@ export interface FormatRule {
   field: string
   pattern?: string
   requiredKeywords?: string[]
+  matchMode?: 'all' | 'any'
   suggestionTemplate: string
 }
 

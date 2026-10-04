@@ -175,6 +175,8 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
             data,
             {
               requiredFields: configPack.requiredFields,
+              ...(configPack.coreRequiredFields ? { coreRequiredFields: configPack.coreRequiredFields } : {}),
+              ...(configPack.extendedRequiredFields ? { extendedRequiredFields: configPack.extendedRequiredFields } : {}),
               formatRules: configPack.formatRules,
               severityMapping: configPack.severityMapping,
               scoringWeights: configPack.scoringWeights,

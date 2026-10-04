@@ -1,7 +1,7 @@
 import type { ErrorDetail } from './types.js'
 import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 
-const PLACEHOLDER_VALUES = ['无', '暂无', '无要求', '/', '—', '-']
+const PLACEHOLDER_VALUES = ['无', '暂无', '无要求', '/', '—', '-', '空', '未填写', '未提供', '未设置', '未配置', '待补充', '待填写', '待完善', '略', '省略', 'N/A', 'n/a', 'NA', 'none', 'None', 'NULL', 'null']
 
 function isMissing(val: unknown): boolean {
   return val === undefined || val === null ||
