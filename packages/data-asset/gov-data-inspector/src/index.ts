@@ -196,6 +196,7 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
               degradedSimilarityThreshold: configPack.degradedSimilarityThreshold,
               inlineLocalTerms: configPack.localStandardTerms,
               referenceSystem: configPack.referenceSystem ?? null,
+              ...(args.groundTruth ? { groundTruth: args.groundTruth as import('./types.js').GroundTruth } : {}),
             },
           )
           result.guideInspection = orchestrateResult

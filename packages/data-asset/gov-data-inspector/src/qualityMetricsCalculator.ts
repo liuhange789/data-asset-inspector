@@ -1,4 +1,4 @@
-import type { ErrorDetail, DetectionRates } from './types.js'
+import type { ErrorDetail, DetectionRates, GroundTruth } from './types.js'
 
 export interface MetricsInput {
   semanticErrorCount: number
@@ -10,6 +10,7 @@ export interface MetricsInput {
   totalFieldCount: number
   errorDetails: ErrorDetail[]
   falsePositiveCount?: number
+  groundTruth?: GroundTruth
 
   scoreWeights: { completeness: number; accuracy: number; traceability: number }
 }
@@ -26,21 +27,26 @@ export const QualityMetricsCalculator = {
       totalFieldCount,
       errorDetails,
       falsePositiveCount = 0,
+      groundTruth,
 
       scoreWeights,
     } = input
 
-    const semanticDetectionRate: number =
-      totalGuides > 0 ? Math.min(100, Math.round((semanticErrorCount / totalGuides) * 100)) : 0
+    const semanticDetectionRate: number = groundTruth?.realSemanticErrorCount
+      ? Math.min(100, Math.round((semanticErrorCount / groundTruth.realSemanticErrorCount) * 100))
+      : totalGuides > 0 ? Math.min(100, Math.round((semanticErrorCount / totalGuides) * 100)) : 0
 
-    const logicalDetectionRate: number =
-      totalGuides > 0 ? Math.min(100, Math.round((logicalErrorCount / totalGuides) * 100)) : 0
+    const logicalDetectionRate: number = groundTruth?.realLogicalErrorCount
+      ? Math.min(100, Math.round((logicalErrorCount / groundTruth.realLogicalErrorCount) * 100))
+      : totalGuides > 0 ? Math.min(100, Math.round((logicalErrorCount / totalGuides) * 100)) : 0
 
-    const missingFieldDetectionRate: number =
-      totalFieldCount > 0 ? Math.round((missingFieldCount / totalFieldCount) * 100) : 0
+    const missingFieldDetectionRate: number = groundTruth?.realMissingFieldCount
+      ? Math.min(100, Math.round((missingFieldCount / groundTruth.realMissingFieldCount) * 100))
+      : totalFieldCount > 0 ? Math.round((missingFieldCount / totalFieldCount) * 100) : 0
 
-    const formatDetectionRate: number =
-      totalFieldCount > 0 ? Math.round((formatIssueCount / totalFieldCount) * 100) : 0
+    const formatDetectionRate: number = groundTruth?.realFormatIssueCount
+      ? Math.min(100, Math.round((formatIssueCount / groundTruth.realFormatIssueCount) * 100))
+      : totalFieldCount > 0 ? Math.round((formatIssueCount / totalFieldCount) * 100) : 0
 
     const totalReportedErrors = semanticErrorCount + logicalErrorCount + missingFieldCount
     const falsePositiveRate =

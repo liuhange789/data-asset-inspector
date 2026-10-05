@@ -92,6 +92,13 @@ export interface DetectionRates {
   overallScore: number
 }
 
+export interface GroundTruth {
+  realMissingFieldCount?: number
+  realSemanticErrorCount?: number
+  realLogicalErrorCount?: number
+  realFormatIssueCount?: number
+}
+
 export interface GuideInspectionResult {
   completeness: number
   missingFields: number

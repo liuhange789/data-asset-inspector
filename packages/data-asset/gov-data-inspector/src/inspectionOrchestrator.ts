@@ -1,4 +1,4 @@
-import type { ErrorDetail, FormatIssue, GuideInspectionResult, KnowledgeBase, StandardRule, FormatRule, DetectionRates, UnmatchedWarning } from './types.js'
+import type { ErrorDetail, FormatIssue, GuideInspectionResult, KnowledgeBase, StandardRule, FormatRule, DetectionRates, UnmatchedWarning, GroundTruth } from './types.js'
 import { MissingFieldDetector } from './missingFieldDetector.js'
 import { SemanticRuleEngine } from './semanticRuleEngine.js'
 import { LogicRuleEngine } from './logicRuleEngine.js'
@@ -53,6 +53,7 @@ export interface OrchestrateOptions {
   degradedSimilarityThreshold?: number | undefined
   inlineLocalTerms?: { materials: string[]; conditions: string[] } | undefined
   referenceSystem?: import('./types.js').ReferenceSystem | null
+  groundTruth?: GroundTruth
 }
 
 export interface OrchestrateResult extends GuideInspectionResult {
@@ -188,6 +189,7 @@ export const InspectionOrchestrator = {
       totalFieldCount: totalFieldCount > 0 ? totalFieldCount : 1,
       errorDetails: allErrorDetails,
       scoreWeights: scoringWeights!,
+      ...(options?.groundTruth ? { groundTruth: options.groundTruth } : {}),
     })
 
     return {
