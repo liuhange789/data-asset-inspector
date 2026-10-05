@@ -243,10 +243,10 @@ describe('SemanticRuleEngine', () => {
     expect(result.details.some((d) => d.field === '申请材料' && d.errorType === 'semantic')).toBe(true)
   })
 
-  it('LT-04: E44 材料笔误', () => {
+  it('LT-04: E44 材料短名（子串匹配）→ 本地词表不报错', () => {
     const guide = { 事项名称: '食品经营许可', 申请材料: '健康证' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: ['健康证明'], conditions: [] } })
-    expect(result.details.some((d) => d.field === '申请材料' && d.errorType === 'semantic' && d.description.includes('疑似错误'))).toBe(true)
+    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(false)
   })
 
   it('LT-05: 精确匹配不报告', () => {
@@ -255,10 +255,10 @@ describe('SemanticRuleEngine', () => {
     expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(false)
   })
 
-  it('LT-06: 包含但相似度≤0.8 → 报告', () => {
+  it('LT-06: 包含关系（子串匹配）→ 不报错', () => {
     const guide = { 事项名称: '食品经营许可', 申请材料: '居民身份证原件' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: ['身份证原件'], conditions: [] } })
-    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(true)
+    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(false)
   })
 
   it('LT-07: 高相似度不报告', () => {
@@ -324,5 +324,59 @@ describe('SemanticRuleEngine', () => {
       inlineLocalTerms: { materials: [], conditions: ['年满18周岁', '具有完全民事行为能力'] },
     })
     expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic')).toBe(true)
+  })
+
+  it('SUB-01: 短材料名是标准名子串 → 不报本地词表错误', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '身份证、申请表、营业执照复印件' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: ['身份证原件', '申请表', '营业执照复印件'], conditions: [] } })
+    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(false)
+  })
+
+  it('SUB-02: 标准名是短材料名子串 → 不报本地词表错误', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '居民身份证原件、申请表' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: ['身份证原件', '申请表'], conditions: [] } })
+    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(false)
+  })
+
+  it('SUB-03: 真实笔误仍被检出', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '营业执照复映件、申请表' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: ['营业执照复印件', '申请表'], conditions: [] } })
+    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(true)
+  })
+
+  it('SUB-04: 驾驶证短名不误报', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '驾驶证、行驶证、申请表' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: ['驾驶员驾驶证', '行驶证', '申请表'], conditions: [] } })
+    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(false)
+  })
+
+  it('DEPTH-01: 全程网办（IV级）→ 不报枚举错误', () => {
+    const guide = { 事项名称: '食品经营许可', 网上办理深度: '全程网办（IV级）' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.field === '网上办理深度' && d.standardClause === '结构完整性校验·网办深度不规范')).toBe(false)
+  })
+
+  it('DEPTH-02: 部分网办（III级）→ 不报枚举错误', () => {
+    const guide = { 事项名称: '食品经营许可', 网上办理深度: '部分网办（III级）' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.field === '网上办理深度' && d.standardClause === '结构完整性校验·网办深度不规范')).toBe(false)
+  })
+
+  it('DEPTH-03: 不带标注的全程网办 → 不报枚举错误', () => {
+    const guide = { 事项名称: '食品经营许可', 网上办理深度: '全程网办' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.field === '网上办理深度' && d.standardClause === '结构完整性校验·网办深度不规范')).toBe(false)
+  })
+
+  it('DEPTH-04: 无效值带标注 → 仍报枚举错误', () => {
+    const guide = { 事项名称: '食品经营许可', 网上办理深度: '在线办理（II级）' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.field === '网上办理深度' && d.standardClause === '结构完整性校验·网办深度不规范')).toBe(true)
+  })
+
+  it('DEPTH-05: 半角括号标注全程网办 → 不报枚举错误', () => {
+    const guide = { 事项名称: '食品经营许可', 网上办理深度: '全程网办(IV级)' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
+    expect(result.details.some((d) => d.field === '网上办理深度' && d.standardClause === '结构完整性校验·网办深度不规范')).toBe(false)
   })
 })

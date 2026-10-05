@@ -393,6 +393,15 @@ function checkMaterialCompleteness(
   return []
 }
 
+function isSubstringIdentical(item: string, term: string): boolean {
+  if (!item || !term) return false
+  return term.includes(item) || item.includes(term)
+}
+
+function normalizeOnlineDepthValue(raw: string): string {
+  return raw.replace(/（[^（）]*）/g, '').replace(/\([^()]*\)/g, '').trim()
+}
+
 function checkOnlineDepthValidity(
   guide: Record<string, unknown>,
   guideId: string,
@@ -400,8 +409,10 @@ function checkOnlineDepthValidity(
 ): ErrorDetail[] {
   const depth = String(guide['网上办理深度'] ?? '').trim()
   if (!depth) return []
+  const normalized = normalizeOnlineDepthValue(depth)
+  if (!normalized) return []
   const validValues = ['全程网办', '部分网办', '网上预审', '现场办理', '不见面审批']
-  if (!validValues.includes(depth)) {
+  if (!validValues.includes(normalized)) {
     return [
       ErrorDetailBuilder.build(
         {
@@ -429,6 +440,7 @@ function matchAndReport(
   severityMapping?: Record<string, string>,
 ): ErrorDetail[] {
   if (terms.length === 0) return []
+  if (terms.some((t) => isSubstringIdentical(item, t))) return []
   let maxSim = 0
   let closestTerm = ''
   for (const term of terms) {
