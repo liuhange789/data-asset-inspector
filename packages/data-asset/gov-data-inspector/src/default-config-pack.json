@@ -975,9 +975,11 @@
     {
       "ruleId": "LOG_CONDITION_FIELD_MISPLACED_001",
       "triggerFields": [
-        "办理条件"
+        "办理条件",
+        "受理条件"
       ],
       "condition": "受理条件字段包含材料名称",
+      "scanMode": "anyField",
       "threshold": null,
       "suggestionTemplate": "受理条件字段不应包含材料名称，请核对字段内容归属",
       "standardClause": "GB/T 36114-2018 第6.3条 字段内容归属要求",
@@ -1015,6 +1017,7 @@
       "standardClause": "国办发〔2018〕45号 第三条 即办件时限要求",
       "triggerKeywords": [
         "当场办理",
+        "当场办结",
         "即办",
         "即办即取"
       ]
