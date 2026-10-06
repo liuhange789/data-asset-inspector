@@ -2,7 +2,7 @@
 # This file declares the plugin's runtime patch for the Cordis framework.
 # Used by DSH plugin manager to apply framework-level patches during installation.
 plugin: @liuhange/dsh-construction-data-inventory
-version: "3.2.1"
+version: "3.2.2"
 patch:
   - target: tools
     action: register

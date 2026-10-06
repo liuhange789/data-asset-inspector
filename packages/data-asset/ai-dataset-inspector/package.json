@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-ai-dataset-inspector",
-  "description": "AI training dataset inspection plugin: annotation consistency, label distribution, data leakage detection",
-  "version": "3.1.3",
+  "description": "检测AI训练数据集的标注一致性、标签分布、数据泄露，输出质检报告",
+  "version": "3.1.4",
   "publishConfig": {
     "access": "public"
   },
@@ -45,40 +45,10 @@
     }
   },
   "keywords": [
-    "deepseek-harness",
-    "dsh-plugin",
-    "data-asset",
-    "data-asset-inspector",
-    "shujintong",
-    "数据资产",
     "ai-dataset",
-    "annotation-consistency",
-    "data-leakage",
-    "kappa-coefficient",
-    "AI数据集",
-    "标注一致性",
-    "数据泄露",
-    "dsh",
-    "typescript",
-    "nodejs",
-    "automation",
-    "audit",
-    "compliance",
-    "data-governance",
-    "data-quality",
-    "plugin",
-    "open-source",
-    "data-management",
-    "ai",
-    "machine-learning",
-    "dataset",
-    "training-data",
-    "annotation",
-    "label-quality",
-    "data-validation",
-    "model-evaluation",
-    "ai-data",
-    "ml-ops"
+    "training-data-quality",
+    "annotation-audit",
+    "dsh-plugin"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector#readme"
 }

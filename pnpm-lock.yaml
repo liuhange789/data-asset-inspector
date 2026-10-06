@@ -79,6 +79,12 @@ importers:
         specifier: ^3.1.0
         version: 3.1.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)
 
+  packages/data-asset/construction-data-inventory:
+    dependencies:
+      '@liuhange/dsh-data-asset-shared':
+        specifier: ^3.1.0
+        version: 3.1.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)
+
   packages/data-asset/data-asset-attestation:
     dependencies:
       '@liuhange/dsh-data-asset-shared':
@@ -125,7 +131,25 @@ importers:
 
   packages/data-asset/data-visualization: {}
 
+  packages/data-asset/fin-aml-checker:
+    dependencies:
+      '@liuhange/dsh-data-asset-shared':
+        specifier: ^3.1.0
+        version: 3.1.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)
+
   packages/data-asset/generate-registration-docs: {}
+
+  packages/data-asset/geo-data-quality-inspector:
+    dependencies:
+      '@liuhange/dsh-data-asset-shared':
+        specifier: ^3.2.3
+        version: 3.2.3(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)
+
+  packages/data-asset/gov-config-gd: {}
+
+  packages/data-asset/gov-config-schema: {}
+
+  packages/data-asset/gov-config-zj: {}
 
   packages/data-asset/gov-data-inspector:
     dependencies:
@@ -136,6 +160,18 @@ importers:
   packages/data-asset/match-registration-agency: {}
 
   packages/data-asset/registration-precheck: {}
+
+  packages/data-asset/research-data-provenance:
+    dependencies:
+      '@liuhange/dsh-data-asset-shared':
+        specifier: ^3.1.0
+        version: 3.1.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)
+
+  packages/data-asset/underground-pipeline-inspector:
+    dependencies:
+      '@liuhange/dsh-data-asset-shared':
+        specifier: ^3.2.3
+        version: 3.2.3(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)
 
   packages/data-asset/visibility-doctor:
     devDependencies:
@@ -437,6 +473,13 @@ packages:
 
   '@liuhange/dsh-data-asset-shared@3.1.2':
     resolution: {integrity: sha512-9w9804tgLp72gsZ+Mw07W6rbe7WbZ8ErIw6l3HCJ2IiiH6YBD+rAja0/0nSRqb5pv74ygu3fAQsjNG6+xI7Eug==}
+    peerDependencies:
+      '@deepseek-ai/cordis': ^4.0.0
+      '@deepseek-ai/dsh-tools': 0.0.1-rc.1
+      '@deepseek-ai/schemastery': ^3.18.0
+
+  '@liuhange/dsh-data-asset-shared@3.2.3':
+    resolution: {integrity: sha512-vcaU0bs4jnI+p26qNloaJdyjJ0uGo/k8bPJSSqr5sWmIk4Nmmdl6VxJJdjnA9OQa1OSzrE23+0bf907NHXh3CQ==}
     peerDependencies:
       '@deepseek-ai/cordis': ^4.0.0
       '@deepseek-ai/dsh-tools': 0.0.1-rc.1
@@ -1049,6 +1092,13 @@ snapshots:
   '@jridgewell/sourcemap-codec@1.5.5': {}
 
   '@liuhange/dsh-data-asset-shared@3.1.2(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)':
+    dependencies:
+      '@deepseek-ai/cordis': 4.0.1
+      '@deepseek-ai/dsh-tools': 0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1)
+      '@deepseek-ai/schemastery': 3.18.1
+      csv-parse: 5.6.0
+
+  '@liuhange/dsh-data-asset-shared@3.2.3(@deepseek-ai/cordis@4.0.1)(@deepseek-ai/dsh-tools@0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1))(@deepseek-ai/schemastery@3.18.1)':
     dependencies:
       '@deepseek-ai/cordis': 4.0.1
       '@deepseek-ai/dsh-tools': 0.0.1-rc.1(b9f02de5a52f6bd6787cb5f9b58010d1)
