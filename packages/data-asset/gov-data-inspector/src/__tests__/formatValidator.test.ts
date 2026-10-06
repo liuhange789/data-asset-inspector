@@ -161,25 +161,33 @@ describe('FormatValidator', () => {
 
   it('FV-18: 办理地点不含addressSpecificKeywords → 报"缺少具体地址信息"', () => {
     const rules: FormatRule[] = [
-      { field: '办理地点', requiredKeywords: ['街道', '路', '号', '室', '楼', '层', '栋'], addressSpecificKeywords: ['街道', '路', '号', '室', '楼', '层', '栋', '区', '市', '县', '镇', '村'], suggestionTemplate: '应包含具体地址信息' },
+      { field: '办理地点', requiredKeywords: ['街道', '路', '号', '室', '楼', '层', '栋'], addressSpecificKeywords: ['街道', '路', '号', '室', '楼', '层', '栋', '巷', '大道', '广场'], suggestionTemplate: '应包含具体地址信息' },
     ]
     const issues = FormatValidator.validate({ 办理地点: '线上办理' }, 'g1', rules)
     expect(issues.some((i) => i.field === '办理地点' && i.issue === '办理地点缺少具体地址信息')).toBe(true)
   })
 
-  it('FV-19: 办理地点含"区" → 不报错（addressSpecificKeywords命中）', () => {
+  it('FV-19: 办理地点仅含行政区划词"区" → 报"缺少具体地址信息"（区不算具体地址）', () => {
     const rules: FormatRule[] = [
-      { field: '办理地点', requiredKeywords: ['街道', '路', '号', '室', '楼', '层', '栋'], addressSpecificKeywords: ['街道', '路', '号', '室', '楼', '层', '栋', '区', '市', '县', '镇', '村'], suggestionTemplate: '应包含具体地址信息' },
+      { field: '办理地点', requiredKeywords: ['街道', '路', '号', '室', '楼', '层', '栋'], addressSpecificKeywords: ['街道', '路', '号', '室', '楼', '层', '栋', '巷', '大道', '广场'], suggestionTemplate: '应包含具体地址信息' },
     ]
     const issues = FormatValidator.validate({ 办理地点: '番禺区就业服务中心' }, 'g1', rules)
-    expect(issues.some((i) => i.field === '办理地点')).toBe(false)
+    expect(issues.some((i) => i.field === '办理地点' && i.issue === '办理地点缺少具体地址信息')).toBe(true)
   })
 
-  it('FV-20: 办理地点含"街道" → 不报错', () => {
+  it('FV-20: 办理地点含"路""号"具体门牌要素 → 不报错', () => {
     const rules: FormatRule[] = [
-      { field: '办理地点', requiredKeywords: ['街道', '路', '号', '室', '楼', '层', '栋'], addressSpecificKeywords: ['街道', '路', '号', '室', '楼', '层', '栋', '区', '市', '县', '镇', '村'], suggestionTemplate: '应包含具体地址信息' },
+      { field: '办理地点', requiredKeywords: ['街道', '路', '号', '室', '楼', '层', '栋'], addressSpecificKeywords: ['街道', '路', '号', '室', '楼', '层', '栋', '巷', '大道', '广场'], suggestionTemplate: '应包含具体地址信息' },
     ]
     const issues = FormatValidator.validate({ 办理地点: '番禺区市桥街清河东路3号' }, 'g1', rules)
     expect(issues.some((i) => i.field === '办理地点')).toBe(false)
+  })
+
+  it('FV-21: 办理地点命中模糊描述"任一区" → 直接报格式错误（就业样本F7）', () => {
+    const rules: FormatRule[] = [
+      { field: '办理地点', requiredKeywords: ['街道', '路', '号', '室', '楼', '层', '栋'], fuzzyDescriptors: ['线上', '线上办理', '网上办理', '区街镇机构', '任意网点', '任一区', '全市'], addressSpecificKeywords: ['街道', '路', '号', '室', '楼', '层', '栋', '巷', '大道', '广场'], suggestionTemplate: '应包含具体地址信息' },
+    ]
+    const issues = FormatValidator.validate({ 办理地点: '广州市任一区、街（镇）公共就业服务机构' }, 'g1', rules)
+    expect(issues.some((i) => i.field === '办理地点' && i.issue === '办理地点缺少具体地址信息')).toBe(true)
   })
 })

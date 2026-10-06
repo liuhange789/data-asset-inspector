@@ -347,6 +347,7 @@ function ruleProcessTimeLimitInconsistent(
   const process = String(guide['办理流程'] ?? '')
   const timeLimit = guide['办理时限']
   if (!process || !timeLimit) return []
+  if (isLogicDebug()) console.log(`[logic-debug] ruleId=${rule.ruleId} event=call process=${process} timeLimit=${String(timeLimit)}`)
   const stepMatches = process.matchAll(/(\d+)\s*个?\s*(?:工作日|天)/g)
   let sumDays = 0
   for (const m of stepMatches) {

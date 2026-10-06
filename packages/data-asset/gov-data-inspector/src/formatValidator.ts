@@ -45,6 +45,15 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
     }
   }
   if (rule.addressSpecificKeywords && rule.addressSpecificKeywords.length > 0) {
+    if (rule.fuzzyDescriptors && rule.fuzzyDescriptors.length > 0 && rule.fuzzyDescriptors.some((d) => strVal.includes(d))) {
+      issues.push({
+        guideId,
+        field: rule.field,
+        issue: '办理地点缺少具体地址信息',
+        suggestion: '办理地点应包含街道/路/号等具体地址信息',
+      })
+      return issues
+    }
     const hasAnySpecific = rule.addressSpecificKeywords.some((kw) => strVal.includes(kw))
     if (!hasAnySpecific) {
       issues.push({
