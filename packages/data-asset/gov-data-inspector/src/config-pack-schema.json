@@ -74,6 +74,11 @@
             "type": "array",
             "items": { "type": "string" }
           },
+          "matchMode": { "type": "string", "enum": ["all", "any"] },
+          "fuzzyDescriptors": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
           "suggestionTemplate": { "type": "string" }
         }
       }
@@ -193,6 +198,18 @@
     "materialConciseThreshold": { "type": "number" },
     "missingFieldStandardClause": { "type": "string" },
     "degradedSimilarityThreshold": { "type": "number", "minimum": 0, "maximum": 1 },
-    "inputLengthThreshold": { "type": "number" }
+    "inputLengthThreshold": { "type": "number" },
+    "vagueTerms": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "substantiveWords": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "addressFuzzyDescriptors": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
   }
 }

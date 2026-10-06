@@ -51,20 +51,21 @@ function annotatePolicyBasis(
 
 function validateMetrics(detectionRates: DetectionRates): ConfigPackWarning[] {
   const warnings: ConfigPackWarning[] = []
-  if (detectionRates.missingFieldDetectionRate < 0.90) {
-    warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'METRICS_NOT_MET', message: `漏项检出率 ${detectionRates.missingFieldDetectionRate.toFixed(2)} 未达标（≥0.90）` })
+  const { missingFieldDetectionRate, semanticDetectionRate, logicalDetectionRate, formatDetectionRate, falsePositiveRate } = detectionRates
+  if (typeof missingFieldDetectionRate === 'number' && missingFieldDetectionRate < 0.90) {
+    warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'METRICS_NOT_MET', message: `漏项检出率 ${missingFieldDetectionRate.toFixed(2)} 未达标（≥0.90）` })
   }
-  if (detectionRates.semanticDetectionRate < 0.50) {
-    warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'METRICS_NOT_MET', message: `语义检出率 ${detectionRates.semanticDetectionRate.toFixed(2)} 未达标（≥0.50）` })
+  if (typeof semanticDetectionRate === 'number' && semanticDetectionRate < 0.50) {
+    warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'METRICS_NOT_MET', message: `语义检出率 ${semanticDetectionRate.toFixed(2)} 未达标（≥0.50）` })
   }
-  if (detectionRates.logicalDetectionRate < 0.80) {
-    warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'METRICS_NOT_MET', message: `逻辑检出率 ${detectionRates.logicalDetectionRate.toFixed(2)} 未达标（≥0.80）` })
+  if (typeof logicalDetectionRate === 'number' && logicalDetectionRate < 0.80) {
+    warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'METRICS_NOT_MET', message: `逻辑检出率 ${logicalDetectionRate.toFixed(2)} 未达标（≥0.80）` })
   }
-  if (detectionRates.formatDetectionRate < 0.90) {
-    warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'METRICS_NOT_MET', message: `格式检出率 ${detectionRates.formatDetectionRate.toFixed(2)} 未达标（≥0.90）` })
+  if (typeof formatDetectionRate === 'number' && formatDetectionRate < 0.90) {
+    warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'METRICS_NOT_MET', message: `格式检出率 ${formatDetectionRate.toFixed(2)} 未达标（≥0.90）` })
   }
-  if (detectionRates.falsePositiveRate > 0.12) {
-    warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'METRICS_NOT_MET', message: `误报率 ${detectionRates.falsePositiveRate.toFixed(2)} 未达标（≤0.12）` })
+  if (typeof falsePositiveRate === 'number' && falsePositiveRate > 0.12) {
+    warnings.push({ type: 'CONFIG_PACK_WARNING', code: 'METRICS_NOT_MET', message: `误报率 ${falsePositiveRate.toFixed(2)} 未达标（≤0.12）` })
   }
   return warnings
 }

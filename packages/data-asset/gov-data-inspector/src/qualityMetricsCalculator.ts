@@ -15,6 +15,13 @@ export interface MetricsInput {
   scoreWeights: { completeness: number; accuracy: number; traceability: number }
 }
 
+function computeRateOrNA(detected: number, truthCount: number | undefined): number | 'N/A' {
+  if (truthCount !== undefined && truthCount > 0) {
+    return Math.min(100, Math.round((detected / truthCount) * 100))
+  }
+  return 'N/A'
+}
+
 export const QualityMetricsCalculator = {
   calculate(input: MetricsInput): DetectionRates {
     const {
@@ -22,8 +29,8 @@ export const QualityMetricsCalculator = {
       logicalErrorCount,
       missingFieldCount,
       formatIssueCount,
-      totalGuides,
       requiredFieldCount,
+      totalGuides,
       totalFieldCount,
       errorDetails,
       falsePositiveCount = 0,
@@ -32,25 +39,15 @@ export const QualityMetricsCalculator = {
       scoreWeights,
     } = input
 
-    const semanticDetectionRate: number = groundTruth?.realSemanticErrorCount
-      ? Math.min(100, Math.round((semanticErrorCount / groundTruth.realSemanticErrorCount) * 100))
-      : totalGuides > 0 ? Math.min(100, Math.round((semanticErrorCount / totalGuides) * 100)) : 0
-
-    const logicalDetectionRate: number = groundTruth?.realLogicalErrorCount
-      ? Math.min(100, Math.round((logicalErrorCount / groundTruth.realLogicalErrorCount) * 100))
-      : totalGuides > 0 ? Math.min(100, Math.round((logicalErrorCount / totalGuides) * 100)) : 0
-
-    const missingFieldDetectionRate: number = groundTruth?.realMissingFieldCount
-      ? Math.min(100, Math.round((missingFieldCount / groundTruth.realMissingFieldCount) * 100))
-      : totalFieldCount > 0 ? Math.round((missingFieldCount / totalFieldCount) * 100) : 0
-
-    const formatDetectionRate: number = groundTruth?.realFormatIssueCount
-      ? Math.min(100, Math.round((formatIssueCount / groundTruth.realFormatIssueCount) * 100))
-      : totalFieldCount > 0 ? Math.round((formatIssueCount / totalFieldCount) * 100) : 0
+    const semanticDetectionRate = computeRateOrNA(semanticErrorCount, groundTruth?.realSemanticErrorCount)
+    const logicalDetectionRate = computeRateOrNA(logicalErrorCount, groundTruth?.realLogicalErrorCount)
+    const missingFieldDetectionRate = computeRateOrNA(missingFieldCount, groundTruth?.realMissingFieldCount)
+    const formatDetectionRate = computeRateOrNA(formatIssueCount, groundTruth?.realFormatIssueCount)
 
     const totalReportedErrors = semanticErrorCount + logicalErrorCount + missingFieldCount
-    const falsePositiveRate =
-      totalReportedErrors > 0 ? Math.round((falsePositiveCount / totalReportedErrors) * 100) : 0
+    const falsePositiveRate: number | 'N/A' = groundTruth !== undefined
+      ? totalReportedErrors > 0 ? Math.round((falsePositiveCount / totalReportedErrors) * 100) : 0
+      : 'N/A'
 
     const totalRequiredSlots = requiredFieldCount * totalGuides
     const completenessScore =

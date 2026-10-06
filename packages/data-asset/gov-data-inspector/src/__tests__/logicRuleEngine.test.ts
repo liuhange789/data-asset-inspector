@@ -8,6 +8,8 @@ const rules: StandardRule[] = [
   { ruleId: 'LOG_CONDITION_PROXY_001', standardClause: 'DB1405/T 085-2025 第5.4条', triggerFields: ['办理条件', '办理流程'], condition: '条件要求本人到场但流程允许代办', suggestionTemplate: '建议统一', threshold: undefined, triggerKeywords: ['本人到场', '本人办理', '代办', '委托办理'] },
   { ruleId: 'LOG_MATERIAL_CONDITION_001', standardClause: 'DB1405/T 085-2025 第5.5条', triggerFields: ['申请材料', '办理条件'], condition: '条件要求的证明材料未列入材料清单', suggestionTemplate: '建议补充', threshold: undefined, triggerKeywords: ['收入证明', '产权证明', '资质证明', '无犯罪记录证明', '健康证明', '社保证明', '纳税证明'] },
   { ruleId: 'LOG_CONDITION_AGE_PROXY_001', standardClause: '国办发〔2018〕45号 第5.6条', triggerFields: ['办理条件', '办理流程'], condition: '办理条件含年龄限制且办理流程含代办', suggestionTemplate: '建议明确：未成年人由监护人代办，或删除年龄限制', threshold: undefined, triggerKeywords: ['年满18周岁', '年满十八周岁', '须为成年人', '监护人代办', '未成年人代办', '法定代理人代办'], scanMode: 'anyField', anyFieldKeywords: ['监护人代办', '未成年人代办', '法定代理人代办'] },
+  { ruleId: 'LOG_CONDITION_FIELD_MISPLACED_001', standardClause: 'GB/T 36114-2018 第6.3条 字段内容归属要求', triggerFields: ['办理条件', '受理条件'], condition: '受理条件字段包含材料名称', scanMode: 'anyField', threshold: undefined, suggestionTemplate: '受理条件字段不应包含材料名称，请核对字段内容归属', triggerKeywords: ['申请表', '身份证明', '身体条件证明', '身份证复印件', '营业执照复印件', '居民身份证', '身份证原件', '营业执照', '产权证', '户口本', '户口簿'] },
+  { ruleId: 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001', standardClause: 'DB1405/T 085-2025 第5.7条', triggerFields: ['办理流程', '办理时限'], condition: '流程步骤时限合计≠承诺办结时限', suggestionTemplate: '建议核对流程步骤时限与承诺办结时限是否一致', threshold: undefined, triggerKeywords: ['工作日'] },
 ]
 
 describe('LogicRuleEngine', () => {
@@ -122,5 +124,35 @@ describe('LogicRuleEngine', () => {
     const guide = { 事项名称: '身份证补领', 办理条件: '申请人须年满18周岁', 办理流程: '受理→审批→发证', 备注: '无特殊说明' }
     const details = LogicRuleEngine.detect(guide, 'g1', rules)
     expect(details.some((d) => d.description.includes('年满18周岁') && d.description.includes('代办'))).toBe(false)
+  })
+
+  it('LRE-11: 办理条件含"居民身份证" → 报logical错误提示材料名称错位', () => {
+    const guide = { 办理条件: '居民身份证原件及复印件' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules)
+    expect(details.some((d) => d.errorType === 'logical' && d.description.includes('材料名称'))).toBe(true)
+  })
+
+  it('LRE-12: 办理条件含"需提供营业执照"且申请材料未列"营业执照" → 报logical错误', () => {
+    const guide = { 办理条件: '需提供营业执照', 申请材料: '身份证、申请表' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules)
+    expect(details.some((d) => d.errorType === 'logical' && d.description.includes('营业执照'))).toBe(true)
+  })
+
+  it('LRE-13: 流程步骤时限合计15工作日，承诺时限20工作日 → 报logical错误', () => {
+    const guide = { 办理流程: '受理(5个工作日)→审核(5个工作日)→审批(5个工作日)', 办理时限: '20个工作日' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules)
+    expect(details.some((d) => d.errorType === 'logical' && d.description.includes('时限不一致'))).toBe(true)
+  })
+
+  it('LRE-14: 办理流程无步骤时限 → 不报时限不一致错误', () => {
+    const guide = { 办理流程: '受理-审核-办结', 办理时限: '20个工作日' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules)
+    expect(details.some((d) => d.description.includes('时限不一致'))).toBe(false)
+  })
+
+  it('LRE-15: 办理时限="即办" → 不报时限不一致错误', () => {
+    const guide = { 办理流程: '受理(5个工作日)→审核(5个工作日)→审批(5个工作日)', 办理时限: '即办' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules)
+    expect(details.some((d) => d.description.includes('时限不一致'))).toBe(false)
   })
 })

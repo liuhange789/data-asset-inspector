@@ -81,11 +81,11 @@ export interface FormatIssue {
 }
 
 export interface DetectionRates {
-  semanticDetectionRate: number
-  logicalDetectionRate: number
-  missingFieldDetectionRate: number
-  formatDetectionRate: number
-  falsePositiveRate: number
+  semanticDetectionRate: number | 'N/A'
+  logicalDetectionRate: number | 'N/A'
+  missingFieldDetectionRate: number | 'N/A'
+  formatDetectionRate: number | 'N/A'
+  falsePositiveRate: number | 'N/A'
   completenessScore: number
   accuracyScore: number
   traceabilityScore: number
@@ -233,6 +233,7 @@ export interface FormatRule {
   requiredKeywords?: string[]
   matchMode?: 'all' | 'any'
   suggestionTemplate: string
+  fuzzyDescriptors?: string[] | undefined
 }
 
 export interface SemanticRule {

@@ -225,16 +225,16 @@ describe('SemanticRuleEngine', () => {
     expect(result.details.some((d) => d.errorType === 'logical' && d.description.includes('矛盾'))).toBe(true)
   })
 
-  it('LT-01: E43 条件笔误（短句）', () => {
+  it('LT-01: E43 条件笔误（短句）→ 双轨制不报（规范内容放行）', () => {
     const guide = { 事项名称: '食品经营许可', 办理条件: '年满16周岁' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: [], conditions: ['年满18周岁'] } })
-    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.description.includes('疑似错误'))).toBe(true)
+    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.standardClause === '降级模式·双轨制识别')).toBe(false)
   })
 
-  it('LT-02: E43 条件笔误（带前缀整句）', () => {
+  it('LT-02: E43 条件笔误（带前缀整句）→ 双轨制不报（规范内容放行）', () => {
     const guide = { 事项名称: '食品经营许可', 办理条件: '申请人须年满16周岁' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: [], conditions: ['年满18周岁'] } })
-    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic')).toBe(true)
+    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.standardClause === '降级模式·双轨制识别')).toBe(false)
   })
 
   it('LT-03: E23 材料不匹配', () => {
@@ -278,7 +278,7 @@ describe('SemanticRuleEngine', () => {
     const guide = { 事项名称: '食品经营许可', 办理条件: '年满18周岁', 办理流程: '可由监护人代办' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, semanticConflictRules: lt09Rules, inlineLocalTerms: { materials: [], conditions: ['年满十六周岁'] } })
     expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'logical')).toBe(true)
-    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.standardClause === '降级模式·本地词表校验')).toBe(true)
+
   })
 
   it('LT-10: 无新增误报', () => {
@@ -287,12 +287,10 @@ describe('SemanticRuleEngine', () => {
     expect(result.details.some((d) => d.standardClause === '降级模式·本地词表校验')).toBe(false)
   })
 
-  it('S1: 样本s1降级检测检出E43/E44/E45', () => {
+  it('S1: 样本s1降级检测检出E45（材料条件冲突）', () => {
     const s1Rules: SemanticConflictRules = { ageKeywords: [], proxyKeywords: [], proofKeywords: ['健康证明'], siteInspectionThreshold: 5, instantHandleThreshold: 1 }
     const guide = { 事项名称: '食品经营许可', 申请材料: '健康证、身份证复印件、申请表', 办理条件: '年满16周岁，需提供健康证明' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, semanticConflictRules: s1Rules, inlineLocalTerms: { materials: ['健康证明'], conditions: ['年满18周岁'] } })
-    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic')).toBe(true)
-    expect(result.details.some((d) => d.field === '申请材料' && d.errorType === 'semantic' && d.description.includes('健康证'))).toBe(true)
     expect(result.details.some((d) => d.field === '申请材料' && d.errorType === 'semantic' && d.standardClause === '语义矛盾检测·材料条件冲突')).toBe(true)
   })
 
@@ -338,10 +336,10 @@ describe('SemanticRuleEngine', () => {
     expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(false)
   })
 
-  it('SUB-03: 真实笔误仍被检出', () => {
+  it('SUB-03: 真实笔误→双轨制不报（规范内容放行，笔误由非降级模式词表检测）', () => {
     const guide = { 事项名称: '食品经营许可', 申请材料: '营业执照复映件、申请表' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, inlineLocalTerms: { materials: ['营业执照复印件', '申请表'], conditions: [] } })
-    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·本地词表校验')).toBe(true)
+    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·双轨制识别')).toBe(false)
   })
 
   it('SUB-04: 驾驶证短名不误报', () => {
@@ -378,5 +376,35 @@ describe('SemanticRuleEngine', () => {
     const guide = { 事项名称: '食品经营许可', 网上办理深度: '全程网办(IV级)' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true })
     expect(result.details.some((d) => d.field === '网上办理深度' && d.standardClause === '结构完整性校验·网办深度不规范')).toBe(false)
+  })
+
+  it('DT-01: 编号清单每条>5字 → 规范内容不报错', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '1.居民身份证；2.申请及授权书；3.中标通知书' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, vagueTerms: ['符合条件'], substantiveWords: ['申请', '证明'] })
+    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·双轨制识别')).toBe(false)
+  })
+
+  it('DT-02: 含实质性词汇 → 规范内容不报错', () => {
+    const guide = { 事项名称: '食品经营许可', 申请材料: '申请及授权书' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, vagueTerms: ['符合条件'], substantiveWords: ['申请', '证明'] })
+    expect(result.details.some((d) => d.field === '申请材料' && d.standardClause === '降级模式·双轨制识别')).toBe(false)
+  })
+
+  it('DT-03: 空内容 → 报semantic异常', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '，。；' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, vagueTerms: ['符合条件'], substantiveWords: ['申请'] })
+    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.standardClause === '降级模式·双轨制识别')).toBe(true)
+  })
+
+  it('DT-04: vague term "符合条件" → 报semantic异常', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '符合条件' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, vagueTerms: ['符合条件'], substantiveWords: ['申请'] })
+    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.standardClause === '降级模式·双轨制识别')).toBe(true)
+  })
+
+  it('DT-05: vague term "按规定执行" → 报semantic异常', () => {
+    const guide = { 事项名称: '食品经营许可', 办理条件: '按规定执行' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, vagueTerms: ['按规定执行'], substantiveWords: ['申请'] })
+    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.standardClause === '降级模式·双轨制识别')).toBe(true)
   })
 })

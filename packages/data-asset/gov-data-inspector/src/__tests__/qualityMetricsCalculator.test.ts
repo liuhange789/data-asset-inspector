@@ -29,6 +29,7 @@ describe('QualityMetricsCalculator', () => {
       totalFieldCount: 14,
       errorDetails: [makeDetail('semantic'), makeDetail('semantic'), makeDetail('semantic')],
       scoreWeights,
+      groundTruth: { realSemanticErrorCount: 1 },
     })
     expect(rates.semanticDetectionRate).toBe(100)
   })
@@ -44,6 +45,7 @@ describe('QualityMetricsCalculator', () => {
       totalFieldCount: 14,
       errorDetails: [makeDetail('logical'), makeDetail('logical')],
       scoreWeights,
+      groundTruth: { realLogicalErrorCount: 1 },
     })
     expect(rates.logicalDetectionRate).toBe(100)
   })
@@ -59,6 +61,7 @@ describe('QualityMetricsCalculator', () => {
       totalFieldCount: 14,
       errorDetails: [],
       scoreWeights,
+      groundTruth: { realSemanticErrorCount: 3, realLogicalErrorCount: 1, realMissingFieldCount: 14, realFormatIssueCount: 14 },
     })
     expect(rates.semanticDetectionRate).toBe(100)
     expect(rates.logicalDetectionRate).toBe(0)
@@ -97,5 +100,69 @@ describe('QualityMetricsCalculator', () => {
     expect(rates.accuracyScore).toBe(100)
     expect(rates.traceabilityScore).toBe(100)
     expect(rates.overallScore).toBe(100)
+  })
+
+  it('未传groundTruth → 5个检测率均为N/A', () => {
+    const rates = QualityMetricsCalculator.calculate({
+      semanticErrorCount: 5, logicalErrorCount: 2, missingFieldCount: 3, formatIssueCount: 1,
+      totalGuides: 10, requiredFieldCount: 14, totalFieldCount: 140,
+      errorDetails: [], scoreWeights,
+    })
+    expect(rates.semanticDetectionRate).toBe('N/A')
+    expect(rates.logicalDetectionRate).toBe('N/A')
+    expect(rates.missingFieldDetectionRate).toBe('N/A')
+    expect(rates.formatDetectionRate).toBe('N/A')
+    expect(rates.falsePositiveRate).toBe('N/A')
+  })
+
+  it('groundTruth真实5个检出5个 → 检出率100', () => {
+    const rates = QualityMetricsCalculator.calculate({
+      semanticErrorCount: 5, logicalErrorCount: 0, missingFieldCount: 0, formatIssueCount: 0,
+      totalGuides: 1, requiredFieldCount: 14, totalFieldCount: 14,
+      errorDetails: [], scoreWeights,
+      groundTruth: { realSemanticErrorCount: 5 },
+    })
+    expect(rates.semanticDetectionRate).toBe(100)
+  })
+
+  it('groundTruth真实5个检出3个 → 检出率60', () => {
+    const rates = QualityMetricsCalculator.calculate({
+      semanticErrorCount: 3, logicalErrorCount: 0, missingFieldCount: 0, formatIssueCount: 0,
+      totalGuides: 1, requiredFieldCount: 14, totalFieldCount: 14,
+      errorDetails: [], scoreWeights,
+      groundTruth: { realSemanticErrorCount: 5 },
+    })
+    expect(rates.semanticDetectionRate).toBe(60)
+  })
+
+  it('groundTruth真实0个 → 检出率N/A（避免除零）', () => {
+    const rates = QualityMetricsCalculator.calculate({
+      semanticErrorCount: 0, logicalErrorCount: 0, missingFieldCount: 0, formatIssueCount: 0,
+      totalGuides: 1, requiredFieldCount: 14, totalFieldCount: 14,
+      errorDetails: [], scoreWeights,
+      groundTruth: { realSemanticErrorCount: 0 },
+    })
+    expect(rates.semanticDetectionRate).toBe('N/A')
+  })
+
+  it('检出5条但groundTruth真实3个 → 检出率100（上限封顶）', () => {
+    const rates = QualityMetricsCalculator.calculate({
+      semanticErrorCount: 5, logicalErrorCount: 0, missingFieldCount: 0, formatIssueCount: 0,
+      totalGuides: 1, requiredFieldCount: 14, totalFieldCount: 14,
+      errorDetails: [], scoreWeights,
+      groundTruth: { realSemanticErrorCount: 3 },
+    })
+    expect(rates.semanticDetectionRate).toBe(100)
+  })
+
+  it('传groundTruth检出10条误报3条 → 误报率30', () => {
+    const rates = QualityMetricsCalculator.calculate({
+      semanticErrorCount: 5, logicalErrorCount: 3, missingFieldCount: 2, formatIssueCount: 0,
+      totalGuides: 1, requiredFieldCount: 14, totalFieldCount: 14,
+      errorDetails: [], scoreWeights,
+      falsePositiveCount: 3,
+      groundTruth: { realSemanticErrorCount: 5, realLogicalErrorCount: 3, realMissingFieldCount: 2 },
+    })
+    expect(rates.falsePositiveRate).toBe(30)
   })
 })

@@ -44,6 +44,8 @@ export interface OrchestrateConfig {
   gbtMapping?: Record<string, string>
   fieldMapping?: Record<string, string> | undefined
   semanticConflictRules?: import('./types.js').SemanticConflictRules | undefined
+  vagueTerms?: string[] | undefined
+  substantiveWords?: string[] | undefined
 }
 
 export interface OrchestrateOptions {
@@ -138,7 +140,7 @@ export const InspectionOrchestrator = {
         kb,
         config.itemTypeMatching,
         config.severityMapping,
-        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold, inlineLocalTerms: options?.inlineLocalTerms, semanticConflictRules: config.semanticConflictRules },
+        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold, inlineLocalTerms: options?.inlineLocalTerms, semanticConflictRules: config.semanticConflictRules, ...(config.vagueTerms ? { vagueTerms: config.vagueTerms } : {}), ...(config.substantiveWords ? { substantiveWords: config.substantiveWords } : {}) },
       )
       const suspected = semanticResult.details.filter(
         (d) => d.standardClause?.includes('降级模式') && d.description.includes('相似度'),

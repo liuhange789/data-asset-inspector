@@ -1,5 +1,28 @@
 import type { FormatIssue, FormatRule } from './types.js'
 
+function checkAddressFuzzy(
+  strVal: string,
+  requiredKeywords: string[] | undefined,
+  fuzzyDescriptors: string[] | undefined,
+  field: string,
+  guideId: string,
+  suggestionTemplate: string,
+): FormatIssue | null {
+  if (!fuzzyDescriptors || fuzzyDescriptors.length === 0 || !requiredKeywords || requiredKeywords.length === 0) {
+    return null
+  }
+  const matchesFuzzy = fuzzyDescriptors.some((d) => strVal.includes(d))
+  if (!matchesFuzzy) return null
+  const hasSpecific = requiredKeywords.some((kw) => strVal.includes(kw))
+  if (hasSpecific) return null
+  return {
+    guideId,
+    field,
+    issue: `字段"${field}"值"${strVal}"为模糊描述，缺少具体地址要素(街道/路/号等)`,
+    suggestion: suggestionTemplate,
+  }
+}
+
 function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: FormatRule): FormatIssue[] {
   const val = guide[rule.field]
   if (val === undefined || val === null) return []
@@ -22,6 +45,11 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
     }
   }
   if (rule.requiredKeywords && rule.requiredKeywords.length > 0) {
+    const fuzzyIssue = checkAddressFuzzy(strVal, rule.requiredKeywords, rule.fuzzyDescriptors, rule.field, guideId, rule.suggestionTemplate)
+    if (fuzzyIssue) {
+      issues.push(fuzzyIssue)
+      return issues
+    }
     const hasAnyKeyword = rule.requiredKeywords.some((kw) => strVal.includes(kw))
     if (!hasAnyKeyword) {
       const issue: FormatIssue = {

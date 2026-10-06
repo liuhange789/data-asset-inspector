@@ -170,4 +170,64 @@ describe('MissingFieldDetector.detectGraded', () => {
     const detail = result.extendedDetails.find((d) => d.field === '结果样本')
     expect(detail).toBeUndefined()
   })
+
+  it('9.1 缺失监督电话 → 报missing（核心字段一视同仁）', () => {
+    const core14 = ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '收费标准', '办理地点', '咨询电话', '监督电话', '办理时间', '网上办理深度', '结果送达方式', '表格下载']
+    const guide: Record<string, unknown> = {
+      事项名称: '测试', 实施主体: '部门', 办理条件: '条件', 申请材料: '材料',
+      办理流程: '流程', 办理时限: '3个工作日', 收费标准: '不收费', 办理地点: '某路1号',
+      咨询电话: '12345', 办理时间: '9:00-17:00', 网上办理深度: '全程网办',
+      表格下载: '可下载', 结果送达方式: '邮寄',
+    }
+    const result = MissingFieldDetector.detectGraded(guide, 'g1', core14, [], severityMapping)
+    expect(result.coreDetails.some((d) => d.field === '监督电话' && d.errorType === 'missing')).toBe(true)
+  })
+
+  it('9.2 缺失收费标准 → 报missing', () => {
+    const core14 = ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '收费标准', '办理地点', '咨询电话', '监督电话', '办理时间', '网上办理深度', '结果送达方式', '表格下载']
+    const guide: Record<string, unknown> = {
+      事项名称: '测试', 实施主体: '部门', 办理条件: '条件', 申请材料: '材料',
+      办理流程: '流程', 办理时限: '3个工作日', 办理地点: '某路1号',
+      咨询电话: '12345', 监督电话: '67890', 办理时间: '9:00-17:00', 网上办理深度: '全程网办',
+      表格下载: '可下载', 结果送达方式: '邮寄',
+    }
+    const result = MissingFieldDetector.detectGraded(guide, 'g1', core14, [], severityMapping)
+    expect(result.coreDetails.some((d) => d.field === '收费标准' && d.errorType === 'missing')).toBe(true)
+  })
+
+  it('9.3 缺失办理时间 → 报missing', () => {
+    const core14 = ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '收费标准', '办理地点', '咨询电话', '监督电话', '办理时间', '网上办理深度', '结果送达方式', '表格下载']
+    const guide: Record<string, unknown> = {
+      事项名称: '测试', 实施主体: '部门', 办理条件: '条件', 申请材料: '材料',
+      办理流程: '流程', 办理时限: '3个工作日', 收费标准: '不收费', 办理地点: '某路1号',
+      咨询电话: '12345', 监督电话: '67890', 网上办理深度: '全程网办',
+      表格下载: '可下载', 结果送达方式: '邮寄',
+    }
+    const result = MissingFieldDetector.detectGraded(guide, 'g1', core14, [], severityMapping)
+    expect(result.coreDetails.some((d) => d.field === '办理时间' && d.errorType === 'missing')).toBe(true)
+  })
+
+  it('9.4 缺失结果送达方式 → 报missing', () => {
+    const core14 = ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '收费标准', '办理地点', '咨询电话', '监督电话', '办理时间', '网上办理深度', '结果送达方式', '表格下载']
+    const guide: Record<string, unknown> = {
+      事项名称: '测试', 实施主体: '部门', 办理条件: '条件', 申请材料: '材料',
+      办理流程: '流程', 办理时限: '3个工作日', 收费标准: '不收费', 办理地点: '某路1号',
+      咨询电话: '12345', 监督电话: '67890', 办理时间: '9:00-17:00', 网上办理深度: '全程网办',
+      表格下载: '可下载',
+    }
+    const result = MissingFieldDetector.detectGraded(guide, 'g1', core14, [], severityMapping)
+    expect(result.coreDetails.some((d) => d.field === '结果送达方式' && d.errorType === 'missing')).toBe(true)
+  })
+
+  it('9.5 缺失表格下载 → 报missing', () => {
+    const core14 = ['事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限', '收费标准', '办理地点', '咨询电话', '监督电话', '办理时间', '网上办理深度', '结果送达方式', '表格下载']
+    const guide: Record<string, unknown> = {
+      事项名称: '测试', 实施主体: '部门', 办理条件: '条件', 申请材料: '材料',
+      办理流程: '流程', 办理时限: '3个工作日', 收费标准: '不收费', 办理地点: '某路1号',
+      咨询电话: '12345', 监督电话: '67890', 办理时间: '9:00-17:00', 网上办理深度: '全程网办',
+      结果送达方式: '邮寄',
+    }
+    const result = MissingFieldDetector.detectGraded(guide, 'g1', core14, [], severityMapping)
+    expect(result.coreDetails.some((d) => d.field === '表格下载' && d.errorType === 'missing')).toBe(true)
+  })
 })

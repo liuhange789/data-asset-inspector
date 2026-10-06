@@ -15,6 +15,8 @@ interface DetectOptions {
   degradedSimilarityThreshold?: number | undefined
   inlineLocalTerms?: { materials: string[]; conditions: string[] } | undefined
   semanticConflictRules?: SemanticConflictRules | undefined
+  vagueTerms?: string[] | undefined
+  substantiveWords?: string[] | undefined
 }
 
 export interface SemanticDetectResult {
@@ -600,7 +602,76 @@ function deduplicateErrors(errors: ErrorDetail[]): ErrorDetail[] {
   return errors.filter((e) => !(e.errorType === 'semantic' && logicalKeys.has(`${e.field}:${e.standardClause ?? ''}`)))
 }
 
+function isNormalContent(val: string, substantiveWords: string[]): boolean {
+  const trimmed = val.trim()
+  if (!trimmed) return false
+  const numberedRegex = /\d+[.、]\s*[^;；\n]+/g
+  const numberedMatches = trimmed.match(numberedRegex)
+  if (numberedMatches && numberedMatches.length > 1) {
+    const parts = trimmed.split(/[一二三四五六七八九十]+\s*[、.．]|[\d]+\s*[.、．]/)
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0)
+    if (parts.length > 1 && parts.every((s) => s.length > 5)) return true
+  }
+  if (substantiveWords.some((w) => trimmed.includes(w))) return true
+  return false
+}
+
+function isAbnormalContent(val: string, vagueTerms: string[], substantiveWords: string[]): { abnormal: boolean; reason?: string } {
+  const trimmed = val.trim()
+  if (trimmed === '' || /^[\s，。；、,.;:：！!？?]+$/.test(trimmed)) {
+    return { abnormal: true, reason: '内容为空或仅含标点' }
+  }
+  const matchedVague = vagueTerms.find((t) => trimmed.includes(t))
+  if (matchedVague) {
+    return { abnormal: true, reason: `内容命中兜底表述"${matchedVague}"` }
+  }
+  if (trimmed.length < 3 && !substantiveWords.some((w) => trimmed.includes(w))) {
+    return { abnormal: true, reason: '内容长度不足且无实质性词汇' }
+  }
+  return { abnormal: false }
+}
+
+const GRADED_CHECK_FIELDS = [
+  '申请材料', '办理条件', '办理流程', '办理时限', '收费标准',
+  '办理地点', '办理时间', '结果送达方式', '表格下载',
+]
+
+function detectGradedSemantic(
+  guide: Record<string, unknown>,
+  guideId: string,
+  vagueTerms: string[],
+  substantiveWords: string[],
+  severityMapping?: Record<string, string>,
+): ErrorDetail[] {
+  const details: ErrorDetail[] = []
+  for (const field of GRADED_CHECK_FIELDS) {
+    const val = String(guide[field] ?? '').trim()
+    if (!val) continue
+    if (isNormalContent(val, substantiveWords)) continue
+    const abnormal = isAbnormalContent(val, vagueTerms, substantiveWords)
+    if (abnormal.abnormal) {
+      details.push(
+        ErrorDetailBuilder.build(
+          {
+            guideId,
+            field,
+            errorType: 'semantic',
+            description: `字段"${field}"内容异常：${abnormal.reason}。[降级模式·双轨制识别]`,
+            suggestion: `请核实"${field}"字段内容，补充有效信息`,
+            dataSource: 'standard',
+            standardClause: '降级模式·双轨制识别',
+          },
+          severityMapping,
+        ),
+      )
+    }
+  }
+  return details
+}
+
 export const SemanticRuleEngine = {
+  detectLocalTermsMismatch,
   detect(
     guide: Record<string, unknown>,
     guideId: string,
@@ -638,8 +709,8 @@ export const SemanticRuleEngine = {
       structuralDetails.push(...checkConditionCompleteness(guide, guideId, severityMapping))
       structuralDetails.push(...checkMaterialCompleteness(guide, guideId, severityMapping))
       structuralDetails.push(...checkOnlineDepthValidity(guide, guideId, severityMapping))
-      const localTermsDetails = detectLocalTermsMismatch(guide, guideId, options, severityMapping)
-      return { details: deduplicateErrors([...conflictDetails, ...structuralDetails, ...localTermsDetails]) }
+      const gradedDetails = detectGradedSemantic(guide, guideId, options?.vagueTerms ?? [], options?.substantiveWords ?? [], severityMapping)
+      return { details: deduplicateErrors([...conflictDetails, ...structuralDetails, ...gradedDetails]) }
     }
 
     if (isKbMissing) {
@@ -656,7 +727,7 @@ export const SemanticRuleEngine = {
     details.push(...detectTimeLimit(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectMaterials(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectConditions(guide, guideId, itemType, kb, severityMapping))
-    details.push(...detectConditionTermsMismatch(guide, guideId, options ?? {}, severityMapping))
+    details.push(...detectGradedSemantic(guide, guideId, options?.vagueTerms ?? [], options?.substantiveWords ?? [], severityMapping))
     return { details: deduplicateErrors([...conflictDetails, ...details]) }
   },
 

@@ -223,11 +223,7 @@ export const MissingFieldDetector = {
     }
 
     for (const elem of coreRequiredFields) {
-      if (!requiredFields || requiredFields.has(elem)) {
-        processRequiredField(elem)
-      } else {
-        processOptionalField(elem)
-      }
+      processRequiredField(elem)
     }
 
     if (!extendedRequiredFields || extendedRequiredFields.length === 0) {

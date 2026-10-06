@@ -67,6 +67,9 @@ export interface ConfigPack {
   fieldMapping?: Record<string, string>
   semanticConflictRules?: import('./types.js').SemanticConflictRules
   referenceSystem?: ReferenceSystem
+  vagueTerms?: string[] | undefined
+  substantiveWords?: string[] | undefined
+  addressFuzzyDescriptors?: string[] | undefined
 }
 
 const REQUIRED_FIELDS: (keyof ConfigPack)[] = [
