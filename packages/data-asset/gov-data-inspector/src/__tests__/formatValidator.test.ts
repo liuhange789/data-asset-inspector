@@ -190,4 +190,12 @@ describe('FormatValidator', () => {
     const issues = FormatValidator.validate({ 办理地点: '广州市任一区、街（镇）公共就业服务机构' }, 'g1', rules)
     expect(issues.some((i) => i.field === '办理地点' && i.issue === '办理地点缺少具体地址信息')).toBe(true)
   })
+
+  it('FV-22: 办理地点含模糊描述但同时含具体地址要素 → 不报错（排水样本）', () => {
+    const rules: FormatRule[] = [
+      { field: '办理地点', requiredKeywords: ['街道', '路', '号', '室', '楼', '层', '栋'], fuzzyDescriptors: ['线上', '线上办理', '网上办理', '区街镇机构', '任意网点', '任一区', '全市', '综合服务大厅'], addressSpecificKeywords: ['街道', '路', '号', '室', '楼', '层', '栋', '巷', '大道', '广场'], suggestionTemplate: '应包含具体地址信息' },
+    ]
+    const issues = FormatValidator.validate({ 办理地点: '亚运大道550号综合服务大厅X楼X窗口' }, 'g1', rules)
+    expect(issues.some((i) => i.field === '办理地点')).toBe(false)
+  })
 })

@@ -45,7 +45,7 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
     }
   }
   if (rule.addressSpecificKeywords && rule.addressSpecificKeywords.length > 0) {
-    if (rule.fuzzyDescriptors && rule.fuzzyDescriptors.length > 0 && rule.fuzzyDescriptors.some((d) => strVal.includes(d))) {
+    if (rule.fuzzyDescriptors && rule.fuzzyDescriptors.length > 0 && rule.fuzzyDescriptors.some((d) => strVal.includes(d)) && !rule.addressSpecificKeywords.some((kw) => strVal.includes(kw))) {
       issues.push({
         guideId,
         field: rule.field,
