@@ -234,6 +234,7 @@ export interface FormatRule {
   matchMode?: 'all' | 'any'
   suggestionTemplate: string
   fuzzyDescriptors?: string[] | undefined
+  addressSpecificKeywords?: string[] | undefined
 }
 
 export interface SemanticRule {

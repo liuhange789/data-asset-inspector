@@ -17,6 +17,7 @@ interface DetectOptions {
   semanticConflictRules?: SemanticConflictRules | undefined
   vagueTerms?: string[] | undefined
   substantiveWords?: string[] | undefined
+  validShortValues?: string[] | undefined
 }
 
 export interface SemanticDetectResult {
@@ -617,10 +618,13 @@ function isNormalContent(val: string, substantiveWords: string[]): boolean {
   return false
 }
 
-function isAbnormalContent(val: string, vagueTerms: string[], substantiveWords: string[]): { abnormal: boolean; reason?: string } {
+function isAbnormalContent(val: string, vagueTerms: string[], substantiveWords: string[], validShortValues: string[]): { abnormal: boolean; reason?: string } {
   const trimmed = val.trim()
   if (trimmed === '' || /^[\s，。；、,.;:：！!？?]+$/.test(trimmed)) {
     return { abnormal: true, reason: '内容为空或仅含标点' }
+  }
+  if (validShortValues.includes(trimmed)) {
+    return { abnormal: false }
   }
   const matchedVague = vagueTerms.find((t) => trimmed.includes(t))
   if (matchedVague) {
@@ -642,6 +646,7 @@ function detectGradedSemantic(
   guideId: string,
   vagueTerms: string[],
   substantiveWords: string[],
+  validShortValues: string[],
   severityMapping?: Record<string, string>,
 ): ErrorDetail[] {
   const details: ErrorDetail[] = []
@@ -649,7 +654,7 @@ function detectGradedSemantic(
     const val = String(guide[field] ?? '').trim()
     if (!val) continue
     if (isNormalContent(val, substantiveWords)) continue
-    const abnormal = isAbnormalContent(val, vagueTerms, substantiveWords)
+    const abnormal = isAbnormalContent(val, vagueTerms, substantiveWords, validShortValues)
     if (abnormal.abnormal) {
       details.push(
         ErrorDetailBuilder.build(
@@ -709,7 +714,7 @@ export const SemanticRuleEngine = {
       structuralDetails.push(...checkConditionCompleteness(guide, guideId, severityMapping))
       structuralDetails.push(...checkMaterialCompleteness(guide, guideId, severityMapping))
       structuralDetails.push(...checkOnlineDepthValidity(guide, guideId, severityMapping))
-      const gradedDetails = detectGradedSemantic(guide, guideId, options?.vagueTerms ?? [], options?.substantiveWords ?? [], severityMapping)
+      const gradedDetails = detectGradedSemantic(guide, guideId, options?.vagueTerms ?? [], options?.substantiveWords ?? [], options?.validShortValues ?? [], severityMapping)
       return { details: deduplicateErrors([...conflictDetails, ...structuralDetails, ...gradedDetails]) }
     }
 
@@ -727,7 +732,7 @@ export const SemanticRuleEngine = {
     details.push(...detectTimeLimit(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectMaterials(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectConditions(guide, guideId, itemType, kb, severityMapping))
-    details.push(...detectGradedSemantic(guide, guideId, options?.vagueTerms ?? [], options?.substantiveWords ?? [], severityMapping))
+    details.push(...detectGradedSemantic(guide, guideId, options?.vagueTerms ?? [], options?.substantiveWords ?? [], options?.validShortValues ?? [], severityMapping))
     return { details: deduplicateErrors([...conflictDetails, ...details]) }
   },
 

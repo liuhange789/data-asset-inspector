@@ -407,4 +407,28 @@ describe('SemanticRuleEngine', () => {
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, vagueTerms: ['按规定执行'], substantiveWords: ['申请'] })
     expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic' && d.standardClause === '降级模式·双轨制识别')).toBe(true)
   })
+
+  it('DT-06: 表格下载="无" + validShortValues含"无" → 不报semantic', () => {
+    const guide = { 事项名称: '食品经营许可', 表格下载: '无' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, vagueTerms: ['符合条件'], substantiveWords: ['申请'], validShortValues: ['无', '不需要', '不适用', '免费', '不收费'] })
+    expect(result.details.some((d) => d.field === '表格下载' && d.errorType === 'semantic')).toBe(false)
+  })
+
+  it('DT-07: 字段值="不需要" + validShortValues含"不需要" → 不报semantic', () => {
+    const guide = { 事项名称: '食品经营许可', 表格下载: '不需要' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, vagueTerms: ['符合条件'], substantiveWords: ['申请'], validShortValues: ['无', '不需要', '不适用', '免费', '不收费'] })
+    expect(result.details.some((d) => d.field === '表格下载' && d.errorType === 'semantic')).toBe(false)
+  })
+
+  it('DT-08: 字段值="x" + validShortValues不含"x" → 报semantic', () => {
+    const guide = { 事项名称: '食品经营许可', 表格下载: 'x' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, vagueTerms: ['符合条件'], substantiveWords: ['申请'], validShortValues: ['无', '不需要'] })
+    expect(result.details.some((d) => d.field === '表格下载' && d.errorType === 'semantic')).toBe(true)
+  })
+
+  it('DT-09: validShortValues=undefined → 沿用既有逻辑（向后兼容）', () => {
+    const guide = { 事项名称: '食品经营许可', 表格下载: '无' }
+    const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, vagueTerms: ['符合条件'], substantiveWords: ['申请'] })
+    expect(result.details.some((d) => d.field === '表格下载' && d.errorType === 'semantic')).toBe(true)
+  })
 })

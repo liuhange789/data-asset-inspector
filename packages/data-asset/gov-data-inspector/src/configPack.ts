@@ -70,6 +70,9 @@ export interface ConfigPack {
   vagueTerms?: string[] | undefined
   substantiveWords?: string[] | undefined
   addressFuzzyDescriptors?: string[] | undefined
+  conditionRequiredMaterialKeywords?: string[] | undefined
+  addressSpecificKeywords?: string[] | undefined
+  validShortValues?: string[] | undefined
 }
 
 const REQUIRED_FIELDS: (keyof ConfigPack)[] = [

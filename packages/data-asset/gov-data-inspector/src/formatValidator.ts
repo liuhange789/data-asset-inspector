@@ -44,6 +44,19 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
       issues.push(issue)
     }
   }
+  if (rule.addressSpecificKeywords && rule.addressSpecificKeywords.length > 0) {
+    const hasAnySpecific = rule.addressSpecificKeywords.some((kw) => strVal.includes(kw))
+    if (!hasAnySpecific) {
+      issues.push({
+        guideId,
+        field: rule.field,
+        issue: '办理地点缺少具体地址信息',
+        suggestion: '办理地点应包含街道/路/号等具体地址信息',
+      })
+      return issues
+    }
+    return issues
+  }
   if (rule.requiredKeywords && rule.requiredKeywords.length > 0) {
     const fuzzyIssue = checkAddressFuzzy(strVal, rule.requiredKeywords, rule.fuzzyDescriptors, rule.field, guideId, rule.suggestionTemplate)
     if (fuzzyIssue) {

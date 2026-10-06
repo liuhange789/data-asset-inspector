@@ -352,9 +352,24 @@ function ruleProcessTimeLimitInconsistent(
   for (const m of stepMatches) {
     if (m[1]) sumDays += parseInt(m[1], 10)
   }
-  if (sumDays === 0) return []
   const commitDays = extractTimeLimitDays(timeLimit)
   if (commitDays === null) return []
+  if (sumDays === 0) {
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '办理流程',
+          errorType: 'warning',
+          description: `办理流程缺少分步时限描述，无法与承诺办结时限${commitDays}个工作日进行比对。${rule.standardClause ?? ''}`,
+          suggestion: '办理流程应补充各环节的工作日时限描述',
+          dataSource: 'standard',
+          standardClause: rule.standardClause,
+        },
+        severityMapping,
+      ),
+    ]
+  }
   if (sumDays !== commitDays) {
     return [
       ErrorDetailBuilder.build(
