@@ -7,7 +7,7 @@ function isLogicDebug(): boolean {
 
 function extractTimeLimitDays(timeLimit: unknown): number | null {
   const str = String(timeLimit ?? '')
-  const match = str.match(/(\d+)\s*个?\s*(?:工作日|天)/)
+  const match = str.match(/(\d+)\s*个?\s*(?:工作日|天|日)/)
   if (!match || !match[1]) return null
   return parseInt(match[1], 10)
 }

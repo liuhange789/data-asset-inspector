@@ -1053,6 +1053,20 @@
       ]
     },
     {
+      "ruleId": "LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001",
+      "triggerFields": [
+        "办理流程",
+        "办理时限"
+      ],
+      "condition": "流程步骤时限合计不等于承诺办结时限",
+      "threshold": null,
+      "suggestionTemplate": "办理流程各步骤时限合计应与承诺办结时限一致，请核对",
+      "standardClause": "GB/T 36114-2018 第6.4条 办理时限一致性要求",
+      "triggerKeywords": [
+        "工作日"
+      ]
+    },
+    {
       "ruleId": "LOG_PROCESS_COMPLETENESS_001",
       "triggerFields": [
         "办理流程"
@@ -1115,20 +1129,6 @@
         "产权证",
         "户口本",
         "户口簿"
-      ]
-    },
-    {
-      "ruleId": "LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001",
-      "triggerFields": [
-        "办理流程",
-        "办理时限"
-      ],
-      "condition": "流程步骤时限合计不等于承诺办结时限",
-      "threshold": null,
-      "suggestionTemplate": "办理流程各步骤时限合计应与承诺办结时限一致，请核对",
-      "standardClause": "GB/T 36114-2018 第6.4条 办理时限一致性要求",
-      "triggerKeywords": [
-        "工作日"
       ]
     },
     {
