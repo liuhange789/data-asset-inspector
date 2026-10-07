@@ -14,10 +14,34 @@ export interface ConfigPackLoadResult {
   warnings: ConfigPackWarning[]
 }
 
-function attachValidShortValues(raw: Record<string, unknown>, normalized: ConfigPack): ConfigPack {
-  const values = raw.validShortValues
-  if (Array.isArray(values) && values.length > 0) {
-    normalized.validShortValues = values as string[]
+function attachOptionalVocabFields(raw: Record<string, unknown>, normalized: ConfigPack): ConfigPack {
+  const validShortValues = raw.validShortValues
+  if (Array.isArray(validShortValues) && validShortValues.length > 0) {
+    normalized.validShortValues = validShortValues as string[]
+  }
+  const govServiceHotlineWhitelist = raw.govServiceHotlineWhitelist
+  if (Array.isArray(govServiceHotlineWhitelist) && govServiceHotlineWhitelist.length > 0) {
+    normalized.govServiceHotlineWhitelist = govServiceHotlineWhitelist as string[]
+  }
+  const timeLimitValidExpressions = raw.timeLimitValidExpressions
+  if (Array.isArray(timeLimitValidExpressions) && timeLimitValidExpressions.length > 0) {
+    normalized.timeLimitValidExpressions = timeLimitValidExpressions as string[]
+  }
+  const chargeValidPatterns = raw.chargeValidPatterns
+  if (Array.isArray(chargeValidPatterns) && chargeValidPatterns.length > 0) {
+    normalized.chargeValidPatterns = chargeValidPatterns as string[]
+  }
+  const processCoreStepKeywords = raw.processCoreStepKeywords
+  if (Array.isArray(processCoreStepKeywords) && processCoreStepKeywords.length > 0) {
+    normalized.processCoreStepKeywords = processCoreStepKeywords as string[]
+  }
+  const fieldResidueValues = raw.fieldResidueValues
+  if (Array.isArray(fieldResidueValues) && fieldResidueValues.length > 0) {
+    normalized.fieldResidueValues = fieldResidueValues as string[]
+  }
+  const processSimplifiedStepAliases = raw.processSimplifiedStepAliases
+  if (typeof processSimplifiedStepAliases === 'object' && processSimplifiedStepAliases !== null && !Array.isArray(processSimplifiedStepAliases)) {
+    normalized.processSimplifiedStepAliases = processSimplifiedStepAliases as Record<string, string[]>
   }
   return normalized
 }
@@ -40,7 +64,7 @@ function tryLoadFromFilePath(warnings: ConfigPackWarning[]): ConfigPack | null {
         })
         return null
       }
-      return attachValidShortValues(parsed, normalized)
+      return attachOptionalVocabFields(parsed, normalized)
     } catch (e) {
       warnings.push({
         type: 'CONFIG_PACK_WARNING',
@@ -77,7 +101,7 @@ function tryLoadFromNpmPackage(warnings: ConfigPackWarning[]): ConfigPack | null
         })
         return null
       }
-      return attachValidShortValues(raw, normalized)
+      return attachOptionalVocabFields(raw, normalized)
     } catch (e) {
       warnings.push({
         type: 'CONFIG_PACK_WARNING',
@@ -107,7 +131,7 @@ function tryLoadDefault(warnings: ConfigPackWarning[]): ConfigPack {
         message: `缺省配置包 Schema 校验失败: ${validation.errors.map((e) => e.path).join(', ')}`,
       })
     }
-    return attachValidShortValues(defaultConfigPack as Record<string, unknown>, normalized)
+    return attachOptionalVocabFields(defaultConfigPack as Record<string, unknown>, normalized)
   } catch (e) {
     warnings.push({
       type: 'CONFIG_PACK_WARNING',

@@ -47,6 +47,12 @@ export interface OrchestrateConfig {
   vagueTerms?: string[] | undefined
   substantiveWords?: string[] | undefined
   validShortValues?: string[] | undefined
+  govServiceHotlineWhitelist?: string[] | undefined
+  timeLimitValidExpressions?: string[] | undefined
+  chargeValidPatterns?: string[] | undefined
+  processCoreStepKeywords?: string[] | undefined
+  processSimplifiedStepAliases?: Record<string, string[]> | undefined
+  fieldResidueValues?: string[] | undefined
 }
 
 export interface OrchestrateOptions {
@@ -113,6 +119,7 @@ export const InspectionOrchestrator = {
           undefined,
           config.missingFieldStandardClause,
           matchResult.itemType ?? undefined,
+          { ...(config.fieldResidueValues ? { fieldResidueValues: config.fieldResidueValues } : {}) },
         )
         allErrorDetails.push(...graded.coreDetails, ...graded.extendedDetails)
         coreMissingCount += graded.coreDetails.length
@@ -128,6 +135,7 @@ export const InspectionOrchestrator = {
           config.severityMapping,
           undefined,
           config.missingFieldStandardClause,
+          { ...(config.fieldResidueValues ? { fieldResidueValues: config.fieldResidueValues } : {}) },
         )
         allErrorDetails.push(...missingDetails)
         coreMissingCount += missingDetails.length
@@ -156,11 +164,19 @@ export const InspectionOrchestrator = {
         guideId,
         standardRules,
         config.severityMapping,
+        {
+          ...(config.processCoreStepKeywords ? { processCoreStepKeywords: config.processCoreStepKeywords } : {}),
+          ...(config.processSimplifiedStepAliases ? { processSimplifiedStepAliases: config.processSimplifiedStepAliases } : {}),
+        },
       )
 
       allErrorDetails.push(...semanticResult.details, ...logicalDetails)
 
-      const formatIssues = FormatValidator.validate(standardGuide, guideId, config.formatRules, useGraded ? [...coreRequiredFields, ...extendedRequiredFields] : requiredFields)
+      const formatIssues = FormatValidator.validate(standardGuide, guideId, config.formatRules, useGraded ? [...coreRequiredFields, ...extendedRequiredFields] : requiredFields, {
+        ...(config.govServiceHotlineWhitelist ? { govServiceHotlineWhitelist: config.govServiceHotlineWhitelist } : {}),
+        ...(config.timeLimitValidExpressions ? { timeLimitValidExpressions: config.timeLimitValidExpressions } : {}),
+        ...(config.chargeValidPatterns ? { chargeValidPatterns: config.chargeValidPatterns } : {}),
+      })
       allFormatIssues.push(...formatIssues)
 
       if (standardGuide['办理时限'] && typeof standardGuide['办理时限'] === 'string' && (standardGuide['办理时限'] as string).includes('工作日')) {

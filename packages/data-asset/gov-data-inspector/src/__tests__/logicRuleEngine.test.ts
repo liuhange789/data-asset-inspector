@@ -190,3 +190,47 @@ describe('LogicRuleEngine', () => {
     expect(details.length).toBeGreaterThanOrEqual(2)
   })
 })
+describe('LogicRuleEngine 简式流程归一化（v3.5.7）', () => {
+  const logicOptions = {
+    processCoreStepKeywords: ['受理', '审查', '决定'],
+    processSimplifiedStepAliases: { '审查': ['审核'], '决定': ['审批', '办结'], '（送达）': ['送达'], '(送达)': ['送达'] } as Record<string, string[]>,
+  }
+
+  it('办理流程="申请→受理→审查→决定（送达）" 简式流程三核心齐全 → 不报缺失环节', () => {
+    const guide = { 办理流程: '申请→受理→审查→决定（送达）' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules, undefined, logicOptions)
+    expect(details.some((d) => d.errorType === 'logical' && d.description.includes('流程应包含受理'))).toBe(false)
+  })
+
+  it('办理流程="申请→受理→审查→决定" 三核心齐全（送达可选） → 不报缺失环节', () => {
+    const guide = { 办理流程: '申请→受理→审查→决定' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules, undefined, logicOptions)
+    expect(details.some((d) => d.errorType === 'logical' && d.description.includes('流程应包含受理'))).toBe(false)
+  })
+
+  it('办理流程="受理-审核-办结"（无箭头） → 报缺失环节（回退字面判定）', () => {
+    const guide = { 办理流程: '受理-审核-办结' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules, undefined, logicOptions)
+    expect(details.some((d) => d.errorType === 'logical' && d.description.includes('流程应包含受理'))).toBe(true)
+  })
+
+  it('办理流程="申请→受理"（含箭头缺审查/决定） → 报缺失环节', () => {
+    const guide = { 办理流程: '申请→受理' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules, undefined, logicOptions)
+    expect(details.some((d) => d.errorType === 'logical' && d.description.includes('流程应包含受理'))).toBe(true)
+  })
+
+  it('办理流程含 ->/➡/=> 多种箭头均识别为简式流程', () => {
+    for (const process of ['申请->受理➡审查=>决定', '申请=>受理->审查➡决定']) {
+      const guide = { 办理流程: process }
+      const details = LogicRuleEngine.detect(guide, 'g1', rules, undefined, logicOptions)
+      expect(details.some((d) => d.errorType === 'logical' && d.description.includes('流程应包含受理'))).toBe(false)
+    }
+  })
+
+  it('options缺省时按空词表运行，所有流程回退既有字面判定（向后兼容）', () => {
+    const guide = { 办理流程: '申请→受理→审查→决定' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules)
+    expect(details.some((d) => d.errorType === 'logical' && d.description.includes('流程应包含受理'))).toBe(true)
+  })
+})

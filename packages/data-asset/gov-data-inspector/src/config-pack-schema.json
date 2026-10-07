@@ -407,6 +407,45 @@
       "items": {
         "type": "string"
       }
+    },
+    "govServiceHotlineWhitelist": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "timeLimitValidExpressions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "chargeValidPatterns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "processCoreStepKeywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "processSimplifiedStepAliases": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "fieldResidueValues": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   }
 }

@@ -73,6 +73,12 @@ export interface ConfigPack {
   conditionRequiredMaterialKeywords?: string[] | undefined
   addressSpecificKeywords?: string[] | undefined
   validShortValues?: string[] | undefined
+  govServiceHotlineWhitelist?: string[] | undefined
+  timeLimitValidExpressions?: string[] | undefined
+  chargeValidPatterns?: string[] | undefined
+  processCoreStepKeywords?: string[] | undefined
+  processSimplifiedStepAliases?: Record<string, string[]> | undefined
+  fieldResidueValues?: string[] | undefined
 }
 
 const REQUIRED_FIELDS: (keyof ConfigPack)[] = [

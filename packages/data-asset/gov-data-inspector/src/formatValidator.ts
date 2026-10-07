@@ -1,5 +1,11 @@
 import type { FormatIssue, FormatRule } from './types.js'
 
+export interface FormatValidatorOptions {
+  govServiceHotlineWhitelist?: string[]
+  timeLimitValidExpressions?: string[]
+  chargeValidPatterns?: string[]
+}
+
 function checkAddressFuzzy(
   strVal: string,
   requiredKeywords: string[] | undefined,
@@ -23,12 +29,21 @@ function checkAddressFuzzy(
   }
 }
 
-function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: FormatRule): FormatIssue[] {
+function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: FormatRule, options?: FormatValidatorOptions): FormatIssue[] {
   const val = guide[rule.field]
   if (val === undefined || val === null) return []
   const strVal = String(val).trim()
   if (!strVal) return []
   const issues: FormatIssue[] = []
+  if ((rule.field === '咨询电话' || rule.field === '监督电话') && options?.govServiceHotlineWhitelist && options.govServiceHotlineWhitelist.length > 0) {
+    for (const shortCode of options.govServiceHotlineWhitelist) {
+      const regex = new RegExp(`^(\\d{3,4}[-\\s]?)?${shortCode}$`)
+      if (regex.test(strVal)) return []
+    }
+  }
+  if (rule.field === '办理时限' && options?.timeLimitValidExpressions && options.timeLimitValidExpressions.length > 0) {
+    if (options.timeLimitValidExpressions.includes(strVal)) return []
+  }
   if (rule.pattern) {
     const regex = new RegExp(rule.pattern)
     if (!regex.test(strVal)) {
@@ -66,6 +81,21 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
     }
     return issues
   }
+  if (rule.field === '收费标准' && options?.chargeValidPatterns && options.chargeValidPatterns.length > 0) {
+    let chargeHit = false
+    for (const pattern of options.chargeValidPatterns) {
+      try {
+        const regex = new RegExp(pattern)
+        if (regex.test(strVal)) {
+          chargeHit = true
+          break
+        }
+      } catch {
+        void 0
+      }
+    }
+    if (chargeHit) return issues
+  }
   if (rule.requiredKeywords && rule.requiredKeywords.length > 0) {
     const fuzzyIssue = checkAddressFuzzy(strVal, rule.requiredKeywords, rule.fuzzyDescriptors, rule.field, guideId, rule.suggestionTemplate)
     if (fuzzyIssue) {
@@ -95,6 +125,7 @@ export const FormatValidator = {
     guideId: string,
     formatRules: FormatRule[] | undefined,
     requiredFields?: string[],
+    options?: FormatValidatorOptions,
   ): FormatIssue[] {
     if (!formatRules || formatRules.length === 0) return []
     void requiredFields
@@ -111,7 +142,7 @@ export const FormatValidator = {
         continue
       }
       const isAnyMode = rules.length > 1 && rules.some((r) => r.matchMode === 'any')
-      const ruleResults: FormatIssue[][] = rules.map((rule) => evaluateRule(guide, guideId, rule))
+      const ruleResults: FormatIssue[][] = rules.map((rule) => evaluateRule(guide, guideId, rule, options))
       if (isAnyMode) {
         const anyPassed = ruleResults.some((r) => r.length === 0)
         if (!anyPassed) {

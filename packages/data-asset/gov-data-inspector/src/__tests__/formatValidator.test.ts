@@ -199,3 +199,94 @@ describe('FormatValidator', () => {
     expect(issues.some((i) => i.field === '办理地点')).toBe(false)
   })
 })
+describe('FormatValidator 前置豁免（v3.5.7）', () => {
+  const hotlineRules: FormatRule[] = [
+    { field: '咨询电话', pattern: '^(\\d{3,4}-)?\\d{7,8}$', suggestionTemplate: '应使用"区号-号码"格式' },
+    { field: '监督电话', pattern: '^(\\d{3,4}-)?\\d{7,8}$', suggestionTemplate: '监督电话应使用"区号-号码"格式' },
+  ]
+  const hotlineOptions = { govServiceHotlineWhitelist: ['12315', '12333', '12329', '12336', '12345', '12366', '12385', '12328', '12316', '12320', '12369'] }
+
+  it('咨询电话="0371-12315" 命中白名单区号+短号 → 不报格式问题', () => {
+    const issues = FormatValidator.validate({ 咨询电话: '0371-12315' }, 'g1', hotlineRules, undefined, hotlineOptions)
+    expect(issues.some((i) => i.field === '咨询电话')).toBe(false)
+  })
+
+  it('监督电话纯短号12329/12333/12336/12366/12385 命中白名单 → 不报格式问题', () => {
+    for (const code of ['12329', '12333', '12336', '12366', '12385']) {
+      const issues = FormatValidator.validate({ 监督电话: code }, 'g1', hotlineRules, undefined, hotlineOptions)
+      expect(issues.some((i) => i.field === '监督电话')).toBe(false)
+    }
+  })
+
+  it('咨询电话="12345678"（8位非白名单）回退正则合法 → 不报格式问题', () => {
+    const issues = FormatValidator.validate({ 咨询电话: '12345678' }, 'g1', hotlineRules, undefined, hotlineOptions)
+    expect(issues.some((i) => i.field === '咨询电话')).toBe(false)
+  })
+
+  it('咨询电话="abc12345" 非白名单回退正则非法 → 报格式问题', () => {
+    const issues = FormatValidator.validate({ 咨询电话: 'abc12345' }, 'g1', hotlineRules, undefined, hotlineOptions)
+    expect(issues.some((i) => i.field === '咨询电话')).toBe(true)
+  })
+
+  it('options缺省时电话回退既有正则（向后兼容）', () => {
+    const issues = FormatValidator.validate({ 咨询电话: '12329' }, 'g1', hotlineRules)
+    expect(issues.some((i) => i.field === '咨询电话')).toBe(true)
+  })
+
+  const timeLimitRules: FormatRule[] = [
+    { field: '办理时限', pattern: '^(\\d+个工作日|\\d+个自然日|\\d+个工作日内)$', suggestionTemplate: '应使用"X个工作日"格式' },
+  ]
+  const timeLimitOptions = { timeLimitValidExpressions: ['即时办结', '当场办结', '即办件'] }
+
+  it('办理时限="即时办结"/"当场办结"/"即办件" 命中词表 → 不报格式问题', () => {
+    for (const expr of ['即时办结', '当场办结', '即办件']) {
+      const issues = FormatValidator.validate({ 办理时限: expr }, 'g1', timeLimitRules, undefined, timeLimitOptions)
+      expect(issues.some((i) => i.field === '办理时限')).toBe(false)
+    }
+  })
+
+  it('办理时限="15个自然日"/"20个工作日内" 命中扩展pattern → 不报格式问题', () => {
+    for (const val of ['15个自然日', '20个工作日内']) {
+      const issues = FormatValidator.validate({ 办理时限: val }, 'g1', timeLimitRules, undefined, timeLimitOptions)
+      expect(issues.some((i) => i.field === '办理时限')).toBe(false)
+    }
+  })
+
+  it('办理时限="约20天" 未命中词表+未匹配扩展正则 → 报格式问题', () => {
+    const issues = FormatValidator.validate({ 办理时限: '约20天' }, 'g1', timeLimitRules, undefined, timeLimitOptions)
+    expect(issues.some((i) => i.field === '办理时限')).toBe(true)
+  })
+
+  it('办理时限="约15个自然日" 报格式问题且含semanticHint', () => {
+    const issues = FormatValidator.validate({ 办理时限: '约15个自然日' }, 'g1', timeLimitRules, undefined, timeLimitOptions)
+    const issue = issues.find((i) => i.field === '办理时限')
+    expect(issue).toBeDefined()
+    expect(issue?.semanticHint).toContain('自然日')
+  })
+
+  const chargeRules: FormatRule[] = [
+    { field: '收费标准', requiredKeywords: ['不收费', '收费依据'], suggestionTemplate: '应注明"不收费"或"金额+收费依据"' },
+  ]
+  const chargeOptions = { chargeValidPatterns: ['按.*标准收取', '按.*规定收取', '^\\d+元/(件|本)$', '收费依据[:：]'] }
+
+  it('收费标准命中合规模式 → 不报缺少必要关键词', () => {
+    const validValues = ['按不动产登记费标准收取', '按国家规定收取', '10元/件', '收费依据：发改价格〔2017〕20号']
+    for (const val of validValues) {
+      const issues = FormatValidator.validate({ 收费标准: val }, 'g1', chargeRules, undefined, chargeOptions)
+      expect(issues.some((i) => i.field === '收费标准')).toBe(false)
+    }
+  })
+
+  it('收费标准="见公告"/"另行通知" 未命中模式+未命中requiredKeywords → 报缺少必要关键词', () => {
+    for (const val of ['见公告', '另行通知']) {
+      const issues = FormatValidator.validate({ 收费标准: val }, 'g1', chargeRules, undefined, chargeOptions)
+      expect(issues.some((i) => i.field === '收费标准')).toBe(true)
+    }
+  })
+
+  it('chargeValidPatterns含非法正则时跳过该模式不抛异常', () => {
+    const badOptions = { chargeValidPatterns: ['[invalid', '按.*标准收取'] }
+    const issues = FormatValidator.validate({ 收费标准: '按不动产登记费标准收取' }, 'g1', chargeRules, undefined, badOptions)
+    expect(issues.some((i) => i.field === '收费标准')).toBe(false)
+  })
+})

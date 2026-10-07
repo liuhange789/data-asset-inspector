@@ -1,6 +1,11 @@
 import type { ErrorDetail, StandardRule } from './types.js'
 import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 
+export interface LogicRuleEngineOptions {
+  processCoreStepKeywords?: string[]
+  processSimplifiedStepAliases?: Record<string, string[]>
+}
+
 function isLogicDebug(): boolean {
   return process.env.GOV_LOGIC_DEBUG === '1' || process.env.GOV_LOGIC_DEBUG === 'true'
 }
@@ -211,9 +216,21 @@ function ruleProcessCompleteness(
   guideId: string,
   rule: StandardRule,
   severityMapping?: Record<string, string>,
+  options?: LogicRuleEngineOptions,
 ): ErrorDetail[] {
   const process = String(guide['办理流程'] ?? '')
   if (!process) return []
+  const hasArrow = process.includes('→') || process.includes('->') || process.includes('➡') || process.includes('=>')
+  if (hasArrow && options?.processCoreStepKeywords && options.processCoreStepKeywords.length > 0) {
+    const aliases = options?.processSimplifiedStepAliases ?? {}
+    const allCoreHit = options.processCoreStepKeywords.every((core) => {
+      if (process.includes(core)) return true
+      const coreAliases = aliases[core]
+      if (Array.isArray(coreAliases) && coreAliases.some((a) => process.includes(a))) return true
+      return false
+    })
+    if (allCoreHit) return []
+  }
   const requiredSteps = rule.triggerKeywords
   const missingSteps = requiredSteps.filter((kw) => !process.includes(kw))
   if (missingSteps.length > 0) {
@@ -424,7 +441,7 @@ function ruleInstantTimeLimitContradiction(
 
 const RULE_DISPATCH: Record<
   string,
-  (guide: Record<string, unknown>, guideId: string, rule: StandardRule, severityMapping?: Record<string, string>) => ErrorDetail[]
+  (guide: Record<string, unknown>, guideId: string, rule: StandardRule, severityMapping?: Record<string, string>, options?: LogicRuleEngineOptions) => ErrorDetail[]
 > = {
   LOG_SITE_INSPECTION_001: ruleSiteInspection,
   LOG_INSTANT_HANDLE_001: ruleInstantHandle,
@@ -445,6 +462,7 @@ export const LogicRuleEngine = {
     guideId: string,
     rules: StandardRule[],
     severityMapping?: Record<string, string>,
+    options?: LogicRuleEngineOptions,
   ): ErrorDetail[] {
     if (!rules || rules.length === 0) {
       throw new Error('GOV_DATA_LOGIC_RULES_MISSING: logicErrorRules配置缺失，逻辑检测已中止')
@@ -473,7 +491,7 @@ export const LogicRuleEngine = {
           continue
         }
       }
-      const handlerResults = handler(guide, guideId, rule, severityMapping)
+      const handlerResults = handler(guide, guideId, rule, severityMapping, options)
       if (debug && handlerResults.length === 0) {
         console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=notTriggered`)
       }

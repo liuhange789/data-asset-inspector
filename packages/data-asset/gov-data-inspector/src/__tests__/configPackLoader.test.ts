@@ -166,4 +166,63 @@ describe('配置包加载器', () => {
 
     delete process.env.GOV_CONFIG_PACK_PATH
   })
+
+  it('缺省包v3.5.7词表装载: 6类新字段均为非空', () => {
+    const result = ConfigPackLoader.load()
+    const pack = result.configPack
+    expect(Array.isArray(pack.govServiceHotlineWhitelist)).toBe(true)
+    expect(pack.govServiceHotlineWhitelist!.length).toBeGreaterThan(0)
+    expect(Array.isArray(pack.timeLimitValidExpressions)).toBe(true)
+    expect(pack.timeLimitValidExpressions!.length).toBeGreaterThan(0)
+    expect(Array.isArray(pack.chargeValidPatterns)).toBe(true)
+    expect(pack.chargeValidPatterns!.length).toBeGreaterThan(0)
+    expect(Array.isArray(pack.processCoreStepKeywords)).toBe(true)
+    expect(pack.processCoreStepKeywords!.length).toBeGreaterThan(0)
+    expect(typeof pack.processSimplifiedStepAliases).toBe('object')
+    expect(pack.processSimplifiedStepAliases).not.toBeNull()
+    expect(Array.isArray(pack.fieldResidueValues)).toBe(true)
+    expect(pack.fieldResidueValues!.length).toBeGreaterThan(0)
+  })
+
+  it('外部配置包含6类新字段时按外部包内容挂载', () => {
+    const pack = {
+      configPackId: 'gd-gov-2026',
+      region: '广东省',
+      configPackVersion: '2026.1.0',
+      policyBasis: [{ name: '测试', docNumber: '粤府办〔2024〕1号', coreRequirement: '测试' }],
+      requiredFields: ['事项名称'],
+      formatRules: [],
+      localStandardTerms: { materials: [], conditions: [] },
+      logicErrorRules: [{ ruleId: 'LOG_001', standardClause: '测试', triggerFields: ['办理流程'], triggerKeywords: ['测试'], condition: '测试', suggestionTemplate: '测试' }],
+      scoringWeights: { completeness: 0.3, accuracy: 0.4, traceability: 0.3 },
+      itemTypeMatching: { 行政许可: { keywords: ['许可'], codePrefix: 'XK' } },
+      severityMapping: { missing: 'major', semantic: 'critical', logical: 'critical' },
+      gbtMapping: { structured: 'A01', semiStructured: 'A02', unstructured: 'A03' },
+      dataSourceCredentials: {
+        national: { apiKey: 'KEY', endpoint: 'EP' },
+        provincial: { apiKey: 'KEY', endpoint: 'EP' },
+        standard: { docPath: 'PATH', endpoint: 'EP' },
+      },
+      dataSourcePriority: ['provincial', 'national'],
+      govServiceHotlineWhitelist: ['12345'],
+      timeLimitValidExpressions: ['即办'],
+      chargeValidPatterns: ['按.*收取'],
+      processCoreStepKeywords: ['受理'],
+      processSimplifiedStepAliases: { 审查: ['审核'] },
+      fieldResidueValues: ['无', '暂无'],
+    }
+    writeFileSync(tmpFile, JSON.stringify(pack), 'utf-8')
+    process.env.GOV_CONFIG_PACK_PATH = tmpFile
+
+    const result = ConfigPackLoader.load()
+    expect(result.loadSource).toBe('file')
+    expect(result.configPack.govServiceHotlineWhitelist).toEqual(['12345'])
+    expect(result.configPack.timeLimitValidExpressions).toEqual(['即办'])
+    expect(result.configPack.chargeValidPatterns).toEqual(['按.*收取'])
+    expect(result.configPack.processCoreStepKeywords).toEqual(['受理'])
+    expect(result.configPack.processSimplifiedStepAliases).toEqual({ 审查: ['审核'] })
+    expect(result.configPack.fieldResidueValues).toEqual(['无', '暂无'])
+
+    delete process.env.GOV_CONFIG_PACK_PATH
+  })
 })

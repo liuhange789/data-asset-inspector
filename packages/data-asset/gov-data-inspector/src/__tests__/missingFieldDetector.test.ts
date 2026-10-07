@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { MissingFieldDetector } from '../missingFieldDetector.js'
+import defaultConfigPack from '../default-config-pack.json' with { type: 'json' }
+
+const fieldResidueValues = (defaultConfigPack as Record<string, unknown>).fieldResidueValues as string[]
 
 const requiredElements = [
   '事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限',
@@ -125,7 +128,7 @@ describe('MissingFieldDetector.detectGraded', () => {
     for (const ph of placeholders) {
       const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: ph, 办理条件: '条件' }
       const result = MissingFieldDetector.detectGraded(
-        guide, 'g1', coreFields, extendedFields, severityMapping,
+        guide, 'g1', coreFields, extendedFields, severityMapping, undefined, undefined, undefined, { fieldResidueValues },
       )
       expect(result.coreDetails.some((d) => d.field === '实施主体')).toBe(true)
     }
@@ -229,5 +232,54 @@ describe('MissingFieldDetector.detectGraded', () => {
     }
     const result = MissingFieldDetector.detectGraded(guide, 'g1', core14, [], severityMapping)
     expect(result.coreDetails.some((d) => d.field === '表格下载' && d.errorType === 'missing')).toBe(true)
+  })
+})
+describe('MissingFieldDetector fieldResidueValues 配置化', () => {
+  const coreFields = ['事项名称', '实施主体', '办理条件']
+
+  it('null/NULL/Null 大小写变体 → 报missing', () => {
+    for (const ph of ['null', 'NULL', 'Null']) {
+      const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: ph, 办理条件: '条件' }
+      const result = MissingFieldDetector.detect(guide, 'g1', coreFields, undefined, undefined, undefined, { fieldResidueValues })
+      expect(result.some((d) => d.field === '实施主体')).toBe(true)
+    }
+  })
+
+  it('undefined/Undefined 新增残渣项 → 报missing', () => {
+    for (const ph of ['undefined', 'Undefined']) {
+      const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: ph, 办理条件: '条件' }
+      const result = MissingFieldDetector.detect(guide, 'g1', coreFields, undefined, undefined, undefined, { fieldResidueValues })
+      expect(result.some((d) => d.field === '实施主体')).toBe(true)
+    }
+  })
+
+  it('N/A/n/a/NA 既有残渣项 → 报missing', () => {
+    for (const ph of ['N/A', 'n/a', 'NA']) {
+      const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: ph, 办理条件: '条件' }
+      const result = MissingFieldDetector.detect(guide, 'g1', coreFields, undefined, undefined, undefined, { fieldResidueValues })
+      expect(result.some((d) => d.field === '实施主体')).toBe(true)
+    }
+  })
+
+  it('待补充/待填写/待完善 占位值 → 报missing', () => {
+    for (const ph of ['待补充', '待填写', '待完善']) {
+      const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: ph, 办理条件: '条件' }
+      const result = MissingFieldDetector.detect(guide, 'g1', coreFields, undefined, undefined, undefined, { fieldResidueValues })
+      expect(result.some((d) => d.field === '实施主体')).toBe(true)
+    }
+  })
+
+  it('无/暂无 既有占位值 → 报missing', () => {
+    for (const ph of ['无', '暂无']) {
+      const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: ph, 办理条件: '条件' }
+      const result = MissingFieldDetector.detect(guide, 'g1', coreFields, undefined, undefined, undefined, { fieldResidueValues })
+      expect(result.some((d) => d.field === '实施主体')).toBe(true)
+    }
+  })
+
+  it('options.fieldResidueValues 缺省时占位值不判定为missing（向后兼容）', () => {
+    const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: '无特殊要求', 办理条件: '条件' }
+    const result = MissingFieldDetector.detect(guide, 'g1', coreFields)
+    expect(result.some((d) => d.field === '实施主体')).toBe(false)
   })
 })
