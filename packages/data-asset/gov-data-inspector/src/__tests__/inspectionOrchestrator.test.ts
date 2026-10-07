@@ -323,3 +323,41 @@ describe('deduplicateCrossEngine 按字段+根因去重', () => {
     expect(result[0]!.description).toBe('逻辑矛盾A')
   })
 })
+describe('词表传递链路端到端（v3.5.6）', () => {
+  const validShortValues = ['无', '不需要', '不适用', '免费', '不收费', '暂无', '无需', '无要求', '不涉及', '免提交', '零材料']
+  const vagueTerms = ['符合条件', '按规定执行', '待定']
+  const substantiveWords = ['申请', '证明', '材料', '条件', '办理', '提交', '审核', '许可']
+
+  const configWithLexicons = {
+    ...config,
+    ...(vagueTerms.length > 0 ? { vagueTerms } : {}),
+    ...(substantiveWords.length > 0 ? { substantiveWords } : {}),
+    ...(validShortValues.length > 0 ? { validShortValues } : {}),
+  }
+
+  it('校车样本表格下载="无" → 不报semantic误报，missing保留', () => {
+    const data = [makeCompleteGuide({ 表格下载: '无', 结果送达方式: '邮政EMS寄送' })]
+    const result = InspectionOrchestrator.orchestrate(data, configWithLexicons, kb, standardRules)
+    const semanticDetails = result.errorDetails.filter((d) => d.errorType === 'semantic' && d.field === '表格下载')
+    expect(semanticDetails.length).toBe(0)
+    expect(result.errorDetails.filter((d) => d.field === '表格下载').some((d) => d.description.includes('内容长度不足'))).toBe(false)
+    expect(result.missingFields).toBe(1)
+  })
+
+  it('非词表值表格下载="x" → 仍报semantic', () => {
+    const data = [makeCompleteGuide({ 表格下载: 'x', 结果送达方式: '邮政EMS寄送' })]
+    const result = InspectionOrchestrator.orchestrate(data, configWithLexicons, kb, standardRules)
+    expect(result.errorDetails.some((d) => d.errorType === 'semantic' && d.field === '表格下载' && d.description.includes('内容长度不足'))).toBe(true)
+  })
+
+  it('特困样本编排端到端 → warning(分步时限缺失)与logical(环节缺失)并存', () => {
+    const tunkRules: StandardRule[] = [
+      { ruleId: 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001', standardClause: 'DB1405/T 085-2025 第5.7条', triggerFields: ['办理流程', '办理时限'], condition: '流程步骤时限合计≠承诺办结时限', suggestionTemplate: '建议核对', threshold: undefined, triggerKeywords: ['工作日'] },
+      { ruleId: 'LOG_PROCESS_COMPLETENESS_001', standardClause: '国办发〔2018〕45号 流程环节完备性要求', triggerFields: ['办理流程'], condition: '办理流程应包含受理/审核/审批/办结/送达五个环节', suggestionTemplate: '建议补充环节', threshold: undefined, triggerKeywords: ['受理', '审核', '审批', '办结', '送达'] },
+    ]
+    const data = [makeCompleteGuide({ 办理流程: '受理-审核-办结', 结果送达方式: '邮政EMS寄送' })]
+    const result = InspectionOrchestrator.orchestrate(data, configWithLexicons, kb, tunkRules)
+    expect(result.errorDetails.some((d) => d.errorType === 'warning' && d.description.includes('缺少分步时限描述'))).toBe(true)
+    expect(result.errorDetails.some((d) => d.errorType === 'logical' && d.description.includes('流程应包含受理'))).toBe(true)
+  })
+})

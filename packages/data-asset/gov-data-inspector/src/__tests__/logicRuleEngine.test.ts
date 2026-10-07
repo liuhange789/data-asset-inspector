@@ -10,6 +10,7 @@ const rules: StandardRule[] = [
   { ruleId: 'LOG_CONDITION_AGE_PROXY_001', standardClause: '国办发〔2018〕45号 第5.6条', triggerFields: ['办理条件', '办理流程'], condition: '办理条件含年龄限制且办理流程含代办', suggestionTemplate: '建议明确：未成年人由监护人代办，或删除年龄限制', threshold: undefined, triggerKeywords: ['年满18周岁', '年满十八周岁', '须为成年人', '监护人代办', '未成年人代办', '法定代理人代办'], scanMode: 'anyField', anyFieldKeywords: ['监护人代办', '未成年人代办', '法定代理人代办'] },
   { ruleId: 'LOG_CONDITION_FIELD_MISPLACED_001', standardClause: 'GB/T 36114-2018 第6.3条 字段内容归属要求', triggerFields: ['办理条件', '受理条件'], condition: '受理条件字段包含材料名称', scanMode: 'anyField', threshold: undefined, suggestionTemplate: '受理条件字段不应包含材料名称，请核对字段内容归属', triggerKeywords: ['申请表', '身份证明', '身体条件证明', '身份证复印件', '营业执照复印件', '居民身份证', '身份证原件', '营业执照', '产权证', '户口本', '户口簿'] },
   { ruleId: 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001', standardClause: 'DB1405/T 085-2025 第5.7条', triggerFields: ['办理流程', '办理时限'], condition: '流程步骤时限合计≠承诺办结时限', suggestionTemplate: '建议核对流程步骤时限与承诺办结时限是否一致', threshold: undefined, triggerKeywords: ['工作日'] },
+  { ruleId: 'LOG_PROCESS_COMPLETENESS_001', standardClause: '国办发〔2018〕45号 流程环节完备性要求', triggerFields: ['办理流程'], condition: '办理流程应包含受理/审核/审批/办结/送达五个环节', suggestionTemplate: '办理流程应包含受理/审核/审批/办结/送达五个环节', threshold: undefined, triggerKeywords: ['受理', '审核', '审批', '办结', '送达'] },
 ]
 
 describe('LogicRuleEngine', () => {
@@ -179,5 +180,13 @@ describe('LogicRuleEngine', () => {
     const details = LogicRuleEngine.detect(guide, 'g1', rules)
     expect(details.some((d) => d.description.includes('缺少分步时限描述'))).toBe(false)
     expect(details.some((d) => d.description.includes('时限不一致'))).toBe(false)
+  })
+
+  it('LRE-20: 特困样本两规则互不排斥 → 同时检出warning(缺少分步时限)与logical(流程环节缺失)', () => {
+    const guide = { 办理流程: '受理-审核-办结', 办理时限: '20个工作日' }
+    const details = LogicRuleEngine.detect(guide, 'g1', rules)
+    expect(details.some((d) => d.errorType === 'warning' && d.description.includes('缺少分步时限描述'))).toBe(true)
+    expect(details.some((d) => d.errorType === 'logical' && d.description.includes('流程应包含受理'))).toBe(true)
+    expect(details.length).toBeGreaterThanOrEqual(2)
   })
 })

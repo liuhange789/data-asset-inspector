@@ -93,4 +93,77 @@ describe('配置包加载器', () => {
     expect(pack.dataSourceCredentials).toBeDefined()
     expect(pack.dataSourcePriority).toBeDefined()
   })
+
+  it('缺省包词表装载: validShortValues 为数组且长度≥11', () => {
+    const result = ConfigPackLoader.load()
+    const values = result.configPack.validShortValues
+    expect(Array.isArray(values)).toBe(true)
+    expect(values!.length).toBeGreaterThanOrEqual(11)
+    expect(values).toContain('无')
+    expect(values).toContain('不收费')
+    expect(values).toContain('免提交')
+  })
+
+  it('文件路径包词表挂载: 外部配置包含 validShortValues 时按外部包内容挂载', () => {
+    const pack = {
+      configPackId: 'gd-gov-2026',
+      region: '广东省',
+      configPackVersion: '2026.1.0',
+      policyBasis: [{ name: '测试', docNumber: '粤府办〔2024〕1号', coreRequirement: '测试' }],
+      requiredFields: ['事项名称'],
+      formatRules: [],
+      localStandardTerms: { materials: [], conditions: [] },
+      logicErrorRules: [{ ruleId: 'LOG_001', standardClause: '测试', triggerFields: ['办理流程'], triggerKeywords: ['测试'], condition: '测试', suggestionTemplate: '测试' }],
+      scoringWeights: { completeness: 0.3, accuracy: 0.4, traceability: 0.3 },
+      itemTypeMatching: { 行政许可: { keywords: ['许可'], codePrefix: 'XK' } },
+      severityMapping: { missing: 'major', semantic: 'critical', logical: 'critical' },
+      gbtMapping: { structured: 'A01', semiStructured: 'A02', unstructured: 'A03' },
+      dataSourceCredentials: {
+        national: { apiKey: 'KEY', endpoint: 'EP' },
+        provincial: { apiKey: 'KEY', endpoint: 'EP' },
+        standard: { docPath: 'PATH', endpoint: 'EP' },
+      },
+      dataSourcePriority: ['provincial', 'national'],
+      validShortValues: ['无', '不需要', '不适用'],
+    }
+    writeFileSync(tmpFile, JSON.stringify(pack), 'utf-8')
+    process.env.GOV_CONFIG_PACK_PATH = tmpFile
+
+    const result = ConfigPackLoader.load()
+    expect(result.loadSource).toBe('file')
+    expect(result.configPack.validShortValues).toEqual(['无', '不需要', '不适用'])
+
+    delete process.env.GOV_CONFIG_PACK_PATH
+  })
+
+  it('无词表包向后兼容: 外部配置包不含 validShortValues 时无该字段且不报错', () => {
+    const pack = {
+      configPackId: 'gd-gov-2026',
+      region: '广东省',
+      configPackVersion: '2026.1.0',
+      policyBasis: [{ name: '测试', docNumber: '粤府办〔2024〕1号', coreRequirement: '测试' }],
+      requiredFields: ['事项名称'],
+      formatRules: [],
+      localStandardTerms: { materials: [], conditions: [] },
+      logicErrorRules: [{ ruleId: 'LOG_001', standardClause: '测试', triggerFields: ['办理流程'], triggerKeywords: ['测试'], condition: '测试', suggestionTemplate: '测试' }],
+      scoringWeights: { completeness: 0.3, accuracy: 0.4, traceability: 0.3 },
+      itemTypeMatching: { 行政许可: { keywords: ['许可'], codePrefix: 'XK' } },
+      severityMapping: { missing: 'major', semantic: 'critical', logical: 'critical' },
+      gbtMapping: { structured: 'A01', semiStructured: 'A02', unstructured: 'A03' },
+      dataSourceCredentials: {
+        national: { apiKey: 'KEY', endpoint: 'EP' },
+        provincial: { apiKey: 'KEY', endpoint: 'EP' },
+        standard: { docPath: 'PATH', endpoint: 'EP' },
+      },
+      dataSourcePriority: ['provincial', 'national'],
+    }
+    writeFileSync(tmpFile, JSON.stringify(pack), 'utf-8')
+    process.env.GOV_CONFIG_PACK_PATH = tmpFile
+
+    const result = ConfigPackLoader.load()
+    expect(result.loadSource).toBe('file')
+    expect(result.configPack.validShortValues).toBeUndefined()
+
+    delete process.env.GOV_CONFIG_PACK_PATH
+  })
 })

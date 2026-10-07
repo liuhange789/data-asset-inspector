@@ -14,6 +14,14 @@ export interface ConfigPackLoadResult {
   warnings: ConfigPackWarning[]
 }
 
+function attachValidShortValues(raw: Record<string, unknown>, normalized: ConfigPack): ConfigPack {
+  const values = raw.validShortValues
+  if (Array.isArray(values) && values.length > 0) {
+    normalized.validShortValues = values as string[]
+  }
+  return normalized
+}
+
 function tryLoadFromFilePath(warnings: ConfigPackWarning[]): ConfigPack | null {
   const envPath = process.env.GOV_CONFIG_PACK_PATH
   if (!envPath) return null
@@ -32,7 +40,7 @@ function tryLoadFromFilePath(warnings: ConfigPackWarning[]): ConfigPack | null {
         })
         return null
       }
-      return normalized
+      return attachValidShortValues(parsed, normalized)
     } catch (e) {
       warnings.push({
         type: 'CONFIG_PACK_WARNING',
@@ -69,7 +77,7 @@ function tryLoadFromNpmPackage(warnings: ConfigPackWarning[]): ConfigPack | null
         })
         return null
       }
-      return normalized
+      return attachValidShortValues(raw, normalized)
     } catch (e) {
       warnings.push({
         type: 'CONFIG_PACK_WARNING',
@@ -99,7 +107,7 @@ function tryLoadDefault(warnings: ConfigPackWarning[]): ConfigPack {
         message: `缺省配置包 Schema 校验失败: ${validation.errors.map((e) => e.path).join(', ')}`,
       })
     }
-    return normalized
+    return attachValidShortValues(defaultConfigPack as Record<string, unknown>, normalized)
   } catch (e) {
     warnings.push({
       type: 'CONFIG_PACK_WARNING',
