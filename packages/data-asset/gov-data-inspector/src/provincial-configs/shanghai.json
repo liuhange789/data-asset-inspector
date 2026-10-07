@@ -1,0 +1,24 @@
+{
+  "province": "上海",
+  "standardNumber": "DB31/T 545-2024",
+  "standardName": "政务服务事项办事指南编制规范",
+  "effectiveDate": "2025-04-01",
+  "localAdaptive": [
+    {
+      "ruleId": "PROV-SH-001",
+      "ruleType": "missing",
+      "fieldList": ["办理地点"],
+      "policyBasis": "依据：DB31/T 545-2024 第5章 — 上海市办理地点要素本地化细化要求，须包含具体街道地址",
+      "sourceDocument": "政务服务事项办事指南编制规范",
+      "sourceClause": "第5章"
+    },
+    {
+      "ruleId": "PROV-SH-002",
+      "ruleType": "format",
+      "pattern": "^[\\u4e00-\\u9fa5]+区.+路.+$",
+      "policyBasis": "依据：DB31/T 545-2024 第6章 — 上海市办理地点格式须为「区+路+号」格式",
+      "sourceDocument": "政务服务事项办事指南编制规范",
+      "sourceClause": "第6章"
+    }
+  ]
+}

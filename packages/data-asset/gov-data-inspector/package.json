@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-gov-data-inspector",
   "description": "检测政务办事指南的漏项、语义、逻辑、格式错误，输出合规审计报告",
-  "version": "3.5.8",
+  "version": "3.6.0",
   "publishConfig": {
     "access": "public"
   },

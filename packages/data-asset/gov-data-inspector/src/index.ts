@@ -11,7 +11,9 @@ import { DataScaleGuard } from './dataScaleGuard.js'
 import { UrlReachabilityChecker } from './urlReachabilityChecker.js'
 import { InputBoundaryChecker } from './input-boundary-checker.js'
 import { ConfigPackLoader } from './configPackLoader.js'
-import type { ErrorCode, KnowledgeBase, StandardRule, DataSourceStatus, Warning } from './types.js'
+import { RegulationKnowledgeBaseLoader } from './regulationKnowledgeBaseLoader.js'
+import { extractRulesFromKnowledgeBase } from './ruleExtractor.js'
+import type { ErrorCode, KnowledgeBase, StandardRule, DataSourceStatus, Warning, RegulationKnowledgeBase, ExtractedRule } from './types.js'
 
 export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
   ctx.tools.register({
@@ -170,6 +172,14 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
 
         const allWarnings: Warning[] = [...packWarnings]
 
+        const regulationKbResult = RegulationKnowledgeBaseLoader.load()
+        allWarnings.push(...regulationKbResult.warnings)
+        const regulationKnowledgeBase: RegulationKnowledgeBase | null = regulationKbResult.regulationKnowledgeBase
+        let extractedRules: ExtractedRule[] | undefined
+        if (regulationKnowledgeBase) {
+          extractedRules = extractRulesFromKnowledgeBase(regulationKnowledgeBase)
+        }
+
         if (mode === 'guide' || mode === 'full') {
           const orchestrateResult = InspectionOrchestrator.orchestrate(
             data,
@@ -196,6 +206,8 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
               ...(configPack.processCoreStepKeywords ? { processCoreStepKeywords: configPack.processCoreStepKeywords } : {}),
               ...(configPack.processSimplifiedStepAliases ? { processSimplifiedStepAliases: configPack.processSimplifiedStepAliases } : {}),
               ...(configPack.fieldResidueValues ? { fieldResidueValues: configPack.fieldResidueValues } : {}),
+              ...(regulationKnowledgeBase ? { regulationKnowledgeBase } : {}),
+              ...(extractedRules ? { extractedRules } : {}),
             },
             kb,
             standardRules,
@@ -228,6 +240,7 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
             referenceSystem: configPack.referenceSystem ?? null,
             policyReferences: configPack.policyBasis as import('./policyBasis.js').PolicyDoc[],
             severityMapping: configPack.severityMapping,
+            ...(regulationKnowledgeBase ? { regulationKnowledgeBase } : {}),
           })
           result.guideInspection = {
             ...orchestrateResult,

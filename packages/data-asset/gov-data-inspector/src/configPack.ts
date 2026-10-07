@@ -1,4 +1,4 @@
-import type { FormatRule, StandardRule, ReferenceSystem } from './types.js'
+import type { FormatRule, StandardRule, ReferenceSystem, QualityDimension } from './types.js'
 
 export interface PolicyDocument {
   name: string
@@ -79,6 +79,7 @@ export interface ConfigPack {
   processCoreStepKeywords?: string[] | undefined
   processSimplifiedStepAliases?: Record<string, string[]> | undefined
   fieldResidueValues?: string[] | undefined
+  qualityDimensions?: QualityDimension[] | undefined
 }
 
 const REQUIRED_FIELDS: (keyof ConfigPack)[] = [

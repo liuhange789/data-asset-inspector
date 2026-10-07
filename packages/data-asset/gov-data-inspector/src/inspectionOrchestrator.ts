@@ -1,4 +1,4 @@
-import type { ErrorDetail, FormatIssue, GuideInspectionResult, KnowledgeBase, StandardRule, FormatRule, DetectionRates, UnmatchedWarning, GroundTruth } from './types.js'
+import type { ErrorDetail, FormatIssue, GuideInspectionResult, KnowledgeBase, StandardRule, FormatRule, DetectionRates, UnmatchedWarning, GroundTruth, RegulationKnowledgeBase, ExtractedRule } from './types.js'
 import { MissingFieldDetector } from './missingFieldDetector.js'
 import { SemanticRuleEngine } from './semanticRuleEngine.js'
 import { LogicRuleEngine } from './logicRuleEngine.js'
@@ -6,6 +6,7 @@ import { FormatValidator } from './formatValidator.js'
 import { QualityMetricsCalculator } from './qualityMetricsCalculator.js'
 import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 import { mapGuideToStandard } from './mapping-layer.js'
+import { extractHotlineWhitelist, extractRequiredFields, extractProcessCoreStepKeywords } from './ruleExtractor.js'
 
 export function deduplicateCrossEngine(errors: ErrorDetail[]): ErrorDetail[] {
   const logicalKeys = new Set(
@@ -53,6 +54,9 @@ export interface OrchestrateConfig {
   processCoreStepKeywords?: string[] | undefined
   processSimplifiedStepAliases?: Record<string, string[]> | undefined
   fieldResidueValues?: string[] | undefined
+  regulationKnowledgeBase?: RegulationKnowledgeBase | null
+  extractedRules?: ExtractedRule[]
+  localAdaptive?: ExtractedRule[]
 }
 
 export interface OrchestrateOptions {
@@ -96,6 +100,22 @@ export const InspectionOrchestrator = {
     const scoringWeights = config.scoringWeights ?? config.scoreWeights
     const useGraded = config.coreRequiredFields !== undefined && config.coreRequiredFields.length > 0
 
+    let effectiveHotlineWhitelist = config.govServiceHotlineWhitelist
+    let effectiveCoreRequiredFields = coreRequiredFields
+    let effectiveProcessCoreStepKeywords = config.processCoreStepKeywords
+    let effectiveFieldResidueValues = config.fieldResidueValues
+
+    if (config.regulationKnowledgeBase) {
+      const kbHotlines = extractHotlineWhitelist(config.regulationKnowledgeBase)
+      if (kbHotlines.length > 0) effectiveHotlineWhitelist = kbHotlines
+
+      const kbRequiredFields = extractRequiredFields(config.regulationKnowledgeBase)
+      if (kbRequiredFields.length > 0) effectiveCoreRequiredFields = kbRequiredFields
+
+      const kbProcessKeywords = extractProcessCoreStepKeywords(config.regulationKnowledgeBase)
+      if (kbProcessKeywords.length > 0) effectiveProcessCoreStepKeywords = kbProcessKeywords
+    }
+
     for (let i = 0; i < data.length; i++) {
       const row = data[i]
       if (typeof row !== 'object' || row === null) continue
@@ -113,13 +133,13 @@ export const InspectionOrchestrator = {
         const graded = MissingFieldDetector.detectGraded(
           standardGuide,
           guideId,
-          coreRequiredFields,
+          effectiveCoreRequiredFields,
           extendedRequiredFields,
           config.severityMapping,
           undefined,
           config.missingFieldStandardClause,
           matchResult.itemType ?? undefined,
-          { ...(config.fieldResidueValues ? { fieldResidueValues: config.fieldResidueValues } : {}) },
+          { ...(effectiveFieldResidueValues ? { fieldResidueValues: effectiveFieldResidueValues } : {}) },
         )
         allErrorDetails.push(...graded.coreDetails, ...graded.extendedDetails)
         coreMissingCount += graded.coreDetails.length
@@ -135,7 +155,7 @@ export const InspectionOrchestrator = {
           config.severityMapping,
           undefined,
           config.missingFieldStandardClause,
-          { ...(config.fieldResidueValues ? { fieldResidueValues: config.fieldResidueValues } : {}) },
+          { ...(effectiveFieldResidueValues ? { fieldResidueValues: effectiveFieldResidueValues } : {}) },
         )
         allErrorDetails.push(...missingDetails)
         coreMissingCount += missingDetails.length
@@ -165,15 +185,15 @@ export const InspectionOrchestrator = {
         standardRules,
         config.severityMapping,
         {
-          ...(config.processCoreStepKeywords ? { processCoreStepKeywords: config.processCoreStepKeywords } : {}),
+          ...(effectiveProcessCoreStepKeywords ? { processCoreStepKeywords: effectiveProcessCoreStepKeywords } : {}),
           ...(config.processSimplifiedStepAliases ? { processSimplifiedStepAliases: config.processSimplifiedStepAliases } : {}),
         },
       )
 
       allErrorDetails.push(...semanticResult.details, ...logicalDetails)
 
-      const formatIssues = FormatValidator.validate(standardGuide, guideId, config.formatRules, useGraded ? [...coreRequiredFields, ...extendedRequiredFields] : requiredFields, {
-        ...(config.govServiceHotlineWhitelist ? { govServiceHotlineWhitelist: config.govServiceHotlineWhitelist } : {}),
+      const formatIssues = FormatValidator.validate(standardGuide, guideId, config.formatRules, useGraded ? [...effectiveCoreRequiredFields, ...extendedRequiredFields] : requiredFields, {
+        ...(effectiveHotlineWhitelist ? { govServiceHotlineWhitelist: effectiveHotlineWhitelist } : {}),
         ...(config.timeLimitValidExpressions ? { timeLimitValidExpressions: config.timeLimitValidExpressions } : {}),
         ...(config.chargeValidPatterns ? { chargeValidPatterns: config.chargeValidPatterns } : {}),
       })

@@ -1,5 +1,5 @@
 import { loadJsonConfig } from '@liuhange/dsh-data-asset-shared'
-import type { ErrorType, ReferenceSystem } from './types.js'
+import type { ErrorType, ReferenceSystem, RegulationKnowledgeBase, ExtractedRule } from './types.js'
 
 export interface PolicyDoc {
   name: string
@@ -55,15 +55,39 @@ function extractClauseNumber(standardClause: string): string {
   return match ? match[0] : '待补充条'
 }
 
+function findRuleInKnowledgeBase(
+  regulationKnowledgeBase: RegulationKnowledgeBase,
+  ruleId?: string,
+): ExtractedRule | null {
+  if (!ruleId) return null
+  const allSources = [
+    ...regulationKnowledgeBase.nationalLaws.flatMap((l) => l.relevantClauses.flatMap((c) => c.extractedRules)),
+    ...regulationKnowledgeBase.nationalPolicies.flatMap((p) => p.relevantClauses.flatMap((c) => c.extractedRules)),
+    ...regulationKnowledgeBase.nationalStandards.flatMap((s) => s.relevantClauses.flatMap((c) => c.extractedRules)),
+    ...regulationKnowledgeBase.provincialStandards.flatMap((p) => p.relevantClauses.flatMap((c) => c.extractedRules)),
+  ]
+  return allSources.find((r) => r.ruleId === ruleId) ?? null
+}
+
 export function resolveErrorDetailPolicyBasis(
   errorType: ErrorType,
   standardClause: string,
   referenceSystem: ReferenceSystem | null,
   policyReferences: PolicyDoc[],
+  regulationKnowledgeBase?: RegulationKnowledgeBase | null,
 ): string {
   if (errorType === 'warning') {
     return '依据：服务完善性建议（非法定强制要素）'
   }
+
+  if (regulationKnowledgeBase) {
+    const ruleId = standardClause.match(/ruleId=([^\s]+)/)?.[1]
+    const rule = findRuleInKnowledgeBase(regulationKnowledgeBase, ruleId)
+    if (rule) {
+      return rule.policyBasis
+    }
+  }
+
   const docNumber = ERROR_TYPE_DOC_MAP[errorType]
   const doc = policyReferences.find((d) => d.docNumber === docNumber)
 

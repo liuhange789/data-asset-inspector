@@ -1473,5 +1473,13 @@
     "无相关限制", "无特别限定", "无特殊限定", "无具体限定", "无相关限定", "无特别说明",
     "无特殊说明", "无相关描述", "无具体描述", "暂无描述", "暂无说明", "不要求",
     "不规定", "无约定", "无约定要求"
+  ],
+  "qualityDimensions": [
+    {"dimensionName": "规范性", "dimensionCode": "D1", "indicators": [{"indicatorCode": "D1.1", "indicatorName": "格式合规性", "level": "L2"}, {"indicatorCode": "D1.2", "indicatorName": "取值范围合规性", "level": "L2"}, {"indicatorCode": "D1.3", "indicatorName": "编码规范性", "level": "L2"}]},
+    {"dimensionName": "完整性", "dimensionCode": "D2", "indicators": [{"indicatorCode": "D2.1", "indicatorName": "字段完整性", "level": "L2"}, {"indicatorCode": "D2.2", "indicatorName": "记录完整性", "level": "L2"}, {"indicatorCode": "D2.3", "indicatorName": "引用完整性", "level": "L2"}, {"indicatorCode": "D2.4", "indicatorName": "时间完整性", "level": "L2"}]},
+    {"dimensionName": "准确性", "dimensionCode": "D3", "indicators": [{"indicatorCode": "D3.1", "indicatorName": "取值准确性", "level": "L2"}, {"indicatorCode": "D3.2", "indicatorName": "逻辑准确性", "level": "L2"}, {"indicatorCode": "D3.3", "indicatorName": "语义准确性", "level": "L2"}, {"indicatorCode": "D3.4", "indicatorName": "引用准确性", "level": "L2"}]},
+    {"dimensionName": "一致性", "dimensionCode": "D4", "indicators": [{"indicatorCode": "D4.1", "indicatorName": "跨字段一致性", "level": "L2"}, {"indicatorCode": "D4.2", "indicatorName": "跨记录一致性", "level": "L2"}, {"indicatorCode": "D4.3", "indicatorName": "时序一致性", "level": "L2"}]},
+    {"dimensionName": "时效性", "dimensionCode": "D5", "indicators": [{"indicatorCode": "D5.1", "indicatorName": "更新及时性", "level": "L2"}, {"indicatorCode": "D5.2", "indicatorName": "响应及时性", "level": "L2"}, {"indicatorCode": "D5.3", "indicatorName": "有效期合规性", "level": "L2"}]},
+    {"dimensionName": "可访问性", "dimensionCode": "D6", "indicators": [{"indicatorCode": "D6.1", "indicatorName": "接口可用性", "level": "L2"}, {"indicatorCode": "D6.2", "indicatorName": "数据可检索性", "level": "L2"}, {"indicatorCode": "D6.3", "indicatorName": "服务连续性", "level": "L2"}]}
   ]
 }

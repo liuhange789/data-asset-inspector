@@ -1,0 +1,24 @@
+{
+  "province": "安徽",
+  "standardNumber": "DB34/T 3228-2018",
+  "standardName": "政务服务事项办事指南编写规范",
+  "effectiveDate": "2018-12-01",
+  "localAdaptive": [
+    {
+      "ruleId": "PROV-AH-001",
+      "ruleType": "missing",
+      "fieldList": ["申请材料"],
+      "policyBasis": "依据：DB34/T 3228-2018 第4章 — 安徽省申请材料要素本地化细化要求，须列明材料份数",
+      "sourceDocument": "政务服务事项办事指南编写规范",
+      "sourceClause": "第4章"
+    },
+    {
+      "ruleId": "PROV-AH-002",
+      "ruleType": "format",
+      "pattern": "^.+（[\\d]+份）$",
+      "policyBasis": "依据：DB34/T 3228-2018 第5章 — 安徽省申请材料格式须标注份数",
+      "sourceDocument": "政务服务事项办事指南编写规范",
+      "sourceClause": "第5章"
+    }
+  ]
+}

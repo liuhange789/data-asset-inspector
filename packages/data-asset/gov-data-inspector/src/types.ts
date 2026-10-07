@@ -26,6 +26,8 @@ export interface ErrorDetail {
   dataSource?: DataSource
   standardClause?: string
   policyBasis?: string
+  sourceDocument?: string
+  sourceClause?: string
 }
 
 export interface GovOrderElement {
@@ -44,6 +46,9 @@ export interface NationalStandard {
   standardNumber: string
   standardName: string
   elements: StandardElement[]
+  requiredElements?: string[]
+  serviceGuideElements?: string[]
+  qualityDimensions?: QualityDimension[]
 }
 
 export interface ProvincialElement {
@@ -78,6 +83,9 @@ export interface FormatIssue {
   issue: string
   suggestion: string
   semanticHint?: string
+  policyBasis?: string
+  sourceDocument?: string
+  sourceClause?: string
 }
 
 export interface DetectionRates {
@@ -282,4 +290,82 @@ export interface SemanticConflictRules {
   proofKeywords: string[]
   siteInspectionThreshold: number
   instantHandleThreshold: number
+}
+export type RuleType = 'format' | 'logic' | 'missing' | 'quality'
+
+export interface QualityIndicator {
+  indicatorCode: string
+  indicatorName: string
+  level: string
+}
+
+export interface QualityDimension {
+  dimensionName: string
+  dimensionCode: string
+  indicators: QualityIndicator[]
+}
+
+export interface ExtractedRule {
+  ruleId: string
+  ruleType: RuleType
+  pattern?: string
+  keywords?: string[]
+  fieldList?: string[]
+  dimensions?: QualityDimension[]
+  policyBasis: string
+  sourceDocument: string
+  sourceClause: string
+}
+
+export interface RegulationClause {
+  clauseId: string
+  clauseText: string
+  extractedRules: ExtractedRule[]
+  isCore: boolean
+}
+
+export interface NationalLaw {
+  lawName: string
+  documentNumber: string
+  effectiveDate: string
+  relevantClauses: RegulationClause[]
+}
+
+export interface NationalPolicy {
+  policyName: string
+  documentNumber: string
+  effectiveDate: string
+  relevantClauses: RegulationClause[]
+}
+
+export interface RegulationNationalStandard {
+  standardName: string
+  standardNumber: string
+  effectiveDate: string
+  relevantClauses: RegulationClause[]
+  requiredElements?: string[]
+  serviceGuideElements?: string[]
+  qualityDimensions?: QualityDimension[]
+}
+
+export interface ProvincialStandard {
+  province: string
+  standardName: string
+  standardNumber: string
+  effectiveDate: string
+  relevantClauses: RegulationClause[]
+}
+
+export interface HotlineWhitelistEntry {
+  hotline: string
+  policyBasis: string
+  source: string
+}
+
+export interface RegulationKnowledgeBase {
+  nationalLaws: NationalLaw[]
+  nationalPolicies: NationalPolicy[]
+  nationalStandards: RegulationNationalStandard[]
+  provincialStandards: ProvincialStandard[]
+  hotlineWhitelist: HotlineWhitelistEntry[]
 }
