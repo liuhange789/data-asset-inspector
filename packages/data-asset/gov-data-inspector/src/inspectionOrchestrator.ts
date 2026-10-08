@@ -80,6 +80,16 @@ export interface OrchestrateResult extends GuideInspectionResult {
   itemType?: string | null
 }
 
+const EX_OFFICIO_KEYWORDS = ['依职权', '主动作出', '无需申请', '依申请不适用', '主动开展']
+const EX_OFFICIO_EXEMPT_FIELDS = new Set(['申请材料', '表格下载', '网上办理深度', '结果送达方式'])
+
+function isExOfficioItem(guide: Record<string, unknown>): boolean {
+  const name = String(guide['事项名称'] ?? '')
+  const condition = String(guide['办理条件'] ?? '')
+  const text = name + condition
+  return EX_OFFICIO_KEYWORDS.some((kw) => text.includes(kw))
+}
+
 export const InspectionOrchestrator = {
   orchestrate(
     data: unknown[],
@@ -134,10 +144,14 @@ export const InspectionOrchestrator = {
         const matchResult = SemanticRuleEngine.matchItemType(standardGuide, config.itemTypeMatching, { itemTypeOverride: options?.itemTypeOverride })
         lastItemType = matchResult.itemType
 
+        const exOfficioFields = isExOfficioItem(standardGuide)
+          ? effectiveCoreRequiredFields.filter((f) => !EX_OFFICIO_EXEMPT_FIELDS.has(f))
+          : effectiveCoreRequiredFields
+
         const graded = MissingFieldDetector.detectGraded(
           standardGuide,
           guideId,
-          effectiveCoreRequiredFields,
+          exOfficioFields,
           extendedRequiredFields,
           config.severityMapping,
           undefined,
@@ -152,10 +166,14 @@ export const InspectionOrchestrator = {
         if (isComplete) completeCount++
       } else {
 
+        const exOfficioFields = isExOfficioItem(standardGuide)
+          ? requiredFields.filter((f) => !EX_OFFICIO_EXEMPT_FIELDS.has(f))
+          : requiredFields
+
         const missingDetails = MissingFieldDetector.detect(
           standardGuide,
           guideId,
-          requiredFields,
+          exOfficioFields,
           config.severityMapping,
           undefined,
           config.missingFieldStandardClause,

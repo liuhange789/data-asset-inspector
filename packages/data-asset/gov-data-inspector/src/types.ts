@@ -1,4 +1,4 @@
-export type ErrorType = 'missing' | 'semantic' | 'logical' | 'warning'
+export type ErrorType = 'missing' | 'semantic' | 'logical' | 'warning' | 'info'
 
 export type Severity = 'critical' | 'major' | 'minor' | 'warning'
 

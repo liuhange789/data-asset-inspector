@@ -164,7 +164,7 @@ describe('苏州规范网站容错验证', () => {
     const result = InspectionOrchestrator.orchestrate(suzhouSamples, config, knowledgeBase, standardRules)
 
     const allErrors = [...result.errorDetails, ...result.formatIssues.flatMap((f) => [{ guideId: f.guideId, field: f.field, errorType: 'format' as const, description: f.issue }])]
-    const falsePositives = allErrors.filter((e) => e.errorType !== 'warning')
+    const falsePositives = allErrors.filter((e) => e.errorType !== 'warning' && e.errorType !== 'info')
 
     console.log(`[苏州误报] 总错误=${allErrors.length}, 核心错误(非warning)=${falsePositives.length}`)
     for (const e of falsePositives) {
@@ -176,7 +176,7 @@ describe('苏州规范网站容错验证', () => {
 
   it('苏州样本 policyBasis 追溯率 100%', () => {
     const result = InspectionOrchestrator.orchestrate(suzhouSamples, config, knowledgeBase, standardRules)
-    const coreErrors = result.errorDetails.filter((e) => e.errorType !== 'warning')
+    const coreErrors = result.errorDetails.filter((e) => e.errorType !== 'warning' && e.errorType !== 'info')
 
     let traced = 0
     let total = 0
@@ -534,7 +534,7 @@ describe('苏州规范网站容错验证', () => {
     const result = InspectionOrchestrator.orchestrate(thirdPartySamples, config, knowledgeBase, standardRules)
 
     const allErrors = [...result.errorDetails, ...result.formatIssues.flatMap((f) => [{ guideId: f.guideId, field: f.field, errorType: 'format' as const, description: f.issue }])]
-    const falsePositives = allErrors.filter((e) => e.errorType !== 'warning')
+    const falsePositives = allErrors.filter((e) => e.errorType !== 'warning' && e.errorType !== 'info')
 
     console.log(`[第三方苏州误报] 总错误=${allErrors.length}, 核心错误(非warning)=${falsePositives.length}`)
     for (const e of falsePositives) {

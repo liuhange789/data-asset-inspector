@@ -387,7 +387,11 @@ function checkMaterialCompleteness(
   const material = String(guide['申请材料'] ?? '').trim()
   if (!material) return []
   const hasPunctuation = /[、,，;；]/.test(material)
-  if (!hasPunctuation && material.length < 15) {
+  const hasNumberedItems = /[\d]+\s*[.、．]/.test(material)
+  const hasNewline = /[\n\r]/.test(material)
+  const hasQuantity = /\d+\s*(?:份|个|件|套|张|页|本|册|原|副)/.test(material)
+  const hasMultipleTokens = material.split(/[、,，;；\n\r\s]/).filter((s) => s.trim().length > 1).length > 1
+  if (!hasPunctuation && !hasNumberedItems && !hasNewline && !hasQuantity && !hasMultipleTokens && material.length < 15) {
     return [
       ErrorDetailBuilder.build(
         {

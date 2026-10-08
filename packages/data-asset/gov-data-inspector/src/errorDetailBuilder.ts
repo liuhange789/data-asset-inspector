@@ -1,6 +1,6 @@
 import type { ErrorDetail, ErrorType, Severity, DataSource } from './types.js'
 
-const VALID_ERROR_TYPES: ErrorType[] = ['missing', 'semantic', 'logical', 'warning']
+const VALID_ERROR_TYPES: ErrorType[] = ['missing', 'semantic', 'logical', 'warning', 'info']
 const VALID_SEVERITIES: Severity[] = ['critical', 'major', 'minor', 'warning']
 
 export interface ErrorDetailBuilderInput {
@@ -21,7 +21,7 @@ function resolveSeverity(
   severity: Severity | undefined,
   severityMapping: Record<string, string> | undefined,
 ): Severity {
-  if (errorType === 'warning') {
+  if (errorType === 'warning' || errorType === 'info') {
     if (severity && VALID_SEVERITIES.includes(severity)) return severity
     return 'warning'
   }
@@ -43,7 +43,7 @@ export const ErrorDetailBuilder = {
       )
     }
     if (!VALID_ERROR_TYPES.includes(errorType)) {
-      throw new Error(`errorType必须为missing/semantic/logical/warning之一，当前值: ${errorType}`)
+      throw new Error(`errorType必须为missing/semantic/logical/warning/info之一，当前值: ${errorType}`)
     }
     const result: ErrorDetail = {
       guideId,
@@ -60,13 +60,14 @@ export const ErrorDetailBuilder = {
     return result
   },
 
-  countByType(details: ErrorDetail[]): { missing: number; semantic: number; logical: number; warning: number } {
-    const counts = { missing: 0, semantic: 0, logical: 0, warning: 0 }
+  countByType(details: ErrorDetail[]): { missing: number; semantic: number; logical: number; warning: number; info: number } {
+    const counts = { missing: 0, semantic: 0, logical: 0, warning: 0, info: 0 }
     for (const d of details) {
       if (d.errorType === 'missing') counts.missing++
       else if (d.errorType === 'semantic') counts.semantic++
       else if (d.errorType === 'logical') counts.logical++
       else if (d.errorType === 'warning') counts.warning++
+      else if (d.errorType === 'info') counts.info++
     }
     return counts
   },

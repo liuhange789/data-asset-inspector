@@ -251,15 +251,15 @@ describe('InspectionOrchestrator 分级调度', () => {
     }
   }
 
-  it('9.1 分级调度：核心缺失+扩展缺失 → errorDetails含missing与warning，统计独立', () => {
+  it('9.1 分级调度：核心缺失+扩展缺失 → errorDetails含missing与info，统计独立', () => {
     const data = [makeCompleteGuideGraded({ 实施主体: undefined, 网上支付: undefined })]
     const result = InspectionOrchestrator.orchestrate(data, gradedConfig, kb, standardRules)
     const missingDetails = result.errorDetails.filter((d) => d.errorType === 'missing')
-    const warningDetails = result.errorDetails.filter((d) => d.errorType === 'warning')
+    const infoDetails = result.errorDetails.filter((d) => d.errorType === 'info')
     expect(missingDetails.length).toBeGreaterThan(0)
-    expect(warningDetails.length).toBeGreaterThan(0)
+    expect(infoDetails.length).toBeGreaterThan(0)
     expect(result.coreMissingCount).toBe(missingDetails.length)
-    expect(result.extendedMissingCount).toBe(warningDetails.length)
+    expect(result.extendedMissingCount).toBe(infoDetails.length)
     expect(result.completeness).toBe(0)
   })
 

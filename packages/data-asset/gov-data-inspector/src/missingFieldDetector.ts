@@ -244,7 +244,7 @@ export const MissingFieldDetector = {
             {
               guideId,
               field: elem,
-              errorType: 'warning',
+              errorType: 'info',
               description: `办事指南"${guideId}"缺失扩展要素字段"${elem}"，建议补充以提升服务完整性`,
               suggestion: `建议补充"${elem}"字段内容，提升办事指南服务完善性`,
               dataSource: 'standard',

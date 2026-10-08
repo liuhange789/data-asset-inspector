@@ -89,7 +89,7 @@ describe('MissingFieldDetector.detectGraded', () => {
     expect(result.coreDetails.length).toBe(0)
     expect(result.extendedDetails.length).toBe(2)
     for (const d of result.extendedDetails) {
-      expect(d.errorType).toBe('warning')
+      expect(d.errorType).toBe('info')
       expect(d.severity).toBe('warning')
       expect(d.description).toContain('扩展要素')
     }

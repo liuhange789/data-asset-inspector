@@ -230,13 +230,15 @@ ruleId: rule.ruleId,
 }
 
 const flowImagePattern = /\.(png|jpg|jpeg|gif|bmp|webp|svg)(\?.*)?$/i
-const flowChartPhrases = ['详见流程图', '见下图', '流程图', '见附图', '详见附图', '见图', '见流程图', '点击查看流程图', '扫描二维码查看']
+const flowUrlPattern = /(?:findlct\.do|flowchart|\/flow|\/process|\/lc|\/bszn)/i
+const flowChartPhrases = ['详见流程图', '见下图', '流程图', '见附图', '详见附图', '见图', '见流程图', '点击查看流程图', '点击查看办理流程图', '查看流程图', '点击查看', '扫描二维码查看', '扫码查看流程', '查看办理流程']
 
 function isImageFlow(process: string): boolean {
   const trimmed = process.trim()
   if (!trimmed) return true
   if (flowImagePattern.test(trimmed)) return true
-  if (flowChartPhrases.some((p) => trimmed === p)) return true
+  if (flowUrlPattern.test(trimmed)) return true
+  if (flowChartPhrases.some((p) => trimmed.includes(p))) return true
   return false
 }
 

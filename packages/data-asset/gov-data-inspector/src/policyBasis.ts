@@ -48,6 +48,7 @@ const ERROR_TYPE_DOC_MAP: Record<ErrorType, string> = {
   semantic: 'GB/T 36114-2018',
   logical: '国办发〔2018〕45号',
   warning: '',
+  info: '',
 }
 
 function extractClauseNumber(standardClause: string): string {
@@ -77,7 +78,7 @@ export function resolveErrorDetailPolicyBasis(
   regulationKnowledgeBase?: RegulationKnowledgeBase | null,
   ruleId?: string,
 ): string {
-  if (errorType === 'warning') {
+  if (errorType === 'warning' || errorType === 'info') {
     return '依据：服务完善性建议（非法定强制要素）'
   }
 

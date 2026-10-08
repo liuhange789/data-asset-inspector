@@ -113,7 +113,7 @@ describe('番禺样本 policyBasis 追溯率验证', () => {
   it('番禺样本核心错误 policyBasis 追溯率 ≥ 90%', () => {
     const result = InspectionOrchestrator.orchestrate(panyuSamples, config, knowledgeBase, standardRules)
 
-    const coreErrors = result.errorDetails.filter((e) => e.errorType !== 'warning')
+    const coreErrors = result.errorDetails.filter((e) => e.errorType !== 'warning' && e.errorType !== 'info')
     expect(coreErrors.length).toBeGreaterThan(0)
 
     let traced = 0
