@@ -8,6 +8,10 @@
 >
 > 👉 [**查看全部 32 个插件导航矩阵**](https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md)
 
+> ⚠️ **版本状态说明**
+> 当前稳定版为 `v3.6.5`，生产环境请使用 `@latest` 安装：`npm install @liuhange/dsh-gov-data-inspector`
+> 下一版本正在深度测试中，尝鲜测试请使用 `@beta` 安装：`npm install @liuhange/dsh-gov-data-inspector@beta`
+
 ## 基本信息
 
 | 项目 | 值 |
