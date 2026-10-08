@@ -1283,7 +1283,7 @@
   },
   "materialConciseThreshold": 5,
   "missingFieldStandardClause": "国办发〔2015〕46号 第4.1条",
-  "degradedSimilarityThreshold": 0.6,
+  "degradedSimilarityThreshold": 0.75,
   "inputLengthThreshold": 50000,
   "fieldMapping": {
     "申报条件": "办理条件",

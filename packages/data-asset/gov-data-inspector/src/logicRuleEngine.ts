@@ -229,6 +229,17 @@ ruleId: rule.ruleId,
   return []
 }
 
+const flowImagePattern = /\.(png|jpg|jpeg|gif|bmp|webp|svg)(\?.*)?$/i
+const flowChartPhrases = ['详见流程图', '见下图', '流程图', '见附图', '详见附图', '见图', '见流程图', '点击查看流程图', '扫描二维码查看']
+
+function isImageFlow(process: string): boolean {
+  const trimmed = process.trim()
+  if (!trimmed) return true
+  if (flowImagePattern.test(trimmed)) return true
+  if (flowChartPhrases.some((p) => trimmed === p)) return true
+  return false
+}
+
 function ruleProcessCompleteness(
   guide: Record<string, unknown>,
   guideId: string,
@@ -238,10 +249,7 @@ function ruleProcessCompleteness(
 ): ErrorDetail[] {
   const process = String(guide['办理流程'] ?? '')
   if (!process) return []
-  const trimmedProcess = process.trim()
-  if (/\.(png|jpg|jpeg|gif|bmp|webp)$/i.test(trimmedProcess)) return []
-  const flowChartPhrases = ['详见流程图', '见下图', '流程图', '见附图', '详见附图', '见图', '见流程图']
-  if (flowChartPhrases.some((p) => trimmedProcess === p)) return []
+  if (isImageFlow(process)) return []
   const hasArrow = process.includes('→') || process.includes('->') || process.includes('➡') || process.includes('=>')
   if (hasArrow && options?.processCoreStepKeywords && options.processCoreStepKeywords.length > 0) {
     const aliases = options?.processSimplifiedStepAliases ?? {}
@@ -411,23 +419,7 @@ function ruleProcessTimeLimitInconsistent(
   }
   const commitDays = extractTimeLimitDays(timeLimit)
   if (commitDays === null) return []
-  if (sumDays === 0) {
-    return [
-      ErrorDetailBuilder.build(
-        {
-          guideId,
-          field: '办理流程',
-          errorType: 'warning',
-          description: `办理流程缺少分步时限描述，无法与承诺办结时限${commitDays}个工作日进行比对。${rule.standardClause ?? ''}`,
-          suggestion: '办理流程应补充各环节的工作日时限描述',
-          dataSource: 'standard',
-          standardClause: rule.standardClause,
-ruleId: rule.ruleId,
-        },
-        severityMapping,
-      ),
-    ]
-  }
+  if (sumDays === 0) return []
   if (sumDays !== commitDays) {
     return [
       ErrorDetailBuilder.build(

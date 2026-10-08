@@ -298,3 +298,100 @@ describe('v3.6.6 六项能力升级', () => {
     })
   })
 })
+describe('v3.6.7 整修复测', () => {
+  describe('P0-1: F1 isImageFlow 命名函数自证', () => {
+    it('svg图片URL不报流程缺失', () => {
+      const guide = makeBaseGuide({ '办理流程': 'https://gov.cn/process.svg' })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const processErrors = result.errorDetails.filter(
+        (e) => e.field === '办理流程' && e.ruleId === 'LOG_PROCESS_COMPLETENESS_001',
+      )
+      expect(processErrors.length).toBe(0)
+    })
+
+    it('图片URL带查询参数不报流程缺失', () => {
+      const guide = makeBaseGuide({ '办理流程': 'https://gov.cn/flow.png?v=2' })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const processErrors = result.errorDetails.filter(
+        (e) => e.field === '办理流程' && e.ruleId === 'LOG_PROCESS_COMPLETENESS_001',
+      )
+      expect(processErrors.length).toBe(0)
+    })
+
+    it('点击查看流程图提示语不报流程缺失', () => {
+      const guide = makeBaseGuide({ '办理流程': '点击查看流程图' })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const processErrors = result.errorDetails.filter(
+        (e) => e.field === '办理流程' && e.ruleId === 'LOG_PROCESS_COMPLETENESS_001',
+      )
+      expect(processErrors.length).toBe(0)
+    })
+
+    it('扫描二维码查看提示语不报流程缺失', () => {
+      const guide = makeBaseGuide({ '办理流程': '扫描二维码查看' })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const processErrors = result.errorDetails.filter(
+        (e) => e.field === '办理流程' && e.ruleId === 'LOG_PROCESS_COMPLETENESS_001',
+      )
+      expect(processErrors.length).toBe(0)
+    })
+  })
+
+  describe('P0-3: F4 阈值=0.75 自证', () => {
+    it('config中degradedSimilarityThreshold为0.75', () => {
+      expect(defaultConfigPack.degradedSimilarityThreshold).toBe(0.75)
+    })
+  })
+
+  describe('P0-4: F5 多号码+短号混合应报格式错误', () => {
+    it('多号码含白名单短号仍报格式错误', () => {
+      const guide = makeBaseGuide({
+        '监督电话': '020-34511300；020-12345',
+      })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const phoneIssues = result.formatIssues.filter((f) => f.field === '监督电话')
+      expect(phoneIssues.length).toBeGreaterThan(0)
+    })
+
+    it('单独白名单短号不报格式错误', () => {
+      const guide = makeBaseGuide({
+        '咨询电话': '12345',
+      })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const phoneIssues = result.formatIssues.filter((f) => f.field === '咨询电话')
+      expect(phoneIssues.length).toBe(0)
+    })
+
+    it('单独白名单短号带区号不报格式错误', () => {
+      const guide = makeBaseGuide({
+        '咨询电话': '020-12345',
+      })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const phoneIssues = result.formatIssues.filter((f) => f.field === '咨询电话')
+      expect(phoneIssues.length).toBe(0)
+    })
+
+    it('多号码全合法不报格式错误', () => {
+      const guide = makeBaseGuide({
+        '咨询电话': '020-84612345,020-84612346',
+      })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const phoneIssues = result.formatIssues.filter((f) => f.field === '咨询电话')
+      expect(phoneIssues.length).toBe(0)
+    })
+  })
+
+  describe('P1-5: 时限无分步描述不报warning', () => {
+    it('流程无分步时限不产生warning', () => {
+      const guide = makeBaseGuide({
+        '办理流程': '受理→审查→决定→送达',
+        '办理时限': '5个工作日',
+      })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const timeLimitWarnings = result.errorDetails.filter(
+        (e) => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001' && e.errorType === 'warning',
+      )
+      expect(timeLimitWarnings.length).toBe(0)
+    })
+  })
+})
