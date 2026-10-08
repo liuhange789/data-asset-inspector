@@ -40,10 +40,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/liuhange789/data-asset-inspector.git",
-    "directory": "packages/data-asset/visibility-doctor"
+    "url": "git+https://github.com/liuhange789/data-asset-inspector.git"
   },
-  "homepage": "https://github.com/liuhange789/data-asset-inspector#readme",
+  "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md",
   "keywords": [
     "deepseek-harness",
     "dsh-plugin",

@@ -7,8 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/liuhange789/data-asset-inspector.git",
-    "directory": "packages/data-asset/data-visualization"
+    "url": "git+https://github.com/liuhange789/data-asset-inspector.git"
   },
   "type": "module",
   "main": "lib/index.js",
@@ -82,7 +81,7 @@
     "analytics",
     "data-viz"
   ],
-  "homepage": "https://github.com/liuhange789/data-asset-inspector#readme",
+  "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md",
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"

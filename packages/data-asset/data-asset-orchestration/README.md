@@ -2,8 +2,16 @@
 
 [![npm version](https://img.shields.io/npm/v/@liuhange/dsh-data-asset-orchestration)](https://www.npmjs.com/package/@liuhange/dsh-data-asset-orchestration)
 [![npm downloads](https://img.shields.io/npm/dm/@liuhange/dsh-data-asset-orchestration)](https://www.npmjs.com/package/@liuhange/dsh-data-asset-orchestration)
+[![Tests](https://img.shields.io/badge/tests-429%20passed-brightgreen)](https://github.com/liuhange789/data-asset-inspector)
+[![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/liuhange789/data-asset-inspector)
 
 **一键将原始数据自动完成脱敏 → 清洗 → 盘点 → 封装，让数据资产治理从"手动打补丁"变成"自动化流水线"。**
+
+> 🔥 **为什么选择 DSH 矩阵？**
+>
+> 我们不仅提供编排主包，还拥有 **32 个独立迭代的功能插件**。其中政务巡检插件（[`@liuhange/dsh-gov-data-inspector`](https://www.npmjs.com/package/@liuhange/dsh-gov-data-inspector) v3.6.5）已历经**番禺/开封/苏州三城真实政务网站验收**，逻辑/语义/格式检出率 **100%**，误报率 **0%**，429 单元测试全通过。
+>
+> 👉 [**点击查看全部 32 个插件导航矩阵**](https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md)
 
 ## 为什么选择这个包？
 
