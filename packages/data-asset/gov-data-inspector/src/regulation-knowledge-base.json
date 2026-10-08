@@ -355,6 +355,30 @@
               "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「办理条件」描述不应过于简略",
               "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
               "sourceClause": "表3"
+            },
+            {
+              "ruleId": "FORMAT-监督电话",
+              "ruleType": "format",
+              "fieldList": ["监督电话"],
+              "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「监督电话」应填写有效联系电话（区号+号码或全国统一热线短号）",
+              "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
+              "sourceClause": "表3"
+            },
+            {
+              "ruleId": "FORMAT-办理时限",
+              "ruleType": "format",
+              "fieldList": ["办理时限"],
+              "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「办理时限」应填写规范的时限表述（如「X个工作日」「即时办结」）",
+              "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
+              "sourceClause": "表3"
+            },
+            {
+              "ruleId": "FORMAT-办理地点",
+              "ruleType": "format",
+              "fieldList": ["办理地点"],
+              "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「办理地点」应填写具体地址（含街道/路/号等要素）",
+              "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
+              "sourceClause": "表3"
             }
           ],
           "isCore": true
