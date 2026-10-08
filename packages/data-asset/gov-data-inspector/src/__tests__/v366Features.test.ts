@@ -434,3 +434,42 @@ describe('v3.6.7 整修复测', () => {
     })
   })
 })
+describe('v3.6.9 整修复测', () => {
+  describe('图片URL流程跳过时限规则', () => {
+    it('图片URL流程不报时限warning', () => {
+      const guide = makeBaseGuide({
+        '办理流程': 'https://gov.cn/process.png',
+        '办理时限': '5个工作日',
+      })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const timeLimitErrors = result.errorDetails.filter(
+        (e) => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001',
+      )
+      expect(timeLimitErrors.length).toBe(0)
+    })
+
+    it('流程图提示语不报时限warning', () => {
+      const guide = makeBaseGuide({
+        '办理流程': '详见流程图',
+        '办理时限': '5个工作日',
+      })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const timeLimitErrors = result.errorDetails.filter(
+        (e) => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001',
+      )
+      expect(timeLimitErrors.length).toBe(0)
+    })
+
+    it('正常文字流程仍报时限不一致', () => {
+      const guide = makeBaseGuide({
+        '办理流程': '受理(1个工作日)→审查(2个工作日)→决定(3个工作日)',
+        '办理时限': '5个工作日',
+      })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const timeLimitErrors = result.errorDetails.filter(
+        (e) => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001' && e.errorType === 'logical',
+      )
+      expect(timeLimitErrors.length).toBe(1)
+    })
+  })
+})
