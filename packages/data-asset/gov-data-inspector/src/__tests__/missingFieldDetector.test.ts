@@ -277,10 +277,10 @@ describe('MissingFieldDetector fieldResidueValues 配置化', () => {
     }
   })
 
-  it('options.fieldResidueValues 缺省时占位值不判定为missing（向后兼容）', () => {
+  it('options.fieldResidueValues 缺省时内置默认占位值判定为missing', () => {
     const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: '无特殊要求', 办理条件: '条件' }
     const result = MissingFieldDetector.detect(guide, 'g1', coreFields)
-    expect(result.some((d) => d.field === '实施主体')).toBe(false)
+    expect(result.some((d) => d.field === '实施主体')).toBe(true)
   })
 
   it('null 残渣变体 → 判定为missing', () => {

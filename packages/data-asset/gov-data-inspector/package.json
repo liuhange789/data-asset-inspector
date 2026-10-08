@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-gov-data-inspector",
-  "description": "政务办事指南巡检插件 — 检测漏项/语义/逻辑/格式错误，输出合规审计报告，481测试全通过，三城验收误报率0%",
-  "version": "3.7.0",
+  "description": "政务办事指南巡检插件 — 检测漏项/语义/逻辑/格式错误，输出合规审计报告，486测试全通过，整改默认内置不依赖config传参",
+  "version": "3.7.1",
   "publishConfig": {
     "access": "public"
   },

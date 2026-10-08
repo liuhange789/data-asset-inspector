@@ -242,3 +242,43 @@ describe('整改6: 第四批全新7条样本', () => {
     expect(total === 0 || traced / total >= 0.9).toBe(true)
   })
 })
+describe('v3.7.1 默认内置验证（不传fieldAliases/fieldResidueValues）', () => {
+  const configNoAliases = { ...defaultConfigPack, regulationKnowledgeBase: kb } as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
+  delete (configNoAliases as unknown as Record<string, unknown>).fieldAliases
+  delete (configNoAliases as unknown as Record<string, unknown>).fieldResidueValues
+
+  it('不传fieldAliases时办理形式=网上办理 → 不报MISSING-网上办理深度', () => {
+    const guide = makeGuide({ '网上办理深度': undefined, '办理形式': '网上办理' })
+    const r = InspectionOrchestrator.orchestrate([guide], configNoAliases, knowledgeBase, standardRules)
+    const m = r.errorDetails.filter(e => e.field === '网上办理深度' && e.errorType === 'missing')
+    expect(m.length).toBe(0)
+  })
+
+  it('不传fieldAliases时送达方式=快递 → 不报MISSING-结果送达方式', () => {
+    const guide = makeGuide({ '结果送达方式': undefined, '送达方式': '快递邮寄' })
+    const r = InspectionOrchestrator.orchestrate([guide], configNoAliases, knowledgeBase, standardRules)
+    const m = r.errorDetails.filter(e => e.field === '结果送达方式' && e.errorType === 'missing')
+    expect(m.length).toBe(0)
+  })
+
+  it('不传fieldAliases时材料下载=可下载 → 不报MISSING-表格下载', () => {
+    const guide = makeGuide({ '表格下载': undefined, '材料下载': '可下载' })
+    const r = InspectionOrchestrator.orchestrate([guide], configNoAliases, knowledgeBase, standardRules)
+    const m = r.errorDetails.filter(e => e.field === '表格下载' && e.errorType === 'missing')
+    expect(m.length).toBe(0)
+  })
+
+  it('不传fieldResidueValues时"无"→ 判定为missing', () => {
+    const guide = makeGuide({ '网上办理深度': '无' })
+    const r = InspectionOrchestrator.orchestrate([guide], configNoAliases, knowledgeBase, standardRules)
+    const m = r.errorDetails.filter(e => e.field === '网上办理深度' && e.errorType === 'missing')
+    expect(m.length).toBeGreaterThan(0)
+  })
+
+  it('不传fieldAliases且无别名字段 → 仍报MISSING', () => {
+    const guide = makeGuide({ '网上办理深度': undefined })
+    const r = InspectionOrchestrator.orchestrate([guide], configNoAliases, knowledgeBase, standardRules)
+    const m = r.errorDetails.filter(e => e.field === '网上办理深度' && e.errorType === 'missing')
+    expect(m.length).toBeGreaterThan(0)
+  })
+})

@@ -3,6 +3,11 @@ import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 import { UnmatchedWarningBuilder } from './unmatchedWarningBuilder.js'
 import { LocalTermsLoader } from './local-terms-loader.js'
 
+const DEFAULT_SEMANTIC_CONTEXT_EXEMPTIONS = [
+  '调解', '异议', '信用', '受理条件', '暂由各地区自行规定',
+  '按有关规定', '告知承诺', '当场办理', '即时办结', '容缺受理', '承诺制',
+]
+
 
 interface ItemTypeMatchingConfig {
   [itemType: string]: { keywords: string[]; codePrefix: string }
@@ -555,7 +560,7 @@ function detectLocalTermsMismatch(
     return []
   }
   const threshold = options.degradedSimilarityThreshold ?? 0.80
-  const exemptions = options?.semanticContextExemptions
+  const exemptions = options?.semanticContextExemptions ?? DEFAULT_SEMANTIC_CONTEXT_EXEMPTIONS
   const details: ErrorDetail[] = []
   const materialStr = String(guide['申请材料'] ?? '')
   if (materialStr && localTerms.materials.length > 0) {
@@ -577,7 +582,7 @@ function detectConditionTermsMismatch(
   const localTerms = LocalTermsLoader.load(options.localTermsPath, options.inlineLocalTerms)
   if (localTerms.conditions.length === 0) return []
   const threshold = options.degradedSimilarityThreshold ?? 0.80
-  const exemptions = options?.semanticContextExemptions
+  const exemptions = options?.semanticContextExemptions ?? DEFAULT_SEMANTIC_CONTEXT_EXEMPTIONS
   const conditionStr = String(guide['办理条件'] ?? '')
   if (!conditionStr) return []
   const details: ErrorDetail[] = []
