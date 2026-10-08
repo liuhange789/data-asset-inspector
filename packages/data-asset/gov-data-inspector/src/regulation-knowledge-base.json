@@ -420,6 +420,14 @@
               "sourceClause": "附录A"
             },
             {
+              "ruleId": "LOG_INSTANT_HANDLE_001",
+              "ruleType": "logic",
+              "fieldList": ["办理时限", "办理流程"],
+              "policyBasis": "依据：GB/T 36114-2018 附录A 服务指南要素 — 当场办理事项时限应不超过1个工作日，告知承诺制等简化流程除外",
+              "sourceDocument": "政务服务中心进驻事项服务指南编制规范",
+              "sourceClause": "附录A"
+            },
+            {
               "ruleId": "LOG_CONDITION_FIELD_MISPLACED_001",
               "ruleType": "logic",
               "fieldList": ["办理条件"],

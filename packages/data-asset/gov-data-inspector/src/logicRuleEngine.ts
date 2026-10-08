@@ -14,9 +14,9 @@ function isLogicDebug(): boolean {
 
 function extractTimeLimitDays(timeLimit: unknown): number | null {
   const str = String(timeLimit ?? '')
-  const match = str.match(/(\d+)\s*个?\s*(?:工作日|天|日)/)
+  const match = str.match(/(\d+(?:\.\d+)?)\s*个?\s*(?:工作日|天|日)/)
   if (!match || !match[1]) return null
-  return parseInt(match[1], 10)
+  return parseFloat(match[1])
 }
 
 function ruleSiteInspection(
@@ -73,6 +73,7 @@ function ruleInstantHandle(
   guideId: string,
   rule: StandardRule,
   severityMapping?: Record<string, string>,
+  options?: LogicRuleEngineOptions,
 ): ErrorDetail[] {
   const debug = isLogicDebug()
   const process = String(guide['办理流程'] ?? '')
@@ -85,6 +86,11 @@ function ruleInstantHandle(
   if (!process.includes(triggerKw)) {
     if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=processNotContainTrigger`)
     return []
+  }
+  if (options?.validProcessPhrases && options.validProcessPhrases.length > 0) {
+    const conditionText = String(guide['办理条件'] ?? '')
+    const fullText = process + conditionText
+    if (options.validProcessPhrases.some((phrase) => fullText.includes(phrase))) return []
   }
   if (!timeLimit) {
     if (debug) console.log(`[logic-debug] ruleId=${rule.ruleId} event=eval reason=timeLimitEmpty`)
@@ -389,10 +395,10 @@ function ruleProcessTimeLimitInconsistent(
   const timeLimit = guide['办理时限']
   if (!process || !timeLimit) return []
   if (isLogicDebug()) console.log(`[logic-debug] ruleId=${rule.ruleId} event=call process=${process} timeLimit=${String(timeLimit)}`)
-  const stepMatches = process.matchAll(/(\d+)\s*个?\s*(?:工作日|天)/g)
+  const stepMatches = process.matchAll(/(\d+(?:\.\d+)?)\s*个?\s*(?:工作日|天)/g)
   let sumDays = 0
   for (const m of stepMatches) {
-    if (m[1]) sumDays += parseInt(m[1], 10)
+    if (m[1]) sumDays += parseFloat(m[1])
   }
   const commitDays = extractTimeLimitDays(timeLimit)
   if (commitDays === null) return []
