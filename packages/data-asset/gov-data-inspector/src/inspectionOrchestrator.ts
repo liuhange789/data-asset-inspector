@@ -53,6 +53,8 @@ export interface OrchestrateConfig {
   chargeValidPatterns?: string[] | undefined
   processCoreStepKeywords?: string[] | undefined
   processSimplifiedStepAliases?: Record<string, string[]> | undefined
+  processCoreStepCombinations?: string[][] | undefined
+  validProcessPhrases?: string[] | undefined
   fieldResidueValues?: string[] | undefined
   regulationKnowledgeBase?: RegulationKnowledgeBase | null
   extractedRules?: ExtractedRule[]
@@ -187,6 +189,8 @@ export const InspectionOrchestrator = {
         {
           ...(effectiveProcessCoreStepKeywords ? { processCoreStepKeywords: effectiveProcessCoreStepKeywords } : {}),
           ...(config.processSimplifiedStepAliases ? { processSimplifiedStepAliases: config.processSimplifiedStepAliases } : {}),
+          ...(config.processCoreStepCombinations ? { processCoreStepCombinations: config.processCoreStepCombinations } : {}),
+          ...(config.validProcessPhrases ? { validProcessPhrases: config.validProcessPhrases } : {}),
         },
       )
 

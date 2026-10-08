@@ -4,6 +4,8 @@ import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 export interface LogicRuleEngineOptions {
   processCoreStepKeywords?: string[]
   processSimplifiedStepAliases?: Record<string, string[]>
+  processCoreStepCombinations?: string[][]
+  validProcessPhrases?: string[]
 }
 
 function isLogicDebug(): boolean {
@@ -236,6 +238,18 @@ function ruleProcessCompleteness(
     })
     if (allCoreHit) return []
   }
+  if (hasArrow && options?.processCoreStepCombinations && options.processCoreStepCombinations.length > 0) {
+    const aliases = options?.processSimplifiedStepAliases ?? {}
+    const anyCombinationHit = options.processCoreStepCombinations.some((combo) =>
+      combo.every((kw) => {
+        if (process.includes(kw)) return true
+        const kwAliases = aliases[kw]
+        if (Array.isArray(kwAliases) && kwAliases.some((a) => process.includes(a))) return true
+        return false
+      }),
+    )
+    if (anyCombinationHit) return []
+  }
   const requiredSteps = rule.triggerKeywords
   const missingSteps = requiredSteps.filter((kw) => !process.includes(kw))
   if (missingSteps.length > 0) {
@@ -424,15 +438,21 @@ function ruleInstantTimeLimitContradiction(
   guideId: string,
   rule: StandardRule,
   severityMapping?: Record<string, string>,
+  options?: LogicRuleEngineOptions,
 ): ErrorDetail[] {
   const process = String(guide['办理流程'] ?? '')
   const timeLimit = guide['办理时限']
   if (!process) return []
   const isInstant = rule.triggerKeywords.some((kw) => process.includes(kw))
   if (!isInstant) return []
+  if (options?.validProcessPhrases && options.validProcessPhrases.length > 0) {
+    const conditionText = String(guide['办理条件'] ?? '')
+    const fullText = process + conditionText
+    if (options.validProcessPhrases.some((phrase) => fullText.includes(phrase))) return []
+  }
   const days = extractTimeLimitDays(timeLimit)
   if (days === null) return []
-  if (days > 0) {
+  if (days > 1) {
     return [
       ErrorDetailBuilder.build(
         {
