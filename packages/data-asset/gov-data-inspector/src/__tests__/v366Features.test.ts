@@ -344,13 +344,13 @@ describe('v3.6.7 整修复测', () => {
   })
 
   describe('P0-4: F5 多号码+短号混合应报格式错误', () => {
-    it('多号码含白名单短号仍报格式错误', () => {
+    it('多号码含白名单短号(口径B去区号) → 不报格式错误', () => {
       const guide = makeBaseGuide({
         '监督电话': '020-34511300；020-12345',
       })
       const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
       const phoneIssues = result.formatIssues.filter((f) => f.field === '监督电话')
-      expect(phoneIssues.length).toBeGreaterThan(0)
+      expect(phoneIssues.length).toBe(0)
     })
 
     it('单独白名单短号不报格式错误', () => {

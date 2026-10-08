@@ -8,6 +8,26 @@ const DEFAULT_SEMANTIC_CONTEXT_EXEMPTIONS = [
   '按有关规定', '告知承诺', '当场办理', '即时办结', '容缺受理', '承诺制',
 ]
 
+const DEFAULT_VAGUE_TERMS = [
+  '符合条件', '按规定执行', '视情况而定', '参照执行', '按相关要求',
+  '视相关规定', '按标准执行', '依规执行', '另行通知', '另行规定',
+  '待定', '待确认', '待核实', '酌情办理', '视情办理',
+]
+
+const DEFAULT_SUBSTANTIVE_WORDS = [
+  '办理', '申请', '提交', '审核', '许可', '登记', '备案', '审批', '受理',
+  '送达', '邮寄', '下载', '网上', '网办', '现场', '窗口', '具备', '拥有', '符合', '提供',
+  '证书', '报告', '工作日', '电话', '地址', '街道', '收费', '免费', '时间',
+  '深度', '全程', '原件', '复印件', '身份', '营业', '法人', '预约', '支付',
+  '快递', '物流', '监督', '监管', '市场', '服务', '中心', '大厅', '执照',
+  '证明', '材料', '流程', '条件', '时限', '地点', '标准', '方式', '发证',
+  '审查', '核查', '验收', '认定', '认证', '批准', '注册', '签字', '盖章',
+]
+
+const DEFAULT_VALID_SHORT_VALUES = [
+  '即办', '当场', '即时', '无', '否', '是', '免', '收费', '不收费',
+]
+
 
 interface ItemTypeMatchingConfig {
   [itemType: string]: { keywords: string[]; codePrefix: string }
@@ -716,7 +736,7 @@ export const SemanticRuleEngine = {
       structuralDetails.push(...checkConditionCompleteness(guide, guideId, severityMapping))
       structuralDetails.push(...checkMaterialCompleteness(guide, guideId, severityMapping))
       structuralDetails.push(...checkOnlineDepthValidity(guide, guideId, severityMapping))
-      const gradedDetails = detectGradedSemantic(guide, guideId, options?.vagueTerms ?? [], options?.substantiveWords ?? [], options?.validShortValues ?? [], severityMapping)
+      const gradedDetails = detectGradedSemantic(guide, guideId, options?.vagueTerms ?? DEFAULT_VAGUE_TERMS, options?.substantiveWords ?? DEFAULT_SUBSTANTIVE_WORDS, options?.validShortValues ?? DEFAULT_VALID_SHORT_VALUES, severityMapping)
       return { details: deduplicateErrors([...conflictDetails, ...structuralDetails, ...gradedDetails]) }
     }
 
@@ -734,7 +754,7 @@ export const SemanticRuleEngine = {
     details.push(...detectTimeLimit(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectMaterials(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectConditions(guide, guideId, itemType, kb, severityMapping))
-    details.push(...detectGradedSemantic(guide, guideId, options?.vagueTerms ?? [], options?.substantiveWords ?? [], options?.validShortValues ?? [], severityMapping))
+    details.push(...detectGradedSemantic(guide, guideId, options?.vagueTerms ?? DEFAULT_VAGUE_TERMS, options?.substantiveWords ?? DEFAULT_SUBSTANTIVE_WORDS, options?.validShortValues ?? DEFAULT_VALID_SHORT_VALUES, severityMapping))
     return { details: deduplicateErrors([...conflictDetails, ...details]) }
   },
 

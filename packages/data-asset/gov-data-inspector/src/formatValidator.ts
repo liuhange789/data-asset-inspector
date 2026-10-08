@@ -38,9 +38,8 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
   const issues: FormatIssue[] = []
   if (rule.field === '咨询电话' || rule.field === '监督电话') {
     const numbers = strVal.split(/[，,;；\s、/]/).map((s) => s.trim()).filter(Boolean)
-    const isMultiNumber = numbers.length > 1
     for (const num of numbers) {
-      if (!isMultiNumber && options?.govServiceHotlineWhitelist && options.govServiceHotlineWhitelist.length > 0) {
+      if (options?.govServiceHotlineWhitelist && options.govServiceHotlineWhitelist.length > 0) {
         let isHotline = false
         const pure = num.replace(/^\d{3,4}-/, '')
         for (const shortCode of options.govServiceHotlineWhitelist) {

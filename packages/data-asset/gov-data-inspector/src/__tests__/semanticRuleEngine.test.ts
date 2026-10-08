@@ -426,9 +426,9 @@ describe('SemanticRuleEngine', () => {
     expect(result.details.some((d) => d.field === '表格下载' && d.errorType === 'semantic')).toBe(true)
   })
 
-  it('DT-09: validShortValues=undefined → 沿用既有逻辑（向后兼容）', () => {
+  it('DT-09: validShortValues=undefined → 内置默认值生效（"无"识别为合法短值）', () => {
     const guide = { 事项名称: '食品经营许可', 表格下载: '无' }
     const result = SemanticRuleEngine.detect(guide, 'g1', { timeLimits: [], materials: [], conditions: [] } as unknown as KnowledgeBase, itemTypeMatching, undefined, { degradedMode: true, vagueTerms: ['符合条件'], substantiveWords: ['申请'] })
-    expect(result.details.some((d) => d.field === '表格下载' && d.errorType === 'semantic')).toBe(true)
+    expect(result.details.some((d) => d.field === '表格下载' && d.errorType === 'semantic')).toBe(false)
   })
 })
