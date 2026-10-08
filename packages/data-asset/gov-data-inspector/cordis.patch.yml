@@ -6,13 +6,13 @@
   entry:
     id: "@liuhange/dsh-gov-data-inspector"
     name: "@liuhange/dsh-gov-data-inspector"
-    version: "3.6.5"
+    version: "3.6.6"
 - target: loaders.headless
   action: insert
   entry:
     id: "@liuhange/dsh-gov-data-inspector"
     name: "@liuhange/dsh-gov-data-inspector"
-    version: "3.6.5"
+    version: "3.6.6"
 - target: tools
   action: register
   description: Register plugin tools into Cordis runtime

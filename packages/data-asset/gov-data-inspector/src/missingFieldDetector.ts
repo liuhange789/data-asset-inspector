@@ -3,6 +3,7 @@ import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 
 export interface MissingFieldDetectorOptions {
   fieldResidueValues?: string[]
+  fieldAliases?: Record<string, string[]>
 }
 
 function isPlaceholderMatch(val: string, placeholderValues: string[]): boolean {
@@ -22,6 +23,13 @@ function isMissing(val: unknown, placeholderValues: string[]): boolean {
     (typeof val === 'string' && val.trim() === '') ||
     (Array.isArray(val) && val.length === 0) ||
     (typeof val === 'string' && isPlaceholderMatch(val, placeholderValues))
+}
+
+function hasAliasValue(guide: Record<string, unknown>, field: string, placeholderValues: string[], fieldAliases?: Record<string, string[]>): boolean {
+  if (!fieldAliases) return false
+  const aliases = fieldAliases[field]
+  if (!Array.isArray(aliases)) return false
+  return aliases.some((alias) => !isMissing(guide[alias], placeholderValues))
 }
 
 const INVALID_CONTENT_TEMPLATES = new Set([
@@ -109,6 +117,7 @@ export const MissingFieldDetector = {
     for (const elem of requiredElements) {
       const val = guide[elem]
       if (isMissing(val, placeholderValues)) {
+        if (hasAliasValue(guide, elem, placeholderValues, options?.fieldAliases)) continue
         details.push(
           ErrorDetailBuilder.build(
             {
@@ -188,6 +197,7 @@ export const MissingFieldDetector = {
     const processRequiredField = (elem: string) => {
       const val = guide[elem]
       if (isMissing(val, placeholderValues)) {
+        if (hasAliasValue(guide, elem, placeholderValues, options?.fieldAliases)) return
         coreDetails.push(
           ErrorDetailBuilder.build(
             {
@@ -228,6 +238,7 @@ export const MissingFieldDetector = {
     const processOptionalField = (elem: string) => {
       const val = guide[elem]
       if (isMissing(val, placeholderValues)) {
+        if (hasAliasValue(guide, elem, placeholderValues, options?.fieldAliases)) return
         extendedDetails.push(
           ErrorDetailBuilder.build(
             {

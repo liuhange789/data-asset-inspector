@@ -55,6 +55,8 @@ export interface OrchestrateConfig {
   processSimplifiedStepAliases?: Record<string, string[]> | undefined
   processCoreStepCombinations?: string[][] | undefined
   validProcessPhrases?: string[] | undefined
+  semanticContextExemptions?: string[] | undefined
+  fieldAliases?: Record<string, string[]> | undefined
   fieldResidueValues?: string[] | undefined
   regulationKnowledgeBase?: RegulationKnowledgeBase | null
   extractedRules?: ExtractedRule[]
@@ -141,7 +143,7 @@ export const InspectionOrchestrator = {
           undefined,
           config.missingFieldStandardClause,
           matchResult.itemType ?? undefined,
-          { ...(effectiveFieldResidueValues ? { fieldResidueValues: effectiveFieldResidueValues } : {}) },
+          { ...(effectiveFieldResidueValues ? { fieldResidueValues: effectiveFieldResidueValues } : {}), ...(config.fieldAliases ? { fieldAliases: config.fieldAliases } : {}) },
         )
         allErrorDetails.push(...graded.coreDetails, ...graded.extendedDetails)
         coreMissingCount += graded.coreDetails.length
@@ -157,7 +159,7 @@ export const InspectionOrchestrator = {
           config.severityMapping,
           undefined,
           config.missingFieldStandardClause,
-          { ...(effectiveFieldResidueValues ? { fieldResidueValues: effectiveFieldResidueValues } : {}) },
+          { ...(effectiveFieldResidueValues ? { fieldResidueValues: effectiveFieldResidueValues } : {}), ...(config.fieldAliases ? { fieldAliases: config.fieldAliases } : {}) },
         )
         allErrorDetails.push(...missingDetails)
         coreMissingCount += missingDetails.length
@@ -171,7 +173,7 @@ export const InspectionOrchestrator = {
         kb,
         config.itemTypeMatching,
         config.severityMapping,
-        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold, inlineLocalTerms: options?.inlineLocalTerms, semanticConflictRules: config.semanticConflictRules, ...(config.vagueTerms ? { vagueTerms: config.vagueTerms } : {}), ...(config.substantiveWords ? { substantiveWords: config.substantiveWords } : {}), ...(config.validShortValues ? { validShortValues: config.validShortValues } : {}) },
+        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold, inlineLocalTerms: options?.inlineLocalTerms, semanticConflictRules: config.semanticConflictRules, ...(config.vagueTerms ? { vagueTerms: config.vagueTerms } : {}), ...(config.substantiveWords ? { substantiveWords: config.substantiveWords } : {}), ...(config.validShortValues ? { validShortValues: config.validShortValues } : {}), ...(config.semanticContextExemptions ? { semanticContextExemptions: config.semanticContextExemptions } : {}) },
       )
       const suspected = semanticResult.details.filter(
         (d) => d.standardClause?.includes('降级模式') && d.description.includes('相似度'),

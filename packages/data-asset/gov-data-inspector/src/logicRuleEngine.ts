@@ -14,6 +14,7 @@ function isLogicDebug(): boolean {
 
 function extractTimeLimitDays(timeLimit: unknown): number | null {
   const str = String(timeLimit ?? '')
+  if (/即时|当场/.test(str)) return 0
   const match = str.match(/(\d+(?:\.\d+)?)\s*个?\s*(?:工作日|天|日)/)
   if (!match || !match[1]) return null
   return parseFloat(match[1])
@@ -165,6 +166,10 @@ function ruleMaterialCondition(
   const condition = String(guide['办理条件'] ?? '')
   const materialStr = String(guide['申请材料'] ?? '')
   if (!condition || !materialStr) return []
+  const materialRefPhrases = ['申请材料', '提交材料', '材料清单', '材料要求']
+  if (materialRefPhrases.some((p) => condition.includes(p)) && materialStr) return []
+  const authoritivePhrases = ['暂由各地区自行规定', '按有关规定', '按相关标准', '按相关规定', '按标准执行', '参照执行', '按有关规定执行']
+  if (authoritivePhrases.some((p) => condition.includes(p))) return []
   const proofKeywords = rule.triggerKeywords
   const requiredProofs = proofKeywords.filter((kw) => condition.includes(kw))
   if (requiredProofs.length === 0) return []
@@ -233,6 +238,10 @@ function ruleProcessCompleteness(
 ): ErrorDetail[] {
   const process = String(guide['办理流程'] ?? '')
   if (!process) return []
+  const trimmedProcess = process.trim()
+  if (/\.(png|jpg|jpeg|gif|bmp|webp)$/i.test(trimmedProcess)) return []
+  const flowChartPhrases = ['详见流程图', '见下图', '流程图', '见附图', '详见附图', '见图', '见流程图']
+  if (flowChartPhrases.some((p) => trimmedProcess === p)) return []
   const hasArrow = process.includes('→') || process.includes('->') || process.includes('➡') || process.includes('=>')
   if (hasArrow && options?.processCoreStepKeywords && options.processCoreStepKeywords.length > 0) {
     const aliases = options?.processSimplifiedStepAliases ?? {}

@@ -36,11 +36,31 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
   const strVal = String(val).trim()
   if (!strVal) return []
   const issues: FormatIssue[] = []
-  if ((rule.field === '咨询电话' || rule.field === '监督电话') && options?.govServiceHotlineWhitelist && options.govServiceHotlineWhitelist.length > 0) {
-    for (const shortCode of options.govServiceHotlineWhitelist) {
-      const regex = new RegExp(`^(\\d{3,4}[-\\s]?)?${shortCode}$`)
-      if (regex.test(strVal)) return []
+  if (rule.field === '咨询电话' || rule.field === '监督电话') {
+    const numbers = strVal.split(/[，,;；\s、/]/).map((s) => s.trim()).filter(Boolean)
+    for (const num of numbers) {
+      if (options?.govServiceHotlineWhitelist && options.govServiceHotlineWhitelist.length > 0) {
+        let isHotline = false
+        for (const shortCode of options.govServiceHotlineWhitelist) {
+          const regex = new RegExp(`^(\\d{3,4}[-\\s]?)?${shortCode}$`)
+          if (regex.test(num)) { isHotline = true; break }
+        }
+        if (isHotline) continue
+      }
+      if (rule.pattern) {
+        const regex = new RegExp(rule.pattern)
+        if (!regex.test(num)) {
+          issues.push({
+            guideId,
+            field: rule.field,
+            issue: `字段"${rule.field}"中号码"${num}"不符合格式要求（正则: ${rule.pattern}）`,
+            suggestion: rule.suggestionTemplate,
+            ruleId: `FORMAT-${rule.field}`,
+          })
+        }
+      }
     }
+    return issues
   }
   if (rule.field === '办理时限' && options?.timeLimitValidExpressions && options.timeLimitValidExpressions.length > 0) {
     if (options.timeLimitValidExpressions.includes(strVal)) return []

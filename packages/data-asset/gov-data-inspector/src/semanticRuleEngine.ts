@@ -18,6 +18,7 @@ interface DetectOptions {
   vagueTerms?: string[] | undefined
   substantiveWords?: string[] | undefined
   validShortValues?: string[] | undefined
+  semanticContextExemptions?: string[] | undefined
 }
 
 export interface SemanticDetectResult {
@@ -78,9 +79,10 @@ function matchItemType(
 
 function extractTimeLimitDays(timeLimit: unknown): number | null {
   const str = String(timeLimit ?? '')
-  const match = str.match(/(\d+)\s*个?\s*工作日/)
+  if (/即时|当场/.test(str)) return 0
+  const match = str.match(/(\d+(?:\.\d+)?)\s*个?\s*(?:工作日|天|日)/)
   if (!match || !match[1]) return null
-  return parseInt(match[1], 10)
+  return parseFloat(match[1])
 }
 
 function detectTimeLimit(
@@ -451,9 +453,13 @@ function matchAndReport(
   field: '申请材料' | '办理条件',
   guideId: string,
   severityMapping?: Record<string, string>,
+  contextExemptions?: string[],
 ): ErrorDetail[] {
   if (terms.length === 0) return []
   if (terms.some((t) => isSubstringIdentical(item, t))) return []
+  if (contextExemptions && contextExemptions.length > 0) {
+    if (contextExemptions.some((ex) => item.includes(ex))) return []
+  }
   let maxSim = 0
   let closestTerm = ''
   for (const term of terms) {
@@ -464,9 +470,9 @@ function matchAndReport(
     }
   }
   if (item === closestTerm) return []
-
   if (maxSim >= 0.99) return []
-  if (maxSim >= threshold) {
+  const effectiveThreshold = Math.max(threshold, 0.75)
+  if (maxSim >= effectiveThreshold) {
     return [
       ErrorDetailBuilder.build(
         {
@@ -483,38 +489,7 @@ function matchAndReport(
       ),
     ]
   }
-  if (maxSim === 0) {
-    return [
-      ErrorDetailBuilder.build(
-        {
-          guideId,
-          field,
-          errorType: 'semantic',
-          description: `${field}"${item}"与本地词表无任何匹配，疑似错误。[降级模式·本地词表校验]`,
-          suggestion: `建议核实"${item}"是否为标准${field}名称`,
-          dataSource: 'standard',
-          standardClause: '降级模式·本地词表校验',
-            ruleId: "SEMANTIC-本地词表校验",
-        },
-        severityMapping,
-      ),
-    ]
-  }
-  return [
-    ErrorDetailBuilder.build(
-      {
-        guideId,
-        field,
-        errorType: 'semantic',
-        description: `${field}"${item}"与本地词表匹配度极低（相似度${maxSim.toFixed(2)}），疑似错误。[降级模式·本地词表校验]`,
-        suggestion: `建议核实"${item}"是否为标准${field}名称`,
-        dataSource: 'standard',
-        standardClause: '降级模式·本地词表校验',
-            ruleId: "SEMANTIC-本地词表校验",
-      },
-      severityMapping,
-    ),
-  ]
+  return []
 }
 
 function detectApproximateSubstring(
@@ -570,17 +545,19 @@ function detectLocalTermsMismatch(
   options: DetectOptions,
   severityMapping?: Record<string, string>,
 ): ErrorDetail[] {
+  if (options?.degradedMode) return []
   const localTerms = LocalTermsLoader.load(options.localTermsPath, options.inlineLocalTerms)
   if (localTerms.materials.length === 0 && localTerms.conditions.length === 0) {
     return []
   }
   const threshold = options.degradedSimilarityThreshold ?? 0.80
+  const exemptions = options?.semanticContextExemptions
   const details: ErrorDetail[] = []
   const materialStr = String(guide['申请材料'] ?? '')
   if (materialStr && localTerms.materials.length > 0) {
     const materials = splitMultiContent(materialStr)
     for (const mat of materials) {
-      details.push(...matchAndReport(mat, localTerms.materials, threshold, '申请材料', guideId, severityMapping))
+      details.push(...matchAndReport(mat, localTerms.materials, threshold, '申请材料', guideId, severityMapping, exemptions))
     }
   }
   details.push(...detectConditionTermsMismatch(guide, guideId, options, severityMapping))
@@ -596,12 +573,13 @@ function detectConditionTermsMismatch(
   const localTerms = LocalTermsLoader.load(options.localTermsPath, options.inlineLocalTerms)
   if (localTerms.conditions.length === 0) return []
   const threshold = options.degradedSimilarityThreshold ?? 0.80
+  const exemptions = options?.semanticContextExemptions
   const conditionStr = String(guide['办理条件'] ?? '')
   if (!conditionStr) return []
   const details: ErrorDetail[] = []
   const condParts = splitMultiContent(conditionStr)
   for (const cond of condParts) {
-    const condDetails = matchAndReport(cond, localTerms.conditions, threshold, '办理条件', guideId, severityMapping)
+    const condDetails = matchAndReport(cond, localTerms.conditions, threshold, '办理条件', guideId, severityMapping, exemptions)
     details.push(...condDetails)
     if (condDetails.length === 0) {
       const sub = detectApproximateSubstring(cond, localTerms.conditions, guideId, severityMapping)
