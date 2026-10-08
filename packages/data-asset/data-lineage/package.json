@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-data-lineage",
-  "description": "Data lineage tracking plugin: trace data flow from source to product with hash chaining and Mermaid visualization Also known as @deepseek-ai/dsh-data-lineage.",
+  "description": "数据血缘追踪插件 — 追踪数据从源头到消费端的完整流转路径",
   "version": "2.0.5",
   "publishConfig": {
     "access": "public"

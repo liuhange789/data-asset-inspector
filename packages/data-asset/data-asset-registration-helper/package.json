@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-data-asset-registration-helper",
-  "description": "Registration helper plugin: disallowed scenario check + ownership dispute check + agency matching + registration workflow guidance Also known as @deepseek-ai/dsh-data-asset-registration-helper.",
+  "description": "数据资产登记助手插件 — 禁用场景检查+所有权确认+登记材料准备",
   "version": "3.1.5",
   "publishConfig": {
     "access": "public"

@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-match-registration-agency",
-  "description": "Match registration agency: recommend data exchange based on data type Also known as @deepseek-ai/dsh-match-registration-agency.",
+  "description": "登记机构匹配插件 — 基于数据类型推荐数据交易所/登记机构",
   "version": "3.0.4",
   "publishConfig": {
     "access": "public"

@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-generate-registration-docs",
-  "description": "Generate registration documents: data description, source legality statement, ownership explanation Also known as @deepseek-ai/dsh-generate-registration-docs.",
+  "description": "登记文档生成插件 — 数据说明+来源说明+处理说明+登记申请表",
   "version": "3.0.4",
   "publishConfig": {
     "access": "public"

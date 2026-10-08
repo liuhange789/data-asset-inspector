@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-geo-data-quality-inspector",
-  "description": "检测地理空间数据的高程精度、拓扑一致性，输出加权质量评分",
+  "description": "地理空间数据质量检查插件 — 检测高程精度、拓扑一致性，输出加权质量评分",
   "version": "1.0.2",
   "publishConfig": {
     "access": "public"
@@ -45,10 +45,42 @@
     }
   },
   "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "open-source",
+    "plugin",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
     "geospatial",
     "gis-quality",
     "spatial-data-inspection",
-    "dsh-plugin"
+    "地理空间",
+    "空间数据",
+    "高程精度",
+    "拓扑一致性",
+    "质量评分",
+    "gis",
+    "geo-data",
+    "spatial-analysis",
+    "coordinate-system",
+    "elevation-accuracy",
+    "topology-check",
+    "coverage-check",
+    "mapping",
+    "cartography",
+    "测绘",
+    "地理信息",
+    "空间质量"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }

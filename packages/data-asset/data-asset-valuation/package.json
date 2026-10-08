@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-data-asset-valuation",
-  "description": "Data asset valuation plugin: cost-based (replacement cost - depreciation) + income-based (DCF) dual model Also known as @deepseek-ai/dsh-data-asset-valuation.",
+  "description": "数据资产估值插件 — 成本法（重置成本）+收益法+市场法三轨估值",
   "version": "3.1.5",
   "publishConfig": {
     "access": "public"

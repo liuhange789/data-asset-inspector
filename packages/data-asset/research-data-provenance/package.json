@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-research-data-provenance",
-  "description": "审计科研数据的血缘完整性、可复现性、FAIR原则，输出溯源报告",
+  "description": "科研数据溯源审计插件 — 审计血缘完整性、可复现性、FAIR原则，输出溯源报告",
   "version": "3.1.3",
   "publishConfig": {
     "access": "public"
@@ -45,10 +45,42 @@
     }
   },
   "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "open-source",
+    "plugin",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
     "research-data",
     "data-provenance",
     "fair-principles",
-    "dsh-plugin"
+    "科研数据",
+    "数据溯源",
+    "血缘完整性",
+    "可复现性",
+    "FAIR原则",
+    "scientific-data",
+    "reproducibility",
+    "lineage-tracking",
+    "research-integrity",
+    "data-traceability",
+    "provenance-audit",
+    "open-science",
+    "科研诚信",
+    "学术数据",
+    "实验数据",
+    "溯源审计",
+    "可追溯"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }

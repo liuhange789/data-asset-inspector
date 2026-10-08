@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-city-data-classifier",
-  "description": "City data AI classification plugin: auto-recommend GB/T 47949-2026 category and sensitivity grading",
+  "description": "城市数据AI分类插件 — 基于GB/T 47949自动推荐数据分类，支持结构化/半结构化/非结构化",
   "version": "3.1.3",
   "publishConfig": {
     "access": "public"

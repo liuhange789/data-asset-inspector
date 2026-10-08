@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-data-cleaning",
-  "description": "Data cleaning plugin: deduplication, format standardization, anomaly detection Also known as @deepseek-ai/dsh-data-cleaning.",
+  "description": "数据清洗插件 — 去重+格式标准化+异常值处理+缺失值填充",
   "version": "3.0.4",
   "publishConfig": {
     "access": "public"

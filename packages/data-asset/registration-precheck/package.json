@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-registration-precheck",
-  "description": "Registration precheck plugin: verify data eligibility for national data property registration Also known as @deepseek-ai/dsh-registration-precheck.",
+  "description": "登记预检插件 — 校验数据登记资格+必填项完整性+格式合规性",
   "version": "3.0.4",
   "publishConfig": {
     "access": "public"

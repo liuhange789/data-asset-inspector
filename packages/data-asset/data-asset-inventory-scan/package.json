@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-data-asset-inventory-scan",
-  "description": "Data asset inventory scan plugin: deep metadata scan + triple condition screening + ownership clue annotation Also known as @deepseek-ai/dsh-data-asset-inventory-scan.",
+  "description": "数据资产盘点扫描插件 — 深度元数据扫描+三性检测，输出资产清单",
   "version": "3.1.5",
   "publishConfig": {
     "access": "public"

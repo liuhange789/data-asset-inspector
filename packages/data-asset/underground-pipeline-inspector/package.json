@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-underground-pipeline-inspector",
-  "description": "检测地下管线数据的覆盖率、接边精度、流向合理性，输出质量评分",
+  "description": "地下管线数据质量检查插件 — 检测覆盖率、接边精度、流向合理性，输出质量评分",
   "version": "1.0.2",
   "publishConfig": {
     "access": "public"
@@ -45,10 +45,42 @@
     }
   },
   "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "open-source",
+    "plugin",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
     "pipeline-data",
     "utility-inspection",
     "underground-gis",
-    "dsh-plugin"
+    "地下管线",
+    "管线数据",
+    "覆盖率",
+    "接边精度",
+    "流向合理性",
+    "质量评分",
+    "utility-data",
+    "pipeline-gis",
+    "underground-utility",
+    "infrastructure-inspection",
+    "市政管线",
+    "给水",
+    "排水",
+    "燃气",
+    "电力",
+    "通信",
+    "综合管廊"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-data-quality-scoring",
-  "description": "Data quality scoring plugin: multi-dimensional scoring (completeness/accuracy/consistency/timeliness) with weighted total and improvement suggestions Also known as @deepseek-ai/dsh-data-quality-scoring.",
+  "description": "数据质量打分插件 — 多维度评分（完整性/准确性/一致性/时效性）",
   "version": "2.0.5",
   "publishConfig": {
     "access": "public"

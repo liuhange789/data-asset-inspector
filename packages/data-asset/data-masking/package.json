@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-data-masking",
-  "description": "Data masking plugin: sensitive field identification and graded masking (FULL/PARTIAL/GENERALIZE) Also known as @deepseek-ai/dsh-data-masking.",
+  "description": "数据脱敏插件 — 敏感字段识别+分级脱敏（部分脱敏/完全脱敏/哈希脱敏）",
   "version": "3.0.4",
   "publishConfig": {
     "access": "public"

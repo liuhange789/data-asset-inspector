@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-data-packaging",
-  "description": "Data packaging plugin: product manual generation, compliance statements, packaging Also known as @deepseek-ai/dsh-data-packaging.",
+  "description": "数据封装插件 — 产品说明书生成+合规附件+元数据打包",
   "version": "3.0.4",
   "publishConfig": {
     "access": "public"

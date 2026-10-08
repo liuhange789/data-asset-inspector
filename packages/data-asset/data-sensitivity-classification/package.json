@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-data-sensitivity-classification",
-  "description": "Data sensitivity classification plugin: auto-identify sensitivity levels (Public/Internal/Confidential/Secret) and recommend masking strategies Also known as @deepseek-ai/dsh-data-sensitivity-classification.",
+  "description": "数据敏感度分类插件 — 自动识别敏感字段+分级（高/中/低/公开）",
   "version": "2.0.5",
   "publishConfig": {
     "access": "public"

@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-ai-dataset-inspector",
-  "description": "检测AI训练数据集的标注一致性、标签分布、数据泄露，输出质检报告",
+  "description": "AI训练数据集质检插件 — 检测标注一致性、标签分布、数据泄露，输出质检报告",
   "version": "3.1.4",
   "publishConfig": {
     "access": "public"
@@ -44,10 +44,42 @@
     }
   },
   "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "open-source",
+    "plugin",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
     "ai-dataset",
     "training-data-quality",
     "annotation-audit",
-    "dsh-plugin"
+    "AI数据集",
+    "训练数据",
+    "标注一致性",
+    "标签分布",
+    "数据泄露",
+    "machine-learning",
+    "ml-data",
+    "dataset-quality",
+    "annotation-quality",
+    "label-distribution",
+    "data-leakage",
+    "ai-quality",
+    "training-set",
+    "ground-truth",
+    "model-training",
+    "data-validation",
+    "质检报告"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }

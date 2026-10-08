@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-data-inventory",
-  "description": "Data inventory plugin: directory scanning, value assessment, asset list generation Also known as @deepseek-ai/dsh-data-inventory.",
+  "description": "数据目录盘点插件 — 目录扫描+价值评估+分类标注",
   "version": "3.0.4",
   "publishConfig": {
     "access": "public"

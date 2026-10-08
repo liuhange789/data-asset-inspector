@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-data-asset-quality-score",
-  "description": "Data quality scoring plugin: six-dimension quantitative scoring (normality + completeness + accuracy + consistency + timeliness + accessibility) Also known as @deepseek-ai/dsh-data-asset-quality-score.",
+  "description": "数据资产质量评分插件 — 六维量化评分（完整性/准确性/一致性/时效性/规范性/可访问性）",
   "version": "3.1.5",
   "publishConfig": {
     "access": "public"

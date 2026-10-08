@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/dsh-construction-data-inventory",
-  "description": "盘点建筑工程数据的BIM/IFC分类、资产编码，输出资产清单",
+  "description": "建筑工程数据资产盘点插件 — 盘点BIM/IFC分类、资产编码，输出资产清单",
   "version": "3.2.2",
   "publishConfig": {
     "access": "public"
@@ -45,10 +45,42 @@
     }
   },
   "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "dsh",
+    "typescript",
+    "nodejs",
+    "open-source",
+    "plugin",
+    "automation",
+    "audit",
+    "compliance",
+    "data-governance",
+    "data-quality",
+    "data-asset",
+    "data-asset-inspector",
+    "shujintong",
+    "数据资产",
     "bim-data",
     "construction-inventory",
     "ifc-audit",
-    "dsh-plugin"
+    "建筑工程",
+    "BIM",
+    "IFC",
+    "资产编码",
+    "资产清单",
+    "building-data",
+    "construction-data",
+    "bim-audit",
+    "ifc-classification",
+    "asset-encoding",
+    "building-information-modeling",
+    "工程数据",
+    "建筑资产",
+    "施工数据",
+    "构件分类",
+    "工程盘点",
+    "建设数据"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }
