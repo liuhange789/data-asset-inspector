@@ -299,6 +299,62 @@
               "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「表格下载」为必填项",
               "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
               "sourceClause": "表3"
+            },
+            {
+              "ruleId": "LOG_MATERIAL_CONDITION_001",
+              "ruleType": "logic",
+              "fieldList": ["办理条件", "申请材料"],
+              "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「申请材料」应完整覆盖「办理条件」要求",
+              "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
+              "sourceClause": "表3"
+            },
+            {
+              "ruleId": "SEMANTIC-办理时限",
+              "ruleType": "semantic",
+              "fieldList": ["办理时限"],
+              "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「办理时限」应表述规范，含法定办结时限",
+              "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
+              "sourceClause": "表3"
+            },
+            {
+              "ruleId": "SEMANTIC-申请材料",
+              "ruleType": "semantic",
+              "fieldList": ["申请材料"],
+              "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「申请材料」应逐项列明，含材料名称和份数",
+              "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
+              "sourceClause": "表3"
+            },
+            {
+              "ruleId": "SEMANTIC-办理条件",
+              "ruleType": "semantic",
+              "fieldList": ["办理条件"],
+              "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「办理条件」应具体明确，可操作可验证",
+              "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
+              "sourceClause": "表3"
+            },
+            {
+              "ruleId": "SEMANTIC-材料条件冲突",
+              "ruleType": "semantic",
+              "fieldList": ["申请材料", "办理条件"],
+              "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「申请材料」与「办理条件」应逻辑一致",
+              "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
+              "sourceClause": "表3"
+            },
+            {
+              "ruleId": "SEMANTIC-材料清单不完整",
+              "ruleType": "semantic",
+              "fieldList": ["申请材料"],
+              "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「申请材料」清单应完整，覆盖全部所需材料",
+              "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
+              "sourceClause": "表3"
+            },
+            {
+              "ruleId": "SEMANTIC-条件描述简略",
+              "ruleType": "semantic",
+              "fieldList": ["办理条件"],
+              "policyBasis": "依据：GB/T 39554.2-2020 表3 要素要求 — 要素「办理条件」描述不应过于简略",
+              "sourceDocument": "全国一体化政务服务平台 政务服务事项基本目录及实施清单 第2部分：要素要求",
+              "sourceClause": "表3"
             }
           ],
           "isCore": true
@@ -328,6 +384,61 @@
               "ruleType": "logic",
               "fieldList": ["办理时限"],
               "policyBasis": "依据：GB/T 36114-2018 附录A 服务指南要素 — 办理时限应与法定办结时限一致",
+              "sourceDocument": "政务服务中心进驻事项服务指南编制规范",
+              "sourceClause": "附录A"
+            },
+            {
+              "ruleId": "LOG_INSTANT_TIME_LIMIT_CONTRADICTION_001",
+              "ruleType": "logic",
+              "fieldList": ["办理时限", "办理流程"],
+              "policyBasis": "依据：GB/T 36114-2018 附录A 服务指南要素 — 办理时限应与办理流程一致，即办件不应承诺过长时限",
+              "sourceDocument": "政务服务中心进驻事项服务指南编制规范",
+              "sourceClause": "附录A"
+            },
+            {
+              "ruleId": "LOG_CONDITION_FIELD_MISPLACED_001",
+              "ruleType": "logic",
+              "fieldList": ["办理条件"],
+              "policyBasis": "依据：GB/T 36114-2018 附录A 服务指南要素 — 要素「办理条件」应填写资格条件，不应填写材料清单",
+              "sourceDocument": "政务服务中心进驻事项服务指南编制规范",
+              "sourceClause": "附录A"
+            },
+            {
+              "ruleId": "SEMANTIC-条件流程冲突",
+              "ruleType": "semantic",
+              "fieldList": ["办理条件", "办理流程"],
+              "policyBasis": "依据：GB/T 36114-2018 附录A 服务指南要素 — 办理条件与办理流程应逻辑一致",
+              "sourceDocument": "政务服务中心进驻事项服务指南编制规范",
+              "sourceClause": "附录A"
+            },
+            {
+              "ruleId": "SEMANTIC-时限流程冲突",
+              "ruleType": "semantic",
+              "fieldList": ["办理时限", "办理流程"],
+              "policyBasis": "依据：GB/T 36114-2018 附录A 服务指南要素 — 办理时限与办理流程应匹配",
+              "sourceDocument": "政务服务中心进驻事项服务指南编制规范",
+              "sourceClause": "附录A"
+            },
+            {
+              "ruleId": "SEMANTIC-网办深度不规范",
+              "ruleType": "semantic",
+              "fieldList": ["网上办理深度"],
+              "policyBasis": "依据：GB/T 36114-2018 附录A 服务指南要素 — 网上办理深度应规范表述",
+              "sourceDocument": "政务服务中心进驻事项服务指南编制规范",
+              "sourceClause": "附录A"
+            },
+            {
+              "ruleId": "SEMANTIC-本地词表校验",
+              "ruleType": "semantic",
+              "policyBasis": "依据：GB/T 36114-2018 附录A 服务指南要素 — 要素内容应符合本地词表规范",
+              "sourceDocument": "政务服务中心进驻事项服务指南编制规范",
+              "sourceClause": "附录A"
+            },
+            {
+              "ruleId": "SEMANTIC-双轨制识别",
+              "ruleType": "semantic",
+              "fieldList": ["结果送达方式"],
+              "policyBasis": "依据：GB/T 36114-2018 附录A 服务指南要素 — 结果送达方式应支持线上线下一体化办理",
               "sourceDocument": "政务服务中心进驻事项服务指南编制规范",
               "sourceClause": "附录A"
             }
