@@ -5,11 +5,23 @@ export interface MissingFieldDetectorOptions {
   fieldResidueValues?: string[]
 }
 
+function isPlaceholderMatch(val: string, placeholderValues: string[]): boolean {
+  const trimmed = val.trim()
+  if (placeholderValues.includes(trimmed)) return true
+  for (const p of placeholderValues) {
+    if (!p) continue
+    const escaped = p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const re = new RegExp(`(^|[;；,，、\\s])${escaped}([;；,，、\\s]|$)`, 'u')
+    if (re.test(trimmed)) return true
+  }
+  return false
+}
+
 function isMissing(val: unknown, placeholderValues: string[]): boolean {
   return val === undefined || val === null ||
     (typeof val === 'string' && val.trim() === '') ||
     (Array.isArray(val) && val.length === 0) ||
-    (typeof val === 'string' && placeholderValues.includes(val.trim()))
+    (typeof val === 'string' && isPlaceholderMatch(val, placeholderValues))
 }
 
 const INVALID_CONTENT_TEMPLATES = new Set([
@@ -106,6 +118,7 @@ export const MissingFieldDetector = {
               suggestion: `请补充"${elem}"字段内容，确保办事指南核心要素完整。${basisText}`,
               dataSource: 'standard',
               standardClause: standardClause ?? '',
+              ruleId: `MISSING-${elem}`,
             },
             severityMapping,
           ),
@@ -123,6 +136,7 @@ export const MissingFieldDetector = {
                 suggestion: `请补充"${elem}"字段的有效内容。${basisText}`,
                 dataSource: 'standard',
                 standardClause: standardClause ?? '',
+                ruleId: `MISSING-${elem}`,
               },
               severityMapping,
             ),
@@ -183,6 +197,7 @@ export const MissingFieldDetector = {
               suggestion: `请补充"${elem}"字段内容，确保办事指南核心要素完整。${basisText}`,
               dataSource: 'standard',
               standardClause: stdClause,
+              ruleId: `MISSING-${elem}`,
             },
             severityMapping,
           ),
@@ -200,6 +215,7 @@ export const MissingFieldDetector = {
                 suggestion: `请补充"${elem}"字段的有效内容。${basisText}`,
                 dataSource: 'standard',
                 standardClause: stdClause,
+                ruleId: `MISSING-${elem}`,
               },
               severityMapping,
             ),

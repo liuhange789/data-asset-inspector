@@ -1,6 +1,7 @@
 import type { ErrorDetail, FormatIssue, DetectionRates, UnmatchedWarning, ReferenceSystem, ConfigPackWarning, RegulationKnowledgeBase, ExtractedRule } from './types.js'
 import { deduplicateCrossEngine } from './inspectionOrchestrator.js'
 import { resolveErrorDetailPolicyBasis, resolvePolicyBasis, type PolicyDoc } from './policyBasis.js'
+import { findRuleById } from './ruleExtractor.js'
 
 export interface ReportGeneratorInput {
   rawErrorDetails: ErrorDetail[]
@@ -48,8 +49,9 @@ function annotatePolicyBasis(
     referenceSystem,
     policyReferences,
     regulationKnowledgeBase,
+    errorDetail.ruleId,
   )
-  const sourceMatch = regulationKnowledgeBase ? findRuleInKB(regulationKnowledgeBase, errorDetail.standardClause) : null
+  const sourceMatch = regulationKnowledgeBase ? findRuleInKB(regulationKnowledgeBase, errorDetail.ruleId, errorDetail.standardClause) : null
   return {
     ...errorDetail,
     policyBasis,
@@ -57,18 +59,20 @@ function annotatePolicyBasis(
   }
 }
 
-function findRuleInKB(kb: RegulationKnowledgeBase, standardClause?: string): ExtractedRule | null {
-  if (!standardClause) return null
-  const ruleIdMatch = standardClause.match(/ruleId=([^\s]+)/)
-  const ruleId = ruleIdMatch?.[1]
-  if (!ruleId) return null
-  const allRules: ExtractedRule[] = [
-    ...kb.nationalLaws.flatMap((l) => l.relevantClauses.flatMap((c) => c.extractedRules)),
-    ...kb.nationalPolicies.flatMap((p) => p.relevantClauses.flatMap((c) => c.extractedRules)),
-    ...kb.nationalStandards.flatMap((s) => s.relevantClauses.flatMap((c) => c.extractedRules)),
-    ...kb.provincialStandards.flatMap((p) => p.relevantClauses.flatMap((c) => c.extractedRules)),
-  ]
-  return allRules.find((r) => r.ruleId === ruleId) ?? null
+function findRuleInKB(kb: RegulationKnowledgeBase, ruleId?: string, standardClause?: string): ExtractedRule | null {
+  if (ruleId) {
+    const byRuleId = findRuleById(kb, ruleId)
+    if (byRuleId) return byRuleId
+  }
+  if (standardClause) {
+    const ruleIdMatch = standardClause.match(/ruleId=([^\s]+)/)
+    const extractedRuleId = ruleIdMatch?.[1]
+    if (extractedRuleId) {
+      const byExtracted = findRuleById(kb, extractedRuleId)
+      if (byExtracted) return byExtracted
+    }
+  }
+  return null
 }
 
 export function enrichWithPolicyBasis<T>(
@@ -78,8 +82,8 @@ export function enrichWithPolicyBasis<T>(
   if (!regulationKnowledgeBase) {
     return { ...result, policyBasis: '依据：待补充法规依据', sourceDocument: '', sourceClause: '' }
   }
-  const standardClause = (result as { standardClause?: string }).standardClause
-  const rule = findRuleInKB(regulationKnowledgeBase, standardClause)
+  const { ruleId, standardClause } = result as { ruleId?: string; standardClause?: string }
+  const rule = findRuleInKB(regulationKnowledgeBase, ruleId, standardClause)
   if (rule) {
     return { ...result, policyBasis: rule.policyBasis, sourceDocument: rule.sourceDocument, sourceClause: rule.sourceClause }
   }

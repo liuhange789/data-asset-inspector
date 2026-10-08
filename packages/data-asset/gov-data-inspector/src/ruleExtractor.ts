@@ -93,3 +93,12 @@ export function extractProcessCoreStepKeywords(kb: RegulationKnowledgeBase): str
   const rule = clause?.extractedRules.find((r) => r.ruleId === 'LOG_PROCESS_COMPLETENESS_001')
   return rule?.keywords ?? []
 }
+export function findRuleById(kb: RegulationKnowledgeBase, ruleId: string): ExtractedRule | null {
+  const allRules: ExtractedRule[] = [
+    ...kb.nationalLaws.flatMap((l) => l.relevantClauses.flatMap((c) => c.extractedRules)),
+    ...kb.nationalPolicies.flatMap((p) => p.relevantClauses.flatMap((c) => c.extractedRules)),
+    ...kb.nationalStandards.flatMap((s) => s.relevantClauses.flatMap((c) => c.extractedRules)),
+    ...kb.provincialStandards.flatMap((p) => p.relevantClauses.flatMap((c) => c.extractedRules)),
+  ]
+  return allRules.find((r) => r.ruleId === ruleId) ?? null
+}

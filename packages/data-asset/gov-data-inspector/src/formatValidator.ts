@@ -26,6 +26,7 @@ function checkAddressFuzzy(
     field,
     issue: `字段"${field}"值"${strVal}"为模糊描述，缺少具体地址要素(街道/路/号等)`,
     suggestion: suggestionTemplate,
+    ruleId: `FORMAT-${field}`,
   }
 }
 
@@ -52,6 +53,7 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
         field: rule.field,
         issue: `字段"${rule.field}"值"${strVal}"不符合格式要求（正则: ${rule.pattern}）`,
         suggestion: rule.suggestionTemplate,
+        ruleId: `FORMAT-${rule.field}`,
       }
       if (rule.field === '办理时限' && strVal.includes('自然日')) {
         issue.semanticHint = "时限使用'自然日'而非'工作日'，可能存在语义偏差"
@@ -66,6 +68,7 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
         field: rule.field,
         issue: '办理地点缺少具体地址信息',
         suggestion: '办理地点应包含街道/路/号等具体地址信息',
+        ruleId: `FORMAT-${rule.field}`,
       })
       return issues
     }
@@ -76,6 +79,7 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
         field: rule.field,
         issue: '办理地点缺少具体地址信息',
         suggestion: '办理地点应包含街道/路/号等具体地址信息',
+        ruleId: `FORMAT-${rule.field}`,
       })
       return issues
     }
@@ -109,6 +113,7 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
         field: rule.field,
         issue: `字段"${rule.field}"值"${strVal}"缺少必要关键词（需包含: ${rule.requiredKeywords.join('或')}）`,
         suggestion: rule.suggestionTemplate,
+        ruleId: `FORMAT-${rule.field}`,
       }
       if (rule.field === '办理时限' && strVal.includes('自然日')) {
         issue.semanticHint = "时限使用'自然日'而非'工作日'，可能存在语义偏差"

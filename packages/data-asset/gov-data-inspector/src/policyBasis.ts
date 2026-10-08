@@ -75,14 +75,15 @@ export function resolveErrorDetailPolicyBasis(
   referenceSystem: ReferenceSystem | null,
   policyReferences: PolicyDoc[],
   regulationKnowledgeBase?: RegulationKnowledgeBase | null,
+  ruleId?: string,
 ): string {
   if (errorType === 'warning') {
     return '依据：服务完善性建议（非法定强制要素）'
   }
 
   if (regulationKnowledgeBase) {
-    const ruleId = standardClause.match(/ruleId=([^\s]+)/)?.[1]
-    const rule = findRuleInKnowledgeBase(regulationKnowledgeBase, ruleId)
+    const explicitRuleId = ruleId ?? standardClause.match(/ruleId=([^\s]+)/)?.[1]
+    const rule = findRuleInKnowledgeBase(regulationKnowledgeBase, explicitRuleId)
     if (rule) {
       return rule.policyBasis
     }

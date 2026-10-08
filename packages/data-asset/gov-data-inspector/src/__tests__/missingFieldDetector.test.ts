@@ -282,4 +282,23 @@ describe('MissingFieldDetector fieldResidueValues 配置化', () => {
     const result = MissingFieldDetector.detect(guide, 'g1', coreFields)
     expect(result.some((d) => d.field === '实施主体')).toBe(false)
   })
+
+  it('null 残渣变体 → 判定为missing', () => {
+    const variants = [
+      '；null', 'null；', 'null ', ' null ', '、null、',
+      '；NULL', 'NULL；', 'NULL ', '，null，', 'null',
+      '暂无；null', 'null；暂无', '无；null；无',
+    ]
+    for (const v of variants) {
+      const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: v, 办理条件: '条件' }
+      const result = MissingFieldDetector.detect(guide, 'g1', coreFields, undefined, undefined, undefined, { fieldResidueValues })
+      expect(result.some((d) => d.field === '实施主体')).toBe(true)
+    }
+  })
+
+  it('null 作为有效内容子串不误判（如 "nullPointException"）', () => {
+    const guide: Record<string, unknown> = { 事项名称: '测试', 实施主体: 'nullPointerCheck流程', 办理条件: '条件' }
+    const result = MissingFieldDetector.detect(guide, 'g1', coreFields, undefined, undefined, undefined, { fieldResidueValues })
+    expect(result.some((d) => d.field === '实施主体')).toBe(false)
+  })
 })

@@ -28,6 +28,7 @@ export interface ErrorDetail {
   policyBasis?: string
   sourceDocument?: string
   sourceClause?: string
+  ruleId?: string
 }
 
 export interface GovOrderElement {
@@ -86,6 +87,7 @@ export interface FormatIssue {
   policyBasis?: string
   sourceDocument?: string
   sourceClause?: string
+  ruleId?: string
 }
 
 export interface DetectionRates {
@@ -354,6 +356,8 @@ export interface ProvincialStandard {
   standardNumber: string
   effectiveDate: string
   relevantClauses: RegulationClause[]
+  verificationStatus?: 'verified' | 'unverified'
+  verificationNote?: string
 }
 
 export interface HotlineWhitelistEntry {

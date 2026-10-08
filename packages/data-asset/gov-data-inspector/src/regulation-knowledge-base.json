@@ -24,8 +24,9 @@
     },
     {
       "lawName": "中华人民共和国标准化法",
-      "documentNumber": "主席令第十一号",
+      "documentNumber": "主席令第七十八号",
       "effectiveDate": "2018-01-01",
+      "revisionNote": "2017年11月4日第十二届全国人民代表大会常务委员会第三十次会议修订通过",
       "relevantClauses": [
         {
           "clauseId": "第二条",
@@ -34,7 +35,7 @@
             {
               "ruleId": "QUALITY-001",
               "ruleType": "quality",
-              "policyBasis": "依据：《中华人民共和国标准化法》（主席令第十一号）第二条 — 对需要统一的技术要求应当制定标准",
+              "policyBasis": "依据：《中华人民共和国标准化法》（主席令第七十八号）第二条 — 对需要统一的技术要求应当制定标准",
               "sourceDocument": "中华人民共和国标准化法",
               "sourceClause": "第二条"
             }
@@ -479,6 +480,8 @@
       "standardName": "政务服务事项办事指南编写规范",
       "standardNumber": "DB34/T 3228-2018",
       "effectiveDate": "2018-12-01",
+      "verificationStatus": "unverified",
+      "verificationNote": "该标准未在全国标准信息公共服务平台(std.samr.gov.cn)检索到明确详情页，待人工核验",
       "relevantClauses": [
         {
           "clauseId": "第4章",
