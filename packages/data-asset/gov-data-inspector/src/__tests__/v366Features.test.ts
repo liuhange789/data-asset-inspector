@@ -362,13 +362,13 @@ describe('v3.6.7 整修复测', () => {
       expect(phoneIssues.length).toBe(0)
     })
 
-    it('单独白名单短号带区号不报格式错误', () => {
+    it('区号+短号(020-12345)报格式错误(白名单仅完全等于)', () => {
       const guide = makeBaseGuide({
         '咨询电话': '020-12345',
       })
       const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
       const phoneIssues = result.formatIssues.filter((f) => f.field === '咨询电话')
-      expect(phoneIssues.length).toBe(0)
+      expect(phoneIssues.length).toBeGreaterThan(0)
     })
 
     it('多号码全合法不报格式错误', () => {
@@ -381,8 +381,8 @@ describe('v3.6.7 整修复测', () => {
     })
   })
 
-  describe('P1-5: 时限无分步描述不报warning', () => {
-    it('流程无分步时限不产生warning', () => {
+  describe('改1: sumDays===0 恢复warning(区分有无分步时限文字)', () => {
+    it('流程无分步时限文字 → 报warning', () => {
       const guide = makeBaseGuide({
         '办理流程': '受理→审查→决定→送达',
         '办理时限': '5个工作日',
@@ -391,7 +391,46 @@ describe('v3.6.7 整修复测', () => {
       const timeLimitWarnings = result.errorDetails.filter(
         (e) => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001' && e.errorType === 'warning',
       )
+      expect(timeLimitWarnings.length).toBe(1)
+    })
+
+    it('流程含分步时限文字但解析失败 → 不报warning', () => {
+      const guide = makeBaseGuide({
+        '办理流程': '受理(约1个工作日)→审查→决定',
+        '办理时限': '5个工作日',
+      })
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const timeLimitWarnings = result.errorDetails.filter(
+        (e) => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001' && e.errorType === 'warning',
+      )
       expect(timeLimitWarnings.length).toBe(0)
+    })
+  })
+
+  describe('改3: fieldAliases 逐样本判定', () => {
+    it('番禺样本无别名字段 → 仍报missing', () => {
+      const guide = makeBaseGuide({
+        '结果送达方式': undefined,
+      })
+      delete (guide as Record<string, unknown>)['结果送达方式']
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const missingErrors = result.errorDetails.filter(
+        (e) => e.field === '结果送达方式' && e.errorType === 'missing',
+      )
+      expect(missingErrors.length).toBeGreaterThan(0)
+    })
+
+    it('样本有别名字段"送达方式" → 不报missing', () => {
+      const guide = makeBaseGuide({
+        '结果送达方式': undefined,
+        '送达方式': '邮寄',
+      })
+      delete (guide as Record<string, unknown>)['结果送达方式']
+      const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
+      const missingErrors = result.errorDetails.filter(
+        (e) => e.field === '结果送达方式' && e.errorType === 'missing',
+      )
+      expect(missingErrors.length).toBe(0)
     })
   })
 })

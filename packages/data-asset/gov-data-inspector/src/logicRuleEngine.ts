@@ -419,7 +419,24 @@ function ruleProcessTimeLimitInconsistent(
   }
   const commitDays = extractTimeLimitDays(timeLimit)
   if (commitDays === null) return []
-  if (sumDays === 0) return []
+  if (sumDays === 0) {
+    if (/\d+\s*个?\s*(?:工作日|天)/.test(process)) return []
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '办理流程',
+          errorType: 'warning',
+          description: `流程缺少分步时限描述，无法与承诺办结时限${commitDays}个工作日进行比对。${rule.standardClause ?? ''}`,
+          suggestion: '办理流程应补充各环节的工作日时限描述',
+          dataSource: 'standard',
+          standardClause: rule.standardClause,
+ruleId: rule.ruleId,
+        },
+        severityMapping,
+      ),
+    ]
+  }
   if (sumDays !== commitDays) {
     return [
       ErrorDetailBuilder.build(

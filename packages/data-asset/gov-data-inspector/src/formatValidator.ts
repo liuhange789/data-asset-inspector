@@ -43,8 +43,7 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
       if (!isMultiNumber && options?.govServiceHotlineWhitelist && options.govServiceHotlineWhitelist.length > 0) {
         let isHotline = false
         for (const shortCode of options.govServiceHotlineWhitelist) {
-          const regex = new RegExp(`^(\\d{3,4}[-\\s]?)?${shortCode}$`)
-          if (regex.test(num)) { isHotline = true; break }
+          if (num === shortCode) { isHotline = true; break }
         }
         if (isHotline) continue
       }
