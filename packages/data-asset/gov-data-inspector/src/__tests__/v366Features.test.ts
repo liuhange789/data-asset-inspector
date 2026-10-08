@@ -362,13 +362,13 @@ describe('v3.6.7 整修复测', () => {
       expect(phoneIssues.length).toBe(0)
     })
 
-    it('区号+短号(020-12345)报格式错误(白名单仅完全等于)', () => {
+    it('区号+短号(020-12345)去区号后命中白名单(口径B) → 不报格式错误', () => {
       const guide = makeBaseGuide({
         '咨询电话': '020-12345',
       })
       const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
       const phoneIssues = result.formatIssues.filter((f) => f.field === '咨询电话')
-      expect(phoneIssues.length).toBeGreaterThan(0)
+      expect(phoneIssues.length).toBe(0)
     })
 
     it('多号码全合法不报格式错误', () => {

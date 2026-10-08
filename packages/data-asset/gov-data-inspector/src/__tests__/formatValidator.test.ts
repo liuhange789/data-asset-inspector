@@ -206,9 +206,14 @@ describe('FormatValidator 前置豁免（v3.5.7）', () => {
   ]
   const hotlineOptions = { govServiceHotlineWhitelist: ['12315', '12333', '12329', '12336', '12345', '12366', '12385', '12328', '12316', '12320', '12369'] }
 
-  it('咨询电话="0371-12315" 区号+短号不命中白名单(完全等于) → 报格式问题', () => {
+  it('咨询电话="0371-12315" 区号+短号去区号后命中白名单(口径B) → 不报格式问题', () => {
     const issues = FormatValidator.validate({ 咨询电话: '0371-12315' }, 'g1', hotlineRules, undefined, hotlineOptions)
-    expect(issues.some((i) => i.field === '咨询电话')).toBe(true)
+    expect(issues.some((i) => i.field === '咨询电话')).toBe(false)
+  })
+
+  it('咨询电话="020-12345" 区号+短号去区号后命中白名单(口径B) → 不报格式问题', () => {
+    const issues = FormatValidator.validate({ 咨询电话: '020-12345' }, 'g1', hotlineRules, undefined, hotlineOptions)
+    expect(issues.some((i) => i.field === '咨询电话')).toBe(false)
   })
 
   it('监督电话纯短号12329/12333/12336/12366/12385 命中白名单 → 不报格式问题', () => {

@@ -42,8 +42,9 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
     for (const num of numbers) {
       if (!isMultiNumber && options?.govServiceHotlineWhitelist && options.govServiceHotlineWhitelist.length > 0) {
         let isHotline = false
+        const pure = num.replace(/^\d{3,4}-/, '')
         for (const shortCode of options.govServiceHotlineWhitelist) {
-          if (num === shortCode) { isHotline = true; break }
+          if (pure === shortCode) { isHotline = true; break }
         }
         if (isHotline) continue
       }
