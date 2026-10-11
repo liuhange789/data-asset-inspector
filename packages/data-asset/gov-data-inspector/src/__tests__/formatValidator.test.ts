@@ -233,9 +233,9 @@ describe('FormatValidator 前置豁免（v3.5.7）', () => {
     expect(issues.some((i) => i.field === '咨询电话')).toBe(true)
   })
 
-  it('options缺省时电话回退既有正则（向后兼容）', () => {
+  it('options缺省时core-rules白名单兜底（v3.8.0核心规则直连）', () => {
     const issues = FormatValidator.validate({ 咨询电话: '12329' }, 'g1', hotlineRules)
-    expect(issues.some((i) => i.field === '咨询电话')).toBe(true)
+    expect(issues.some((i) => i.field === '咨询电话')).toBe(false)
   })
 
   const timeLimitRules: FormatRule[] = [

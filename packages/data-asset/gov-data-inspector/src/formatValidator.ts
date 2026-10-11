@@ -1,4 +1,5 @@
 import type { FormatIssue, FormatRule } from './types.js'
+import coreRules from './core-rules.json' with { type: 'json' }
 
 export interface FormatValidatorOptions {
   govServiceHotlineWhitelist?: string[]
@@ -46,6 +47,13 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
           if (pure === shortCode) { isHotline = true; break }
         }
         if (isHotline) continue
+      } else if (coreRules.govServiceHotlineWhitelist && coreRules.govServiceHotlineWhitelist.length > 0) {
+        let isHotline = false
+        const pure = num.replace(/^\d{3,4}-/, '')
+        for (const shortCode of coreRules.govServiceHotlineWhitelist) {
+          if (pure === shortCode) { isHotline = true; break }
+        }
+        if (isHotline) continue
       }
       if (rule.pattern) {
         const regex = new RegExp(rule.pattern)
@@ -62,8 +70,9 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
     }
     return issues
   }
-  if (rule.field === '办理时限' && options?.timeLimitValidExpressions && options.timeLimitValidExpressions.length > 0) {
-    if (options.timeLimitValidExpressions.includes(strVal)) return []
+  if (rule.field === '办理时限') {
+    const validExprs = options?.timeLimitValidExpressions?.length ? options.timeLimitValidExpressions : coreRules.timeLimitValidExpressions
+    if (validExprs && validExprs.length > 0 && validExprs.includes(strVal)) return []
   }
   if (rule.pattern) {
     const regex = new RegExp(rule.pattern)
@@ -105,20 +114,23 @@ function evaluateRule(guide: Record<string, unknown>, guideId: string, rule: For
     }
     return issues
   }
-  if (rule.field === '收费标准' && options?.chargeValidPatterns && options.chargeValidPatterns.length > 0) {
-    let chargeHit = false
-    for (const pattern of options.chargeValidPatterns) {
-      try {
-        const regex = new RegExp(pattern)
-        if (regex.test(strVal)) {
-          chargeHit = true
-          break
+  if (rule.field === '收费标准') {
+    const chargePatterns = options?.chargeValidPatterns?.length ? options.chargeValidPatterns : coreRules.chargeValidPatterns
+    if (chargePatterns && chargePatterns.length > 0) {
+      let chargeHit = false
+      for (const pattern of chargePatterns) {
+        try {
+          const regex = new RegExp(pattern)
+          if (regex.test(strVal)) {
+            chargeHit = true
+            break
+          }
+        } catch {
+          void 0
         }
-      } catch {
-        void 0
       }
+      if (chargeHit) return issues
     }
-    if (chargeHit) return issues
   }
   if (rule.requiredKeywords && rule.requiredKeywords.length > 0) {
     const fuzzyIssue = checkAddressFuzzy(strVal, rule.requiredKeywords, rule.fuzzyDescriptors, rule.field, guideId, rule.suggestionTemplate)

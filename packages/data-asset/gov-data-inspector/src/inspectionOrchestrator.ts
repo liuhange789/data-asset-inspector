@@ -121,13 +121,13 @@ export const InspectionOrchestrator = {
 
     if (config.regulationKnowledgeBase) {
       const kbHotlines = extractHotlineWhitelist(config.regulationKnowledgeBase)
-      if (kbHotlines.length > 0) effectiveHotlineWhitelist = kbHotlines
+      if (kbHotlines.length > 0) effectiveHotlineWhitelist = [...new Set([...(effectiveHotlineWhitelist ?? []), ...kbHotlines])]
 
       const kbRequiredFields = extractRequiredFields(config.regulationKnowledgeBase)
       if (kbRequiredFields.length > 0) effectiveCoreRequiredFields = kbRequiredFields
 
       const kbProcessKeywords = extractProcessCoreStepKeywords(config.regulationKnowledgeBase)
-      if (kbProcessKeywords.length > 0) effectiveProcessCoreStepKeywords = kbProcessKeywords
+      if (kbProcessKeywords.length > 0) effectiveProcessCoreStepKeywords = [...new Set([...(effectiveProcessCoreStepKeywords ?? []), ...kbProcessKeywords])]
     }
 
     for (let i = 0; i < data.length; i++) {
