@@ -3,6 +3,7 @@ import { ConfigPackLoader } from '../configPackLoader.js'
 import { writeFileSync, unlinkSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { tmpdir } from 'node:os'
+import coreRules from '../core-rules.json' with { type: 'json' }
 
 describe('配置包加载器', () => {
   const tmpFile = resolve(tmpdir(), 'test-config-pack.json')
@@ -216,12 +217,12 @@ describe('配置包加载器', () => {
 
     const result = ConfigPackLoader.load()
     expect(result.loadSource).toBe('file')
-    expect(result.configPack.govServiceHotlineWhitelist).toEqual(['12345'])
-    expect(result.configPack.timeLimitValidExpressions).toEqual(['即办'])
-    expect(result.configPack.chargeValidPatterns).toEqual(['按.*收取'])
-    expect(result.configPack.processCoreStepKeywords).toEqual(['受理'])
-    expect(result.configPack.processSimplifiedStepAliases).toEqual({ 审查: ['审核'] })
-    expect(result.configPack.fieldResidueValues).toEqual(['无', '暂无'])
+    expect(result.configPack.govServiceHotlineWhitelist).toEqual(coreRules.govServiceHotlineWhitelist)
+    expect(result.configPack.timeLimitValidExpressions).toEqual(coreRules.timeLimitValidExpressions)
+    expect(result.configPack.chargeValidPatterns).toEqual(coreRules.chargeValidPatterns)
+    expect(result.configPack.processCoreStepKeywords).toEqual(coreRules.processCoreStepKeywords)
+    expect(result.configPack.processSimplifiedStepAliases).toEqual(coreRules.processSimplifiedStepAliases)
+    expect(result.configPack.fieldResidueValues).toEqual(coreRules.fieldResidueValues)
 
     delete process.env.GOV_CONFIG_PACK_PATH
   })

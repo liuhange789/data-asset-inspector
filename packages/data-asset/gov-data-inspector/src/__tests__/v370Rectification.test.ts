@@ -3,6 +3,7 @@ import { InspectionOrchestrator } from '../inspectionOrchestrator.js'
 import { enrichWithPolicyBasis, annotateFormatIssuePolicyBasis } from '../reportGenerator.js'
 import type { KnowledgeBase, StandardRule, RegulationKnowledgeBase } from '../types.js'
 import defaultConfigPack from '../default-config-pack.json' with { type: 'json' }
+import coreRules from '../core-rules.json' with { type: 'json' }
 import regulationKb from '../regulation-knowledge-base.json' with { type: 'json' }
 
 const kb = regulationKb as RegulationKnowledgeBase
@@ -24,7 +25,7 @@ const standardRules: StandardRule[] = [
   { ruleId: 'LOG_PROCESS_COMPLETENESS_001', standardClause: 'GB/T 36114-2018 附录A', triggerFields: ['办理流程'], condition: '办理流程缺少核心环节', suggestionTemplate: '补充环节', threshold: 0, triggerKeywords: [] },
   { ruleId: 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001', standardClause: 'GB/T 36114-2018 附录A', triggerFields: ['办理时限'], condition: '办理时限超出法定上限', threshold: 20, suggestionTemplate: '修正时限', triggerKeywords: [] },
 ]
-const config = { ...defaultConfigPack, regulationKnowledgeBase: kb } as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
+const config = { ...defaultConfigPack, ...coreRules, regulationKnowledgeBase: kb } as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
 
 function makeGuide(overrides: Record<string, unknown>): Record<string, unknown> {
   const base: Record<string, unknown> = {
@@ -243,7 +244,7 @@ describe('整改6: 第四批全新7条样本', () => {
   })
 })
 describe('v3.7.1 默认内置验证（不传fieldAliases/fieldResidueValues）', () => {
-  const configNoAliases = { ...defaultConfigPack, regulationKnowledgeBase: kb } as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
+  const configNoAliases = { ...defaultConfigPack, ...coreRules, regulationKnowledgeBase: kb } as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
   delete (configNoAliases as unknown as Record<string, unknown>).fieldAliases
   delete (configNoAliases as unknown as Record<string, unknown>).fieldResidueValues
 

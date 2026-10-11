@@ -4,6 +4,7 @@ import { enrichWithPolicyBasis, annotateFormatIssuePolicyBasis } from '../report
 import { findRuleById } from '../ruleExtractor.js'
 import type { KnowledgeBase, StandardRule, RegulationKnowledgeBase } from '../types.js'
 import defaultConfigPack from '../default-config-pack.json' with { type: 'json' }
+import coreRules from '../core-rules.json' with { type: 'json' }
 import regulationKb from '../regulation-knowledge-base.json' with { type: 'json' }
 
 const kb = regulationKb as RegulationKnowledgeBase
@@ -34,7 +35,7 @@ const standardRules: StandardRule[] = [
 ]
 
 const config = {
-  ...defaultConfigPack,
+  ...defaultConfigPack, ...coreRules,
   regulationKnowledgeBase: kb,
 } as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
 

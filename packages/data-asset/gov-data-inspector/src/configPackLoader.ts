@@ -7,6 +7,7 @@ import { normalizeConfigPack } from './configPack.js'
 import { ConfigPackSchemaValidator } from './configPackSchemaValidator.js'
 import type { ConfigPackWarning, LoadSource, ReferenceSystem } from './types.js'
 import defaultConfigPack from './default-config-pack.json' with { type: 'json' }
+import coreRules from './core-rules.json' with { type: 'json' }
 
 export interface ConfigPackLoadResult {
   configPack: ConfigPack
@@ -19,29 +20,15 @@ function attachOptionalVocabFields(raw: Record<string, unknown>, normalized: Con
   if (Array.isArray(validShortValues) && validShortValues.length > 0) {
     normalized.validShortValues = validShortValues as string[]
   }
-  const govServiceHotlineWhitelist = raw.govServiceHotlineWhitelist
-  if (Array.isArray(govServiceHotlineWhitelist) && govServiceHotlineWhitelist.length > 0) {
-    normalized.govServiceHotlineWhitelist = govServiceHotlineWhitelist as string[]
-  }
-  const timeLimitValidExpressions = raw.timeLimitValidExpressions
-  if (Array.isArray(timeLimitValidExpressions) && timeLimitValidExpressions.length > 0) {
-    normalized.timeLimitValidExpressions = timeLimitValidExpressions as string[]
-  }
-  const chargeValidPatterns = raw.chargeValidPatterns
-  if (Array.isArray(chargeValidPatterns) && chargeValidPatterns.length > 0) {
-    normalized.chargeValidPatterns = chargeValidPatterns as string[]
-  }
-  const processCoreStepKeywords = raw.processCoreStepKeywords
-  if (Array.isArray(processCoreStepKeywords) && processCoreStepKeywords.length > 0) {
-    normalized.processCoreStepKeywords = processCoreStepKeywords as string[]
-  }
-  const fieldResidueValues = raw.fieldResidueValues
-  if (Array.isArray(fieldResidueValues) && fieldResidueValues.length > 0) {
-    normalized.fieldResidueValues = fieldResidueValues as string[]
-  }
-  const processSimplifiedStepAliases = raw.processSimplifiedStepAliases
-  if (typeof processSimplifiedStepAliases === 'object' && processSimplifiedStepAliases !== null && !Array.isArray(processSimplifiedStepAliases)) {
-    normalized.processSimplifiedStepAliases = processSimplifiedStepAliases as Record<string, string[]>
+  normalized.govServiceHotlineWhitelist = coreRules.govServiceHotlineWhitelist as string[]
+  normalized.timeLimitValidExpressions = coreRules.timeLimitValidExpressions as string[]
+  normalized.chargeValidPatterns = coreRules.chargeValidPatterns as string[]
+  normalized.processCoreStepKeywords = coreRules.processCoreStepKeywords as string[]
+  normalized.fieldResidueValues = coreRules.fieldResidueValues as string[]
+  normalized.processSimplifiedStepAliases = coreRules.processSimplifiedStepAliases as Record<string, string[]>
+  const processCoreStepCombinations = coreRules.processCoreStepCombinations
+  if (Array.isArray(processCoreStepCombinations) && processCoreStepCombinations.length > 0) {
+    normalized.processCoreStepCombinations = processCoreStepCombinations as string[][]
   }
   return normalized
 }

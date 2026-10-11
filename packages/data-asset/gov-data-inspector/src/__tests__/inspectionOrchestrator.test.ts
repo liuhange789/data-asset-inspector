@@ -335,13 +335,13 @@ describe('词表传递链路端到端（v3.5.6）', () => {
     ...(validShortValues.length > 0 ? { validShortValues } : {}),
   }
 
-  it('校车样本表格下载="无" → 不报semantic误报，missing保留', () => {
+  it('校车样本表格下载="无" → 不报semantic误报，不报missing(v3.7.9核心规则豁免)', () => {
     const data = [makeCompleteGuide({ 表格下载: '无', 结果送达方式: '邮政EMS寄送' })]
     const result = InspectionOrchestrator.orchestrate(data, configWithLexicons, kb, standardRules)
     const semanticDetails = result.errorDetails.filter((d) => d.errorType === 'semantic' && d.field === '表格下载')
     expect(semanticDetails.length).toBe(0)
     expect(result.errorDetails.filter((d) => d.field === '表格下载').some((d) => d.description.includes('内容长度不足'))).toBe(false)
-    expect(result.missingFields).toBe(1)
+    expect(result.missingFields).toBe(0)
   })
 
   it('非词表值表格下载="x" → 仍报semantic', () => {

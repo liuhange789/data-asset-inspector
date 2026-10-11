@@ -20,12 +20,17 @@ function resolveSeverity(
   errorType: ErrorType,
   severity: Severity | undefined,
   severityMapping: Record<string, string> | undefined,
+  ruleId?: string | undefined,
 ): Severity {
   if (errorType === 'warning' || errorType === 'info') {
     if (severity && VALID_SEVERITIES.includes(severity)) return severity
     return 'warning'
   }
   if (severity && VALID_SEVERITIES.includes(severity)) return severity
+  if (ruleId) {
+    const ruleMapped = severityMapping?.[ruleId] as Severity | undefined
+    if (ruleMapped && VALID_SEVERITIES.includes(ruleMapped)) return ruleMapped
+  }
   const mapped = severityMapping?.[errorType] as Severity | undefined
   if (mapped && VALID_SEVERITIES.includes(mapped)) return mapped
   return errorType === 'missing' ? 'major' : 'critical'
@@ -49,7 +54,7 @@ export const ErrorDetailBuilder = {
       guideId,
       field,
       errorType,
-      severity: resolveSeverity(errorType, input.severity, severityMapping),
+      severity: resolveSeverity(errorType, input.severity, severityMapping, input.ruleId),
       description,
       suggestion,
     }

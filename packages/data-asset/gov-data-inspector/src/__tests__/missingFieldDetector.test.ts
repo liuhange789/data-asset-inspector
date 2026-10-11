@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { MissingFieldDetector } from '../missingFieldDetector.js'
-import defaultConfigPack from '../default-config-pack.json' with { type: 'json' }
 
-const fieldResidueValues = (defaultConfigPack as Record<string, unknown>).fieldResidueValues as string[]
+import coreRules from '../core-rules.json' with { type: 'json' }
+
+const fieldResidueValues = (coreRules as Record<string, unknown>).fieldResidueValues as string[]
 
 const requiredElements = [
   '事项名称', '实施主体', '办理条件', '申请材料', '办理流程', '办理时限',

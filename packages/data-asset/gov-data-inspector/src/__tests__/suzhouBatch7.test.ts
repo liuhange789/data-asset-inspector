@@ -3,6 +3,7 @@ import { InspectionOrchestrator } from '../inspectionOrchestrator.js'
 import { SemanticRuleEngine } from '../semanticRuleEngine.js'
 import type { KnowledgeBase, StandardRule, RegulationKnowledgeBase } from '../types.js'
 import defaultConfigPack from '../default-config-pack.json' with { type: 'json' }
+import coreRules from '../core-rules.json' with { type: 'json' }
 import regulationKb from '../regulation-knowledge-base.json' with { type: 'json' }
 
 const kb = regulationKb as RegulationKnowledgeBase
@@ -20,7 +21,7 @@ const standardRules: StandardRule[] = [
   { ruleId: 'LOG_CONDITION_FIELD_MISPLACED_001', standardClause: 'GB/T 36114-2018 第6.3条', triggerFields: ['办理条件', '受理条件'], condition: '受理条件字段包含材料名称', scanMode: 'anyField', threshold: undefined, suggestionTemplate: '受理条件字段不应包含材料名称，请核对字段内容归属', triggerKeywords: ['申请表', '身份证明', '身体条件证明', '身份证复印件', '营业执照复印件', '居民身份证', '身份证原件', '营业执照', '产权证', '户口本', '户口簿'] },
 ]
 
-const configDefault = { ...defaultConfigPack, regulationKnowledgeBase: kb } as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
+const configDefault = { ...defaultConfigPack, ...coreRules, regulationKnowledgeBase: kb } as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
 
 const batch7Samples: Record<string, unknown>[] = [
   {

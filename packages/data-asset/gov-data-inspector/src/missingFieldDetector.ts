@@ -31,6 +31,8 @@ const DEFAULT_FIELD_ALIASES: Record<string, string[]> = {
   '表格下载': ['申请表格', '下载专区', '材料下载'],
 }
 
+const FIELDS_WITH_VALID_NONE = new Set(['表格下载', '结果送达方式'])
+
 const DEFAULT_FIELD_RESIDUE_VALUES = [
   '无', '暂无', '无要求', '/', '—', '-', '空', '未填写', '未提供', '未设置',
   '未配置', '待补充', '待填写', '待完善', '略', '省略', 'N/A', 'n/a', 'NA',
@@ -136,6 +138,7 @@ export const MissingFieldDetector = {
     const details: ErrorDetail[] = []
     for (const elem of requiredElements) {
       const val = guide[elem]
+      if (FIELDS_WITH_VALID_NONE.has(elem) && typeof val === 'string' && val.trim() === '无') continue
       if (isMissing(val, placeholderValues)) {
         if (hasAliasValue(guide, elem, placeholderValues, options?.fieldAliases)) continue
         details.push(
@@ -216,6 +219,7 @@ export const MissingFieldDetector = {
 
     const processRequiredField = (elem: string) => {
       const val = guide[elem]
+      if (FIELDS_WITH_VALID_NONE.has(elem) && typeof val === 'string' && val.trim() === '无') return
       if (isMissing(val, placeholderValues)) {
         if (hasAliasValue(guide, elem, placeholderValues, options?.fieldAliases)) return
         coreDetails.push(

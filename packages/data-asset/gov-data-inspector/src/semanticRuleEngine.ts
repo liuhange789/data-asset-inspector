@@ -728,8 +728,9 @@ export const SemanticRuleEngine = {
       structuralDetails.push(...checkMaterialCompleteness(guide, guideId, severityMapping))
       structuralDetails.push(...checkOnlineDepthValidity(guide, guideId, severityMapping))
       const conditionTermDetails = detectConditionTermsMismatch(guide, guideId, options ?? {}, severityMapping)
+      const gradedDetails = detectGradedSemantic(guide, guideId, options?.vagueTerms ?? DEFAULT_VAGUE_TERMS, options?.substantiveWords ?? DEFAULT_SUBSTANTIVE_WORDS, options?.validShortValues ?? DEFAULT_VALID_SHORT_VALUES, severityMapping)
       const warning = UnmatchedWarningBuilder.build(guideId)
-      return { details: deduplicateErrors([...conflictDetails, ...structuralDetails, ...conditionTermDetails]), unmatched: true, warning }
+      return { details: deduplicateErrors([...conflictDetails, ...structuralDetails, ...conditionTermDetails, ...gradedDetails]), unmatched: true, warning }
     }
 
     const isKbMissing = !kb || !kb.timeLimits || !kb.materials || !kb.conditions

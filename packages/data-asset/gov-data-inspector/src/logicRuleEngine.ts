@@ -249,8 +249,24 @@ function ruleProcessCompleteness(
   severityMapping?: Record<string, string>,
   options?: LogicRuleEngineOptions,
 ): ErrorDetail[] {
-  const process = String(guide['办理流程'] ?? '')
-  if (!process) return []
+  const process = String(guide['办理流程'] ?? '').trim()
+  if (!process) {
+    return [
+      ErrorDetailBuilder.build(
+        {
+          guideId,
+          field: '办理流程',
+          errorType: 'logical',
+          description: '办理流程为空，建议补充完整流程环节',
+          suggestion: '请补充办理流程环节信息',
+          dataSource: 'standard',
+          standardClause: rule.standardClause,
+          ruleId: rule.ruleId,
+        },
+        severityMapping,
+      ),
+    ]
+  }
   if (isImageFlow(process)) return []
   const hasArrow = process.includes('→') || process.includes('->') || process.includes('➡') || process.includes('=>')
   if (hasArrow && options?.processCoreStepKeywords && options.processCoreStepKeywords.length > 0) {

@@ -3,6 +3,7 @@ import { InspectionOrchestrator } from '../inspectionOrchestrator.js'
 import { enrichWithPolicyBasis, annotateFormatIssuePolicyBasis } from '../reportGenerator.js'
 import type { KnowledgeBase, StandardRule, RegulationKnowledgeBase } from '../types.js'
 import defaultConfigPack from '../default-config-pack.json' with { type: 'json' }
+import coreRules from '../core-rules.json' with { type: 'json' }
 import regulationKb from '../regulation-knowledge-base.json' with { type: 'json' }
 
 const kb = regulationKb as RegulationKnowledgeBase
@@ -26,7 +27,7 @@ const standardRules: StandardRule[] = [
   { ruleId: 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001', standardClause: 'GB/T 36114-2018 附录A', triggerFields: ['办理时限'], condition: '办理时限超出法定上限', threshold: 20, suggestionTemplate: '修正时限', triggerKeywords: [] },
 ]
 
-const configDefault = { ...defaultConfigPack, regulationKnowledgeBase: kb } as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
+const configDefault = { ...defaultConfigPack, ...coreRules, regulationKnowledgeBase: kb } as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
 delete (configDefault as unknown as Record<string, unknown>).fieldAliases
 delete (configDefault as unknown as Record<string, unknown>).fieldResidueValues
 delete (configDefault as unknown as Record<string, unknown>).semanticContextExemptions

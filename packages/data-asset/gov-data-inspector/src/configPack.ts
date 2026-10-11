@@ -78,6 +78,7 @@ export interface ConfigPack {
   chargeValidPatterns?: string[] | undefined
   processCoreStepKeywords?: string[] | undefined
   processSimplifiedStepAliases?: Record<string, string[]> | undefined
+  processCoreStepCombinations?: string[][] | undefined
   fieldResidueValues?: string[] | undefined
   qualityDimensions?: QualityDimension[] | undefined
 }

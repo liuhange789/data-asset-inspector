@@ -2,6 +2,7 @@ import { describe, it } from 'vitest'
 import { InspectionOrchestrator } from '../inspectionOrchestrator.js'
 import type { KnowledgeBase, StandardRule } from '../types.js'
 import defaultConfigPack from '../default-config-pack.json' with { type: 'json' }
+import coreRules from '../core-rules.json' with { type: 'json' }
 
 const kb: KnowledgeBase = {
   timeLimits: [
@@ -23,7 +24,7 @@ const standardRules: StandardRule[] = [
   { ruleId: 'LOG_INSTANT_HANDLE_001', standardClause: 'DB1405/T 085-2025 第5.3条', triggerFields: ['办理流程', '办理时限'], condition: '当场办理且时限>1', threshold: 1, suggestionTemplate: '建议调整', triggerKeywords: ['当场办理'] },
 ]
 
-const config = defaultConfigPack as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
+const config = { ...defaultConfigPack, ...coreRules } as unknown as Parameters<typeof InspectionOrchestrator.orchestrate>[1]
 
 interface RealSample {
   source: string
