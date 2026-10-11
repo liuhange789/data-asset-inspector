@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/gov-config-gd",
-  "version": "2026.1.1",
+  "version": "2026.1.2",
   "description": "广东省政务数据巡检配置包 — 含粤府办/粤委改等广东省地方政策依据与标准词表",
   "type": "module",
   "exports": {

@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-visibility-doctor",
   "description": "dsh 插件曝光度诊断与采用率提升 CLI 工具",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MIT",
   "author": "liuhange789",
   "type": "module",

@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-fin-aml-checker",
   "description": "金融反洗钱合规检查插件 — 检测大额/可疑交易阈值、豁免、时效性，输出反洗钱合规报告",
-  "version": "3.1.3",
+  "version": "3.1.4",
   "publishConfig": {
     "access": "public"
   },

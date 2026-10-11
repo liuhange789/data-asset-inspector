@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-research-data-provenance",
   "description": "科研数据溯源审计插件 — 审计血缘完整性、可复现性、FAIR原则，输出溯源报告",
-  "version": "3.1.3",
+  "version": "3.1.4",
   "publishConfig": {
     "access": "public"
   },

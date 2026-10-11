@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-geo-data-quality-inspector",
   "description": "地理空间数据质量检查插件 — 检测高程精度、拓扑一致性，输出加权质量评分",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publishConfig": {
     "access": "public"
   },

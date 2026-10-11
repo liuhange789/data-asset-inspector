@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-cleaning",
   "description": "数据清洗插件 — 去重+格式标准化+异常值处理+缺失值填充",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "publishConfig": {
     "access": "public"
   },

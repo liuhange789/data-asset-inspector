@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-compliance-check",
   "description": "数据资产合规检查插件 — 检查来源合规性、处理合规性、使用合规性",
-  "version": "3.1.5",
+  "version": "3.1.6",
   "publishConfig": {
     "access": "public"
   },

@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-quality-scoring",
   "description": "数据质量打分插件 — 多维度评分（完整性/准确性/一致性/时效性）",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "publishConfig": {
     "access": "public"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/gov-config-zj",
-  "version": "2026.1.1",
+  "version": "2026.1.2",
   "description": "浙江省政务数据巡检配置包 — 含浙政办/浙委改等浙江省地方政策依据与标准词表",
   "type": "module",
   "exports": {

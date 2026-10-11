@@ -1,6 +1,6 @@
 {
   "name": "@liuhange/gov-config-schema",
-  "version": "2026.1.1",
+  "version": "2026.1.2",
   "description": "政务数据巡检配置包 JSON Schema — 供配置包维护者离线校验配置包内容",
   "type": "module",
   "exports": {
