@@ -21,7 +21,7 @@ export type {
 } from './reportGenerator.js'
 export { PathValidator } from './pathValidator.js'
 export { AuditLogger } from './auditLogger.js'
-export type { AuditLogParams } from './auditLogger.js'
+export type { AuditLogParams, AuditLogLevel } from './auditLogger.js'
 export { PolicyReferenceResolver } from './policyReferenceResolver.js'
 export { RegistrationNavigationEnhancer } from './registrationNavigationEnhancer.js'
 export {

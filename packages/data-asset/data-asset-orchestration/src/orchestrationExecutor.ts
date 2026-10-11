@@ -7,10 +7,21 @@ export interface OrchestrationExecutorResult {
   result: OrchestrationResult
 }
 
+export interface OrchestrationExecutorOptions {
+  stageTimeoutMs?: number
+  fullFlowTimeoutMs?: number
+}
+
 export class OrchestrationExecutor {
   private readonly sequentialExecutor = new SequentialExecutor()
   private readonly navEnhancer = new RegistrationNavigationEnhancer()
-  private readonly fullFlowTimeoutMs = 180000
+  private readonly stageTimeoutMs: number
+  private readonly fullFlowTimeoutMs: number
+
+  constructor(options: OrchestrationExecutorOptions = {}) {
+    this.stageTimeoutMs = options.stageTimeoutMs ?? 30000
+    this.fullFlowTimeoutMs = options.fullFlowTimeoutMs ?? 180000
+  }
 
   plan(filePath: string, strategy: string, productName: string) {
     return this.sequentialExecutor.plan(filePath, strategy, productName)
@@ -41,6 +52,10 @@ export class OrchestrationExecutor {
     error: string,
   ): OrchestrationExecutorResult {
     return this.sequentialExecutor.aggregateFailure(completedReports, failedStage, error)
+  }
+
+  getStageTimeoutMs(): number {
+    return this.stageTimeoutMs
   }
 
   getTimeoutMs(): number {

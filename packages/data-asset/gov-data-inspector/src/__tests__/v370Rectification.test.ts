@@ -142,10 +142,10 @@ describe('v3.7.0 整改专项验证', () => {
       expect(info.length).toBeGreaterThanOrEqual(1)
       expect(warn.length).toBe(0)
     })
-    it('时限L2 warning仍为warning（非info）', () => {
+    it('时限L2 info(分步时限缺失降为info)', () => {
       const guide = makeGuide({ '办理流程': '受理→审查→决定→送达', '办理时限': '5个工作日' })
       const r = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
-      const l2 = r.errorDetails.filter(e => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001' && e.errorType === 'warning')
+      const l2 = r.errorDetails.filter(e => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001' && e.errorType === 'info')
       expect(l2.length).toBeGreaterThanOrEqual(1)
     })
   })

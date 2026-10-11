@@ -80,7 +80,7 @@ export interface OrchestrateResult extends GuideInspectionResult {
   itemType?: string | null
 }
 
-const EX_OFFICIO_KEYWORDS = ['依职权', '主动作出', '无需申请', '依申请不适用', '主动开展']
+const EX_OFFICIO_KEYWORDS = ['依职权', '主动作出', '无需申请', '无需提交申请材料', '依申请不适用', '主动开展']
 const EX_OFFICIO_EXEMPT_FIELDS = new Set(['申请材料', '表格下载', '网上办理深度', '结果送达方式'])
 
 function isExOfficioItem(guide: Record<string, unknown>): boolean {
@@ -138,7 +138,24 @@ export const InspectionOrchestrator = {
 
       const standardGuide = config.fieldMapping
         ? mapGuideToStandard(guide, config.fieldMapping)
-        : guide
+        : { ...guide }
+
+      const FIELD_ALIAS_MAP: Record<string, string[]> = {
+        '网上办理深度': ['办理形式', '网上办理形式', '办理方式'],
+
+      }
+      for (const [stdField, aliases] of Object.entries(FIELD_ALIAS_MAP)) {
+        const stdVal = standardGuide[stdField]
+        if (stdVal === undefined || stdVal === null || (typeof stdVal === 'string' && stdVal.trim() === '')) {
+          for (const alias of aliases) {
+            const aliasVal = standardGuide[alias]
+            if (aliasVal !== undefined && aliasVal !== null && (typeof aliasVal !== 'string' || aliasVal.trim() !== '')) {
+              standardGuide[stdField] = aliasVal
+              break
+            }
+          }
+        }
+      }
 
       if (useGraded) {
         const matchResult = SemanticRuleEngine.matchItemType(standardGuide, config.itemTypeMatching, { itemTypeOverride: options?.itemTypeOverride })

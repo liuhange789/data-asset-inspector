@@ -25,6 +25,12 @@
 ## 快速开始
 
 ```bash
+dsh plugin --profile web add @liuhange/dsh-data-asset-orchestration
+```
+
+或通过 npm 安装：
+
+```bash
 npm install @liuhange/dsh-data-asset-orchestration
 ```
 
@@ -43,7 +49,7 @@ npm install @liuhange/dsh-data-asset-orchestration
 
 ## Known Limitations and Deferred Work
 
-- Timeout handling uses fixed thresholds (30s per stage, 180s total)
+- Timeout handling is configurable via constructor options (`stageTimeoutMs` default 30s, `fullFlowTimeoutMs` default 180s)
 - Inter-plugin communication via ctx.tools.call string names
 
 ---

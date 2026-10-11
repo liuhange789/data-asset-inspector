@@ -80,7 +80,9 @@
     "燃气",
     "电力",
     "通信",
-    "综合管廊"
+    "综合管廊",
+    "registration",
+    "valuation"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }

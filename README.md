@@ -7,18 +7,18 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-22+-green.svg)](https://nodejs.org/)
 [![Tests](https://img.shields.io/badge/Tests-538%20passed-brightgreen.svg)]()
-[![Plugins](https://img.shields.io/badge/Plugins-29-orange.svg)]()
+[![Plugins](https://img.shields.io/badge/Plugins-32-orange.svg)]()
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-DSH-purple.svg)](https://github.com/deepseek-ai/deepseek-harness)
 [![cordis.patch](https://img.shields.io/badge/cordis.patch-ready-blue.svg)]()
 [![Zero Hardcoding](https://img.shields.io/badge/Zero%20Hardcoding-policy--basis%20traceable-success.svg)]()
 
-> 📦 **29个npm插件** | 🧪 **538个测试全部通过** | 📋 **覆盖数据资产全生命周期** | 🔒 **每个报告含政策依据可审计** | ⭐ **如果对你有帮助，请给个Star！**
+> 📦 **32个npm插件** | 🧪 **538个测试全部通过** | 📋 **覆盖数据资产全生命周期** | 🔒 **每个报告含政策依据可审计** | ⭐ **如果对你有帮助，请给个Star！**
 
 ## 为什么选择本插件矩阵？
 
-| 对比维度 | DSH官方插件 (10个) | 本插件矩阵 (29个) |
+| 对比维度 | DSH官方插件 (10个) | 本插件矩阵 (32个) |
 |---------|-------------------|------------------|
-| 插件数量 | 10 | **29**（+19独有） |
+| 插件数量 | 10 | **32**（+22独有） |
 | npm发布 | ❌ 仅GitHub源码 | ✅ 全部已发布 |
 | 政务数据巡检 | ❌ 无 | ✅ 五维检测+降级模式 |
 | 数据资产估值 | ❌ 无 | ✅ 成本法/收益法/市场法 |
@@ -26,12 +26,12 @@
 | AI数据集检查 | ❌ 无 | ✅ 偏见检测 |
 | 无凭据降级 | ❌ 无 | ✅ 分类独立运行 |
 | 异常输入处理 | ❌ 无 | ✅ 6类异常全覆盖 |
-| cordis.patch | ❌ 无 | ✅ 29包均含 |
+| cordis.patch | ❌ 无 | ✅ 29包均含（3个配置包为纯数据包） |
 | 测试覆盖 | 未公开 | **538 tests passed** |
 
-基于 DeepSeek Harness (DSH) 的全领域数据资产管理插件矩阵，覆盖"脱敏→清洗→盘点→质量→估值→合规→登记→政务→AI→流通→金融→科研→建筑→管线→测绘"完整业务链路。29个插件全部发布至npm，每个插件嵌入政策依据引用，确保"有理有据、可审计、可追溯"。
+基于 DeepSeek Harness (DSH) 的全领域数据资产管理插件矩阵，覆盖"脱敏→清洗→盘点→质量→估值→合规→登记→政务→AI→流通→金融→科研→建筑→管线→测绘"完整业务链路。32个插件全部发布至npm，每个插件嵌入政策依据引用，确保"有理有据、可审计、可追溯"。
 
-## 全部29个插件列表
+## 全部32个插件列表
 
 ### 基础模块
 
@@ -99,7 +99,7 @@
 ```bash
 npx @deepseek-ai/dsh web
 
-# 安装全部29个插件
+# 安装全部32个插件
 dsh plugin --profile web add @liuhange/dsh-data-asset-shared
 dsh plugin --profile web add @liuhange/dsh-data-masking
 dsh plugin --profile web add @liuhange/dsh-data-cleaning
@@ -129,12 +129,15 @@ dsh plugin --profile web add @liuhange/dsh-research-data-provenance
 dsh plugin --profile web add @liuhange/dsh-construction-data-inventory
 dsh plugin --profile web add @liuhange/dsh-underground-pipeline-inspector
 dsh plugin --profile web add @liuhange/dsh-geo-data-quality-inspector
+dsh plugin --profile web add @liuhange/gov-config-gd
+dsh plugin --profile web add @liuhange/gov-config-schema
+dsh plugin --profile web add @liuhange/gov-config-zj
 ```
 
 ### 方式二：npm 批量安装
 
 ```bash
-npm install @liuhange/dsh-data-asset-shared @liuhange/dsh-data-masking @liuhange/dsh-data-cleaning @liuhange/dsh-data-inventory @liuhange/dsh-data-packaging @liuhange/dsh-data-asset-orchestration @liuhange/dsh-data-quality-scoring @liuhange/dsh-data-lineage @liuhange/dsh-data-visualization @liuhange/dsh-data-sensitivity-classification @liuhange/dsh-data-asset-inventory-scan @liuhange/dsh-data-asset-quality-score @liuhange/dsh-data-asset-valuation @liuhange/dsh-data-asset-compliance-check @liuhange/dsh-data-asset-registration-helper @liuhange/dsh-data-asset-attestation @liuhange/dsh-city-data-classifier @liuhange/dsh-ai-dataset-inspector @liuhange/dsh-data-circulation-assessor @liuhange/dsh-generate-registration-docs @liuhange/dsh-registration-precheck @liuhange/dsh-match-registration-agency @liuhange/dsh-visibility-doctor @liuhange/dsh-gov-data-inspector @liuhange/dsh-fin-aml-checker @liuhange/dsh-research-data-provenance @liuhange/dsh-construction-data-inventory @liuhange/dsh-underground-pipeline-inspector @liuhange/dsh-geo-data-quality-inspector
+npm install @liuhange/dsh-data-asset-shared @liuhange/dsh-data-masking @liuhange/dsh-data-cleaning @liuhange/dsh-data-inventory @liuhange/dsh-data-packaging @liuhange/dsh-data-asset-orchestration @liuhange/dsh-data-quality-scoring @liuhange/dsh-data-lineage @liuhange/dsh-data-visualization @liuhange/dsh-data-sensitivity-classification @liuhange/dsh-data-asset-inventory-scan @liuhange/dsh-data-asset-quality-score @liuhange/dsh-data-asset-valuation @liuhange/dsh-data-asset-compliance-check @liuhange/dsh-data-asset-registration-helper @liuhange/dsh-data-asset-attestation @liuhange/dsh-city-data-classifier @liuhange/dsh-ai-dataset-inspector @liuhange/dsh-data-circulation-assessor @liuhange/dsh-generate-registration-docs @liuhange/dsh-registration-precheck @liuhange/dsh-match-registration-agency @liuhange/dsh-visibility-doctor @liuhange/dsh-gov-data-inspector @liuhange/dsh-fin-aml-checker @liuhange/dsh-research-data-provenance @liuhange/dsh-construction-data-inventory @liuhange/dsh-underground-pipeline-inspector @liuhange/dsh-geo-data-quality-inspector @liuhange/gov-config-gd @liuhange/gov-config-schema @liuhange/gov-config-zj
 ```
 
 ## 快速开始

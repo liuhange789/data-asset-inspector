@@ -178,4 +178,26 @@ describe('OrchestrationExecutor', () => {
   it('getTimeoutMs returns the configured full-flow timeout', () => {
     expect(executor.getTimeoutMs()).toBe(180000)
   })
+
+  it('getStageTimeoutMs returns the default per-stage timeout', () => {
+    expect(executor.getStageTimeoutMs()).toBe(30000)
+  })
+
+  it('supports configurable timeouts via constructor options', () => {
+    const custom = new OrchestrationExecutor({ stageTimeoutMs: 60000, fullFlowTimeoutMs: 300000 })
+    expect(custom.getStageTimeoutMs()).toBe(60000)
+    expect(custom.getTimeoutMs()).toBe(300000)
+  })
+
+  it('uses default timeouts when no options provided', () => {
+    const defaultExecutor = new OrchestrationExecutor()
+    expect(defaultExecutor.getStageTimeoutMs()).toBe(30000)
+    expect(defaultExecutor.getTimeoutMs()).toBe(180000)
+  })
+
+  it('supports partial timeout override (only stage)', () => {
+    const partial = new OrchestrationExecutor({ stageTimeoutMs: 45000 })
+    expect(partial.getStageTimeoutMs()).toBe(45000)
+    expect(partial.getTimeoutMs()).toBe(180000)
+  })
 })

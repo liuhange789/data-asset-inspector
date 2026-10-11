@@ -80,7 +80,9 @@
     "施工数据",
     "构件分类",
     "工程盘点",
-    "建设数据"
+    "建设数据",
+    "registration",
+    "valuation"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }

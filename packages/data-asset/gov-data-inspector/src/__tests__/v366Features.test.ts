@@ -382,26 +382,26 @@ describe('v3.6.7 整修复测', () => {
   })
 
   describe('改1: sumDays===0 恢复warning(区分有无分步时限文字)', () => {
-    it('流程无分步时限文字 → 报warning', () => {
+    it('流程无分步时限文字 → 报info', () => {
       const guide = makeBaseGuide({
         '办理流程': '受理→审查→决定→送达',
         '办理时限': '5个工作日',
       })
       const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
       const timeLimitWarnings = result.errorDetails.filter(
-        (e) => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001' && e.errorType === 'warning',
+        (e) => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001' && e.errorType === 'info',
       )
       expect(timeLimitWarnings.length).toBe(1)
     })
 
-    it('流程含分步时限文字但解析失败 → 不报warning', () => {
+    it('流程含分步时限文字但解析失败 → 不报info', () => {
       const guide = makeBaseGuide({
         '办理流程': '受理(约1个工作日)→审查→决定',
         '办理时限': '5个工作日',
       })
       const result = InspectionOrchestrator.orchestrate([guide], config, knowledgeBase, standardRules)
       const timeLimitWarnings = result.errorDetails.filter(
-        (e) => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001' && e.errorType === 'warning',
+        (e) => e.ruleId === 'LOG_PROCESS_TIME_LIMIT_INCONSISTENT_001' && e.errorType === 'info',
       )
       expect(timeLimitWarnings.length).toBe(0)
     })

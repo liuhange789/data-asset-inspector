@@ -75,7 +75,9 @@
     "classification",
     "smart-city",
     "urban-data",
-    "municipal"
+    "municipal",
+    "registration",
+    "valuation"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }

@@ -80,7 +80,9 @@
     "学术数据",
     "实验数据",
     "溯源审计",
-    "可追溯"
+    "可追溯",
+    "registration",
+    "valuation"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }

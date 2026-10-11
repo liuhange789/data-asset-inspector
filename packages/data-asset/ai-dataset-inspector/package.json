@@ -79,7 +79,9 @@
     "ground-truth",
     "model-training",
     "data-validation",
-    "质检报告"
+    "质检报告",
+    "registration",
+    "valuation"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }

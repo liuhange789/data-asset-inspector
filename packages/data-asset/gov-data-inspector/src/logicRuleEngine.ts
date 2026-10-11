@@ -382,8 +382,10 @@ function ruleConditionFieldMisplaced(
 ): ErrorDetail[] {
   const condition = String(guide['办理条件'] ?? guide['受理条件'] ?? '')
   if (!condition) return []
+  const materialStr = String(guide['申请材料'] ?? '')
   for (const kw of rule.triggerKeywords) {
     if (condition.includes(kw)) {
+      if (materialStr.includes(kw)) continue
       return [
         ErrorDetailBuilder.build(
           {
@@ -429,7 +431,7 @@ function ruleProcessTimeLimitInconsistent(
         {
           guideId,
           field: '办理流程',
-          errorType: 'warning',
+          errorType: 'info',
           description: `流程缺少分步时限描述，无法与承诺办结时限${commitDays}个工作日进行比对。${rule.standardClause ?? ''}`,
           suggestion: '办理流程应补充各环节的工作日时限描述',
           dataSource: 'standard',

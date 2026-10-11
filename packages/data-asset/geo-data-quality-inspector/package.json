@@ -80,7 +80,9 @@
     "cartography",
     "测绘",
     "地理信息",
-    "空间质量"
+    "空间质量",
+    "registration",
+    "valuation"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }

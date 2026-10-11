@@ -384,6 +384,8 @@ function checkConditionCompleteness(
 ): ErrorDetail[] {
   const condition = String(guide['办理条件'] ?? '').trim()
   if (!condition) return []
+  const CONDITION_EXEMPTIONS = ['依申请办理', '依申请', '申请办理', '依职权办理', '依职权']
+  if (CONDITION_EXEMPTIONS.some((ex) => condition.includes(ex))) return []
   if (condition.length < 10 || condition === '无' || condition === '无要求') {
     return [
       ErrorDetailBuilder.build(
@@ -417,6 +419,8 @@ function checkMaterialCompleteness(
   const hasQuantity = /\d+\s*(?:份|个|件|套|张|页|本|册|原|副)/.test(material)
   const hasMultipleTokens = material.split(/[、,，;；\n\r\s]/).filter((s) => s.trim().length > 1).length > 1
   if (!hasPunctuation && !hasNumberedItems && !hasNewline && !hasQuantity && !hasMultipleTokens && material.length < 15) {
+    const SUBSTANTIVE_MATERIAL_WORDS = ['章程', '许可证', '执照', '复印件', '副本', '原件', '营业执照', '法人证书', '承诺书', '委托书', '授权书', '协议书', '合同书', '声明书', '身份证明', '护照', '户口本', '户口簿', '健康证明', '学历证明', '学位证明', '居住证明', '收入证明', '产权证明', '资质证明', '资格证明', '工作证明', '社保证明', '纳税证明', '婚姻证明', '关系证明', '出生证明', '死亡证明', '无犯罪记录证明', '不动产权证', '房产证', '土地证', '学位证书', '结婚证', '离婚证', '驾驶证', '行驶证', '资格证']
+    if (SUBSTANTIVE_MATERIAL_WORDS.some((w) => material.includes(w))) return []
     return [
       ErrorDetailBuilder.build(
         {
@@ -454,8 +458,10 @@ function checkOnlineDepthValidity(
   if (!depth) return []
   const normalized = normalizeOnlineDepthValue(depth)
   if (!normalized) return []
-  const validValues = ['全程网办', '部分网办', '网上预审', '现场办理', '不见面审批']
-  if (!validValues.includes(normalized)) {
+  const validValues = ['全程网办', '部分网办', '网上预审', '现场办理', '不见面审批', '全流程网办', '网上办理', '窗口办理', '线上线下', '一级', '二级', '三级', '四级', '0', '1', '2', '3', '4', '快递申请', '快递送达', '邮寄申请']
+  const parts = normalized.split(/[,，、]/).map((s) => s.trim()).filter((s) => s.length > 0)
+  const allValid = parts.length > 0 && parts.every((p) => validValues.includes(p))
+  if (!allValid) {
     return [
       ErrorDetailBuilder.build(
         {
@@ -539,9 +545,9 @@ function detectApproximateSubstring(
           {
             guideId,
             field: '办理条件',
-            errorType: 'semantic',
+            errorType: 'info',
             description: `办理条件段中"${w}"与标准表述"${term}"高度相似，可能存在笔误。[降级模式·本地词表校验]`,
-            suggestion: `建议将"${w}"修改为标准表述"${term}"`,
+            suggestion: `建议核实"${w}"是否为标准表述（疑似笔误，请人工确认）`,
             dataSource: 'standard',
             standardClause: '降级模式·本地词表校验',
             ruleId: "SEMANTIC-本地词表校验",
@@ -717,9 +723,13 @@ export const SemanticRuleEngine = {
         conflictDetails.push(...checkMaterialConditionConflict(guide, guideId, options.semanticConflictRules, severityMapping))
         conflictDetails.push(...checkTimeProcessConflict(guide, guideId, options.semanticConflictRules, severityMapping))
       }
+      const structuralDetails: ErrorDetail[] = []
+      structuralDetails.push(...checkConditionCompleteness(guide, guideId, severityMapping))
+      structuralDetails.push(...checkMaterialCompleteness(guide, guideId, severityMapping))
+      structuralDetails.push(...checkOnlineDepthValidity(guide, guideId, severityMapping))
       const conditionTermDetails = detectConditionTermsMismatch(guide, guideId, options ?? {}, severityMapping)
       const warning = UnmatchedWarningBuilder.build(guideId)
-      return { details: deduplicateErrors([...conflictDetails, ...conditionTermDetails]), unmatched: true, warning }
+      return { details: deduplicateErrors([...conflictDetails, ...structuralDetails, ...conditionTermDetails]), unmatched: true, warning }
     }
 
     const isKbMissing = !kb || !kb.timeLimits || !kb.materials || !kb.conditions
@@ -754,6 +764,8 @@ export const SemanticRuleEngine = {
     details.push(...detectTimeLimit(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectMaterials(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectConditions(guide, guideId, itemType, kb, severityMapping))
+    details.push(...checkMaterialCompleteness(guide, guideId, severityMapping))
+    details.push(...checkOnlineDepthValidity(guide, guideId, severityMapping))
     details.push(...detectGradedSemantic(guide, guideId, options?.vagueTerms ?? DEFAULT_VAGUE_TERMS, options?.substantiveWords ?? DEFAULT_SUBSTANTIVE_WORDS, options?.validShortValues ?? DEFAULT_VALID_SHORT_VALUES, severityMapping))
     return { details: deduplicateErrors([...conflictDetails, ...details]) }
   },

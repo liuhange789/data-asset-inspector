@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-shared",
   "description": "数据资产化共享基础包 — 共享类型定义、业务常量、工具函数（基础依赖）",
-  "version": "3.2.3",
+  "version": "3.3.0",
   "publishConfig": {
     "access": "public"
   },
@@ -82,7 +82,9 @@
     "common",
     "utilities",
     "helpers",
-    "core"
+    "core",
+    "registration",
+    "valuation"
   ],
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }

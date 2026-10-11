@@ -357,7 +357,7 @@ describe('词表传递链路端到端（v3.5.6）', () => {
     ]
     const data = [makeCompleteGuide({ 办理流程: '受理-审核-办结', 结果送达方式: '邮政EMS寄送' })]
     const result = InspectionOrchestrator.orchestrate(data, configWithLexicons, kb, tunkRules)
-    expect(result.errorDetails.some((d) => d.errorType === 'warning' && d.description.includes('缺少分步时限描述'))).toBe(true)
+    expect(result.errorDetails.some((d) => d.errorType === 'info' && d.description.includes('缺少分步时限描述'))).toBe(true)
     expect(result.errorDetails.some((d) => d.errorType === 'logical' && d.description.includes('流程应包含受理'))).toBe(true)
   })
 })

@@ -13,6 +13,12 @@
 ## 用法
 
 ```bash
+dsh plugin --profile web add @liuhange/gov-config-schema
+```
+
+或通过 npm 安装：
+
+```bash
 npm install @liuhange/gov-config-schema
 ```
 

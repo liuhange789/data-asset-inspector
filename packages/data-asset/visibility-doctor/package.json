@@ -70,7 +70,9 @@
     "health-check",
     "monitoring",
     "exposure",
-    "discoverability"
+    "discoverability",
+    "registration",
+    "valuation"
   ],
   "scripts": {
     "build": "tsc",

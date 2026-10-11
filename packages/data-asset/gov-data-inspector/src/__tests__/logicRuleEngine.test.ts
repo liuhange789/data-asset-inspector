@@ -172,7 +172,7 @@ describe('LogicRuleEngine', () => {
   it('LRE-18: 办理流程无分步时限+办理时限有值 → 报warning"缺少分步时限描述"', () => {
     const guide = { 办理流程: '受理-审核-办结', 办理时限: '20个工作日' }
     const details = LogicRuleEngine.detect(guide, 'g1', rules)
-    expect(details.some((d) => d.errorType === 'warning' && d.description.includes('缺少分步时限描述'))).toBe(true)
+    expect(details.some((d) => d.errorType === 'info' && d.description.includes('缺少分步时限描述'))).toBe(true)
   })
 
   it('LRE-19: 办理流程无分步时限+办理时限="即办" → 不报warning也不报logical', () => {
@@ -185,7 +185,7 @@ describe('LogicRuleEngine', () => {
   it('LRE-20: 特困样本 → 同时检出warning(缺少分步时限)与logical(流程环节缺失)', () => {
     const guide = { 办理流程: '受理-审核-办结', 办理时限: '20个工作日' }
     const details = LogicRuleEngine.detect(guide, 'g1', rules)
-    expect(details.some((d) => d.errorType === 'warning' && d.description.includes('缺少分步时限描述'))).toBe(true)
+    expect(details.some((d) => d.errorType === 'info' && d.description.includes('缺少分步时限描述'))).toBe(true)
     expect(details.some((d) => d.errorType === 'logical' && d.description.includes('流程应包含受理'))).toBe(true)
     expect(details.length).toBeGreaterThanOrEqual(2)
   })

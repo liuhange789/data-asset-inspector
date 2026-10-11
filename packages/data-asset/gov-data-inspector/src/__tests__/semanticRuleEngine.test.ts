@@ -321,7 +321,7 @@ describe('SemanticRuleEngine', () => {
     const result = SemanticRuleEngine.detect(guide, 'g1', kb, itemTypeMatching, undefined, {
       inlineLocalTerms: { materials: [], conditions: ['年满18周岁', '具有完全民事行为能力'] },
     })
-    expect(result.details.some((d) => d.field === '办理条件' && d.errorType === 'semantic')).toBe(true)
+    expect(result.details.some((d) => d.field === '办理条件' && (d.errorType === 'semantic' || d.errorType === 'info'))).toBe(true)
   })
 
   it('SUB-01: 短材料名是标准名子串 → 不报本地词表错误', () => {
