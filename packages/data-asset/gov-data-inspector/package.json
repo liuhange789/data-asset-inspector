@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-gov-data-inspector",
-  "description": "政务办事指南巡检插件 — 检测漏项/语义/逻辑/格式错误，输出合规审计报告，490测试全通过，整改默认内置+口径B(去区号)+多号码白名单+语义默认词表",
-  "version": "3.8.0",
+  "description": "政务办事指南巡检插件 — 检测漏项/语义/逻辑/格式错误，输出合规审计报告，516测试全通过，v3.8.1新城市白名单补全+网办深度枚举配置化+表格下载实质内容豁免",
+  "version": "3.8.1",
   "publishConfig": {
     "access": "public"
   },
@@ -92,7 +92,7 @@
     "番禺",
     "开封",
     "零误报",
-    "429-tests",
+    "516-tests",
     "registration",
     "valuation"
   ],

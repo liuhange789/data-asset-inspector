@@ -2,6 +2,7 @@ import type { ErrorDetail, KnowledgeBase, StandardTimeLimit, StandardMaterial, S
 import { ErrorDetailBuilder } from './errorDetailBuilder.js'
 import { UnmatchedWarningBuilder } from './unmatchedWarningBuilder.js'
 import { LocalTermsLoader } from './local-terms-loader.js'
+import coreRules from './core-rules.json' with { type: 'json' }
 
 const DEFAULT_SEMANTIC_CONTEXT_EXEMPTIONS = [
   '调解', '异议', '信用', '受理条件', '暂由各地区自行规定',
@@ -44,6 +45,7 @@ interface DetectOptions {
   substantiveWords?: string[] | undefined
   validShortValues?: string[] | undefined
   semanticContextExemptions?: string[] | undefined
+  onlineDepthValidExpressions?: readonly string[] | undefined
 }
 
 export interface SemanticDetectResult {
@@ -453,22 +455,24 @@ function checkOnlineDepthValidity(
   guide: Record<string, unknown>,
   guideId: string,
   severityMapping?: Record<string, string>,
+  validExpressions?: readonly string[],
 ): ErrorDetail[] {
   const depth = String(guide['网上办理深度'] ?? '').trim()
   if (!depth) return []
   const normalized = normalizeOnlineDepthValue(depth)
   if (!normalized) return []
-  const validValues = ['全程网办', '部分网办', '网上预审', '现场办理', '不见面审批', '全流程网办', '网上办理', '窗口办理', '线上线下', '一级', '二级', '三级', '四级', '0', '1', '2', '3', '4', '快递申请', '快递送达', '邮寄申请']
+  const legalSet = validExpressions?.length ? validExpressions : coreRules.onlineDepthValidExpressions
   const parts = normalized.split(/[,，、]/).map((s) => s.trim()).filter((s) => s.length > 0)
-  const allValid = parts.length > 0 && parts.every((p) => validValues.includes(p))
+  const allValid = parts.length > 0 && parts.every((p) => legalSet.includes(p))
   if (!allValid) {
+    const enumHint = legalSet.slice(0, 5).join('、')
     return [
       ErrorDetailBuilder.build(
         {
           guideId,
           field: '网上办理深度',
           errorType: 'semantic',
-          description: `网上办理深度值"${depth}"不规范，应为以下枚举值之一：全程网办、部分网办、网上预审、现场办理、不见面审批。[结构完整性校验]`,
+          description: `网上办理深度值"${depth}"不规范，应为以下枚举值之一：${enumHint} 等。[结构完整性校验]`,
           suggestion: `建议将网上办理深度修改为标准枚举值之一`,
           dataSource: 'standard',
           standardClause: '结构完整性校验·网办深度不规范',
@@ -645,7 +649,7 @@ function isNormalContent(val: string, substantiveWords: string[]): boolean {
   return false
 }
 
-function isAbnormalContent(val: string, vagueTerms: string[], substantiveWords: string[], validShortValues: string[]): { abnormal: boolean; reason?: string } {
+function isAbnormalContent(val: string, vagueTerms: string[], substantiveWords: string[], validShortValues: string[], exemptContentField?: string): { abnormal: boolean; reason?: string } {
   const trimmed = val.trim()
   if (trimmed === '' || /^[\s，。；、,.;:：！!？?]+$/.test(trimmed)) {
     return { abnormal: true, reason: '内容为空或仅含标点' }
@@ -658,6 +662,9 @@ function isAbnormalContent(val: string, vagueTerms: string[], substantiveWords: 
     return { abnormal: true, reason: `内容命中兜底表述"${matchedVague}"` }
   }
   if (trimmed.length < 3 && !substantiveWords.some((w) => trimmed.includes(w))) {
+    if (exemptContentField && trimmed.length >= 2) {
+      return { abnormal: false }
+    }
     return { abnormal: true, reason: '内容长度不足且无实质性词汇' }
   }
   return { abnormal: false }
@@ -681,7 +688,7 @@ function detectGradedSemantic(
     const val = String(guide[field] ?? '').trim()
     if (!val) continue
     if (isNormalContent(val, substantiveWords)) continue
-    const abnormal = isAbnormalContent(val, vagueTerms, substantiveWords, validShortValues)
+    const abnormal = isAbnormalContent(val, vagueTerms, substantiveWords, validShortValues, field === '表格下载' ? '表格下载' : undefined)
     if (abnormal.abnormal) {
       details.push(
         ErrorDetailBuilder.build(
@@ -726,7 +733,7 @@ export const SemanticRuleEngine = {
       const structuralDetails: ErrorDetail[] = []
       structuralDetails.push(...checkConditionCompleteness(guide, guideId, severityMapping))
       structuralDetails.push(...checkMaterialCompleteness(guide, guideId, severityMapping))
-      structuralDetails.push(...checkOnlineDepthValidity(guide, guideId, severityMapping))
+      structuralDetails.push(...checkOnlineDepthValidity(guide, guideId, severityMapping, options?.onlineDepthValidExpressions))
       const conditionTermDetails = detectConditionTermsMismatch(guide, guideId, options ?? {}, severityMapping)
       const gradedDetails = detectGradedSemantic(guide, guideId, options?.vagueTerms ?? DEFAULT_VAGUE_TERMS, options?.substantiveWords ?? DEFAULT_SUBSTANTIVE_WORDS, options?.validShortValues ?? DEFAULT_VALID_SHORT_VALUES, severityMapping)
       const warning = UnmatchedWarningBuilder.build(guideId)
@@ -746,7 +753,7 @@ export const SemanticRuleEngine = {
       const structuralDetails: ErrorDetail[] = []
       structuralDetails.push(...checkConditionCompleteness(guide, guideId, severityMapping))
       structuralDetails.push(...checkMaterialCompleteness(guide, guideId, severityMapping))
-      structuralDetails.push(...checkOnlineDepthValidity(guide, guideId, severityMapping))
+      structuralDetails.push(...checkOnlineDepthValidity(guide, guideId, severityMapping, options?.onlineDepthValidExpressions))
       const gradedDetails = detectGradedSemantic(guide, guideId, options?.vagueTerms ?? DEFAULT_VAGUE_TERMS, options?.substantiveWords ?? DEFAULT_SUBSTANTIVE_WORDS, options?.validShortValues ?? DEFAULT_VALID_SHORT_VALUES, severityMapping)
       return { details: deduplicateErrors([...conflictDetails, ...structuralDetails, ...gradedDetails]) }
     }
@@ -766,7 +773,7 @@ export const SemanticRuleEngine = {
     details.push(...detectMaterials(guide, guideId, itemType, kb, severityMapping))
     details.push(...detectConditions(guide, guideId, itemType, kb, severityMapping))
     details.push(...checkMaterialCompleteness(guide, guideId, severityMapping))
-    details.push(...checkOnlineDepthValidity(guide, guideId, severityMapping))
+    details.push(...checkOnlineDepthValidity(guide, guideId, severityMapping, options?.onlineDepthValidExpressions))
     details.push(...detectGradedSemantic(guide, guideId, options?.vagueTerms ?? DEFAULT_VAGUE_TERMS, options?.substantiveWords ?? DEFAULT_SUBSTANTIVE_WORDS, options?.validShortValues ?? DEFAULT_VALID_SHORT_VALUES, severityMapping))
     return { details: deduplicateErrors([...conflictDetails, ...details]) }
   },

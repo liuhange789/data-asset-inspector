@@ -56,6 +56,7 @@ export interface OrchestrateConfig {
   processCoreStepCombinations?: string[][] | undefined
   validProcessPhrases?: string[] | undefined
   semanticContextExemptions?: string[] | undefined
+  onlineDepthValidExpressions?: readonly string[] | undefined
   fieldAliases?: Record<string, string[]> | undefined
   fieldResidueValues?: string[] | undefined
   regulationKnowledgeBase?: RegulationKnowledgeBase | null
@@ -208,7 +209,7 @@ export const InspectionOrchestrator = {
         kb,
         config.itemTypeMatching,
         config.severityMapping,
-        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold, inlineLocalTerms: options?.inlineLocalTerms, semanticConflictRules: config.semanticConflictRules, ...(config.vagueTerms ? { vagueTerms: config.vagueTerms } : {}), ...(config.substantiveWords ? { substantiveWords: config.substantiveWords } : {}), ...(config.validShortValues ? { validShortValues: config.validShortValues } : {}), ...(config.semanticContextExemptions ? { semanticContextExemptions: config.semanticContextExemptions } : {}) },
+        { degradedMode: options?.degradedMode, itemTypeOverride: options?.itemTypeOverride, localTermsPath: options?.localTermsPath, degradedSimilarityThreshold: options?.degradedSimilarityThreshold, inlineLocalTerms: options?.inlineLocalTerms, semanticConflictRules: config.semanticConflictRules, ...(config.vagueTerms ? { vagueTerms: config.vagueTerms } : {}), ...(config.substantiveWords ? { substantiveWords: config.substantiveWords } : {}), ...(config.validShortValues ? { validShortValues: config.validShortValues } : {}), ...(config.semanticContextExemptions ? { semanticContextExemptions: config.semanticContextExemptions } : {}), ...(config.onlineDepthValidExpressions ? { onlineDepthValidExpressions: config.onlineDepthValidExpressions } : {}) },
       )
       const suspected = semanticResult.details.filter(
         (d) => d.standardClause?.includes('降级模式') && d.description.includes('相似度'),

@@ -33,6 +33,8 @@ const DEFAULT_FIELD_ALIASES: Record<string, string[]> = {
 
 const FIELDS_WITH_VALID_NONE = new Set(['表格下载', '结果送达方式'])
 
+export const FIELDS_WITH_SUBSTANTIVE_EXEMPTION: ReadonlySet<string> = new Set(['表格下载'])
+
 const DEFAULT_FIELD_RESIDUE_VALUES = [
   '无', '暂无', '无要求', '/', '—', '-', '空', '未填写', '未提供', '未设置',
   '未配置', '待补充', '待填写', '待完善', '略', '省略', 'N/A', 'n/a', 'NA',
@@ -157,6 +159,7 @@ export const MissingFieldDetector = {
           ),
         )
       } else {
+        if (FIELDS_WITH_SUBSTANTIVE_EXEMPTION.has(elem)) continue
         const invalidReason = isInvalidContent(val)
         if (invalidReason) {
           details.push(
@@ -238,6 +241,7 @@ export const MissingFieldDetector = {
           ),
         )
       } else {
+        if (FIELDS_WITH_SUBSTANTIVE_EXEMPTION.has(elem)) return
         const invalidReason = isInvalidContent(val)
         if (invalidReason) {
           coreDetails.push(
