@@ -1,16 +1,15 @@
 # @liuhange/dsh-gov-data-inspector
 
 [![npm version](https://img.shields.io/npm/v/@liuhange/dsh-gov-data-inspector)](https://www.npmjs.com/package/@liuhange/dsh-gov-data-inspector)
-[![Tests](https://img.shields.io/badge/tests-429%20passed-brightgreen)](https://github.com/liuhange789/data-asset-inspector)
+[![Tests](https://img.shields.io/badge/tests-516%20passed-brightgreen)](https://github.com/liuhange789/data-asset-inspector)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/liuhange789/data-asset-inspector)
 
-> 🔥 **DSH 数据资产治理矩阵王牌插件** — 本包是 32 个独立发版插件中的核心引擎，历经番禺/开封/苏州三城真实政务网站验收，逻辑/语义/格式检出率 100%，误报率 0%。
+> 🔥 **DSH 数据资产治理矩阵王牌插件** — 本包是 32 个独立发版插件中的核心引擎，历经番禺/开封/苏州/成都/武汉五城真实政务网站验收，逻辑/语义/格式检出率 100%，误报率 0%，15项运行时断言全通过，白名单21号。
 >
 > 👉 [**查看全部 32 个插件导航矩阵**](https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md)
 
 > ⚠️ **版本状态说明**
-> 当前稳定版为 `v3.6.5`，生产环境请使用 `@latest` 安装：`npm install @liuhange/dsh-gov-data-inspector`
-> 下一版本正在深度测试中，尝鲜测试请使用 `@beta` 安装：`npm install @liuhange/dsh-gov-data-inspector@beta`
+> 当前稳定版为 `v3.8.1`，生产环境请使用 `@latest` 安装：`npm install @liuhange/dsh-gov-data-inspector`
 
 ## 基本信息
 
@@ -18,7 +17,7 @@
 |------|-----|
 | 插件名 | dsh-gov-data-inspector |
 | 包名 | @liuhange/dsh-gov-data-inspector |
-| 版本 | 3.6.5 |
+| 版本 | 3.8.1 |
 | 工具 | inspect_gov_data |
 
 ## 功能说明
