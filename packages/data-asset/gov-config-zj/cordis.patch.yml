@@ -1,0 +1,2 @@
+# 配置包 cordis 补丁：不注入运行时补丁，仅声明 DSH bundle 元数据
+# 此文件使配置包通过 awesome-dsh-plugin CI 的 dsh.bundle.patch 检查

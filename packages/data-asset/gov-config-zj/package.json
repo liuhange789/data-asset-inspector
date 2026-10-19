@@ -7,8 +7,14 @@
     ".": "./config-pack.json"
   },
   "files": [
-    "config-pack.json"
+    "config-pack.json",
+    "cordis.patch.yml"
   ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -53,5 +59,8 @@
     "registration",
     "valuation"
   ],
+  "scripts": {
+    "test": "node -e \"JSON.parse(require('fs').readFileSync('config-pack.json','utf8')); console.log('config-pack.json OK')\""
+  },
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }
