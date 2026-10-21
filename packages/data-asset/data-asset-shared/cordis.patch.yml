@@ -1,9 +1,18 @@
 # Cordis Framework Patch Declaration for @liuhange/dsh-data-asset-shared
-# This file declares the plugin's runtime patch for the Cordis framework.
-# Used by DSH plugin manager to apply framework-level patches during installation.
-plugin: @liuhange/dsh-data-asset-shared
-version: "3.2.3"
-patch:
-  - target: tools
-    action: register
-    description: Register plugin tools into Cordis runtime
+- target: loaders.web
+  action: insert
+  entry:
+    id: "@liuhange/dsh-data-asset-shared"
+    name: "@liuhange/dsh-data-asset-shared"
+    version: "3.3.1"
+- target: loaders.headless
+  action: insert
+  entry:
+    id: "@liuhange/dsh-data-asset-shared"
+    name: "@liuhange/dsh-data-asset-shared"
+    version: "3.3.1"
+- target: tools
+  action: register
+  description: Register plugin tools into Cordis runtime
+  plugin: "@liuhange/dsh-data-asset-shared"
+  version: "3.3.1"

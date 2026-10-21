@@ -1,9 +1,18 @@
 # Cordis Framework Patch Declaration for @liuhange/dsh-ai-dataset-inspector
-# This file declares the plugin's runtime patch for the Cordis framework.
-# Used by DSH plugin manager to apply framework-level patches during installation.
-plugin: @liuhange/dsh-ai-dataset-inspector
-version: "3.1.4"
-patch:
-  - target: tools
-    action: register
-    description: Register plugin tools into Cordis runtime
+- target: loaders.web
+  action: insert
+  entry:
+    id: "@liuhange/dsh-ai-dataset-inspector"
+    name: "@liuhange/dsh-ai-dataset-inspector"
+    version: "3.1.5"
+- target: loaders.headless
+  action: insert
+  entry:
+    id: "@liuhange/dsh-ai-dataset-inspector"
+    name: "@liuhange/dsh-ai-dataset-inspector"
+    version: "3.1.5"
+- target: tools
+  action: register
+  description: Register plugin tools into Cordis runtime
+  plugin: "@liuhange/dsh-ai-dataset-inspector"
+  version: "3.1.5"
