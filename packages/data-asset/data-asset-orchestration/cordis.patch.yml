@@ -4,15 +4,15 @@
   entry:
     id: "@liuhange/dsh-data-asset-orchestration"
     name: "@liuhange/dsh-data-asset-orchestration"
-    version: "3.2.1"
+    version: "3.2.2"
 - target: loaders.headless
   action: insert
   entry:
     id: "@liuhange/dsh-data-asset-orchestration"
     name: "@liuhange/dsh-data-asset-orchestration"
-    version: "3.2.1"
+    version: "3.2.2"
 - target: tools
   action: register
   description: Register plugin tools into Cordis runtime
   plugin: "@liuhange/dsh-data-asset-orchestration"
-  version: "3.2.1"
+  version: "3.2.2"

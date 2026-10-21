@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-shared",
   "description": "数据资产化共享基础包 — 共享类型定义、业务常量、工具函数（基础依赖）",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "publishConfig": {
     "access": "public"
   },

@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-orchestration",
   "description": "DSH数据资产编排主包 — 一键串联脱敏→清洗→盘点→封装，32个插件微内核架构，零依赖TypeScript",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "publishConfig": {
     "access": "public"
   },
