@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-visualization",
   "description": "数据可视化插件 — 生成自包含HTML报告，支持图表/表格/仪表盘",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "publishConfig": {
     "access": "public"
   },
