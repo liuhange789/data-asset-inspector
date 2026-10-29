@@ -11,7 +11,7 @@ export const inject = ['tools'] as const
 export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
   ctx.tools.register({
     name: 'value_data_asset',
-    description: '数据资产估值：成本法（重置成本-折旧）+ 收益法（DCF折现）双模型，输出建议估值与定价区间',
+    description: '数据资产估值：成本法（重置成本-折旧）+ 收益法（DCF折现）两轨模型，输出建议估值与定价区间',
     parameters: {
       type: 'object',
       properties: {

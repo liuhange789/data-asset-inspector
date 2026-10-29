@@ -1,9 +1,4 @@
 # Cordis Framework Patch Declaration for @liuhange/dsh-data-packaging
-# This file declares the plugin's runtime patch for the Cordis framework.
-# Used by DSH plugin manager to apply framework-level patches during installation.
-plugin: @liuhange/dsh-data-packaging
-version: "3.0.4"
-patch:
-  - target: tools
-    action: register
-    description: Register plugin tools into Cordis runtime
+- insert:
+    - id: "@liuhange/dsh-data-packaging"
+      name: "@liuhange/dsh-data-packaging"

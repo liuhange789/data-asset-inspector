@@ -25,7 +25,7 @@ export function apply(ctx: Context) {
   ctx.tools.register(
     defineTool({
       name: 'package_data_asset',
-      description: '将清洗脱敏后的数据打包为可交易的数据产品',
+      description: '将清洗脱敏后的数据生成产品说明书与合规声明',
       parameters: {
         dataPath: { type: 'string', required: true, description: '数据文件路径' },
         productName: { type: 'string', required: true, description: '产品名称' },

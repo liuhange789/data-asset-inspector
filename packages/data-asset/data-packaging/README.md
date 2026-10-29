@@ -1,6 +1,6 @@
 # @liuhange/dsh-data-packaging
 
-Data packaging plugin for DeepSeek Harness. Generates product manual with compliance statements.
+数据封装插件 for DeepSeek Harness — 产品说明书生成 + 合规附件。生成产品说明书与合规声明段。
 
 
 ## 安装
