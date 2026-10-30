@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-circulation-assessor",
   "description": "数据流通评估插件 — 可信数据空间就绪度评估+流通风险检测",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "publishConfig": {
     "access": "public"
   },

@@ -1,9 +1,4 @@
 # Cordis Framework Patch Declaration for @liuhange/dsh-data-asset-inventory-scan
-# This file declares the plugin's runtime patch for the Cordis framework.
-# Used by DSH plugin manager to apply framework-level patches during installation.
-plugin: @liuhange/dsh-data-asset-inventory-scan
-version: "3.1.5"
-patch:
-  - target: tools
-    action: register
-    description: Register plugin tools into Cordis runtime
+- insert:
+    - id: "@liuhange/dsh-data-asset-inventory-scan"
+      name: "@liuhange/dsh-data-asset-inventory-scan"
