@@ -92,6 +92,12 @@
 | 地下管线巡检 | @liuhange/dsh-underground-pipeline-inspector | 覆盖率、接边、拓扑、流向、空间参考、粗差率评分（GB/T 35644 & CJJ 61/68） | 1.0.0 |
 | 测绘质量检查 | @liuhange/dsh-geo-data-quality-inspector | 高程中误差、平面精度、接边、拓扑、逻辑一致性、DSM/DEM加权评分（GB/T 24356-2023） | 1.0.0 |
 
+### 外部收录插件
+
+| 插件 | 仓库 | 功能 | 技术栈 |
+|------|------|------|--------|
+| 党建引领·街道产业生态协同智能插件 | [party-eco-agent](https://github.com/liuhange789/party-eco-agent) | 企业画像自动更新、供需智能匹配、惠企政策智能解析推送、党群诉求自动分类派单、Agent轨迹可观测、风险卡点人工审核、降级开关 | NestJS + React + Taro + 国产大模型 + Agent编排 |
+
 ## 安装方式
 
 ### 方式一：DSH CLI 安装（推荐）
