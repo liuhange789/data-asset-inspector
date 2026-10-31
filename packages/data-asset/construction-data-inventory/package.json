@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-construction-data-inventory",
   "description": "建筑工程数据资产盘点插件 — 盘点BIM/IFC分类、资产编码，输出资产清单",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "publishConfig": {
     "access": "public"
   },
