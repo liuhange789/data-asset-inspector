@@ -1,0 +1,49 @@
+import { defineTool } from '@deepseek-ai/dsh-tools';
+import { AuditLogger, } from '@liuhange/dsh-data-asset-shared';
+import { PrecheckExecutor } from './precheckExecutor.js';
+export const name = '@liuhange/dsh-registration-precheck';
+export const inject = ['tools'];
+export function apply(ctx) {
+    const auditLogger = new AuditLogger();
+    const precheckExecutor = new PrecheckExecutor();
+    ctx.tools.register(defineTool({
+        name: 'registration_precheck',
+        description: '登记预检：检查数据是否满足国家数据产权登记条件，输出《登记预检报告》',
+        parameters: {
+            orchestrationResult: {
+                type: 'string',
+                required: true,
+                description: '体检全流程产物JSON（含 maskingReport/cleaningReport/inventoryReport/packagingManual）',
+            },
+            ownershipConfirmation: {
+                type: 'string',
+                required: true,
+                description: '权属确认信息JSON（含 hasDispute/confirmedAt）',
+            },
+        },
+        output: {
+            schema: { type: 'string' },
+            render: (_args, value) => [{ type: 'text', text: value }],
+        },
+        async execute(args) {
+            try {
+                const orchestrationResult = JSON.parse(args.orchestrationResult);
+                const ownershipConfirmation = JSON.parse(args.ownershipConfirmation);
+                const report = precheckExecutor.execute(orchestrationResult, ownershipConfirmation);
+                auditLogger.log({
+                    pluginName: 'registration-precheck',
+                    operation: 'registration_precheck',
+                    inputPath: '-',
+                    outputPath: '-',
+                    result: report.conclusion === 'CAN_REGISTER' ? 'SUCCESS' : 'FAILED',
+                });
+                return JSON.stringify(report, null, 2);
+            }
+            catch (e) {
+                return JSON.stringify({ error: 'PRECHECK_FAILED', message: e.message });
+            }
+        },
+    }));
+    console.log('[registration-precheck] 登记预检插件已加载');
+}
+//# sourceMappingURL=index.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"agencyMatcher.d.ts","sourceRoot":"","sources":["../../src/agencyMatcher.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,iBAAiB,EAAsB,MAAM,iCAAiC,CAAA;AAG5F,qBAAa,aAAa;IACxB,OAAO,CAAC,MAAM,CAAoB;IAClC,OAAO,CAAC,UAAU,CAAQ;gBAEd,UAAU,CAAC,EAAE,MAAM;IAO/B,OAAO,CAAC,UAAU;IAYlB,KAAK,CAAC,QAAQ,EAAE,MAAM,GAAG,iBAAiB;CAsB3C"}

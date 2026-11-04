@@ -1,0 +1,1 @@
+{"version":3,"file":"gross-error-rate-calculator.d.ts","sourceRoot":"","sources":["../src/gross-error-rate-calculator.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EACV,kBAAkB,EAClB,oBAAoB,EACpB,wBAAwB,EACzB,MAAM,YAAY,CAAA;AAEnB,qBAAa,wBAAwB;IACnC,SAAS,CACP,YAAY,EAAE,kBAAkB,EAAE,EAClC,WAAW,EAAE,MAAM,EACnB,MAAM,EAAE,wBAAwB,GAC/B,oBAAoB;CA4BxB"}

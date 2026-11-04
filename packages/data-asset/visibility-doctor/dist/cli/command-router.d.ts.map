@@ -1,0 +1,1 @@
+{"version":3,"file":"command-router.d.ts","sourceRoot":"","sources":["../../src/cli/command-router.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,qBAAqB,CAAC;AAYzD,qBAAa,aAAa;IAClB,KAAK,CAAC,IAAI,EAAE,aAAa,GAAG,OAAO,CAAC,IAAI,CAAC;YAiBjC,WAAW;YA2BX,UAAU;YAsBV,QAAQ;YAuBR,SAAS;IAyBvB,OAAO,CAAC,gBAAgB;CAGzB"}

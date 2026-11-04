@@ -1,0 +1,1 @@
+{"version":3,"file":"quality-element-scorer.d.ts","sourceRoot":"","sources":["../src/quality-element-scorer.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EACV,kBAAkB,EAClB,mBAAmB,EACnB,oBAAoB,EACrB,MAAM,YAAY,CAAA;AAwBnB,qBAAa,oBAAoB;IAC/B,KAAK,CACH,YAAY,EAAE,kBAAkB,EAAE,EAClC,MAAM,EAAE,oBAAoB,GAC3B;QAAE,MAAM,EAAE,mBAAmB,EAAE,CAAC;QAAC,UAAU,EAAE,MAAM,CAAA;KAAE;CAmCzD"}

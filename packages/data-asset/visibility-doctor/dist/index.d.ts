@@ -1,0 +1,21 @@
+import { NpmRegistryAdapter } from './adapters/npm-registry-adapter.js';
+import { ProbeSimulatorAdapter } from './adapters/probe-simulator-adapter.js';
+import { MarketStoreAdapter } from './adapters/market-store-adapter.js';
+import { GitHubApiAdapter } from './adapters/github-api-adapter.js';
+import { ScoringCalculator } from './domain/scoring-calculator.js';
+import { DiagnoseEngine } from './domain/diagnose-engine.js';
+import { RootCauseAnalyzer } from './domain/root-cause-analyzer.js';
+import { ExposureBooster } from './domain/exposure-booster.js';
+import { AdoptionVerifier, type VerifyOptions } from './domain/adoption-verifier.js';
+import { ReportGenerator } from './generators/report-generator.js';
+import { PatchGenerator } from './generators/patch-generator.js';
+import { GuidanceGenerator } from './generators/guidance-generator.js';
+import { runCli } from './cli/index.js';
+import type { DiagnoseOptions, DiagnoseResult, RootCauseOptions, RootCauseResult, BoostOptions, BoostResult, VerifyResult } from './types/index.js';
+export declare function diagnose(options: DiagnoseOptions): Promise<DiagnoseResult>;
+export declare function analyzeRootCause(options: RootCauseOptions): Promise<RootCauseResult>;
+export declare function boostExposure(options: BoostOptions): Promise<BoostResult>;
+export declare function verifyAdoption(options: VerifyOptions): Promise<VerifyResult>;
+export { NpmRegistryAdapter, ProbeSimulatorAdapter, MarketStoreAdapter, GitHubApiAdapter, ScoringCalculator, DiagnoseEngine, RootCauseAnalyzer, ExposureBooster, AdoptionVerifier, ReportGenerator, PatchGenerator, GuidanceGenerator, runCli, };
+export * from './types/index.js';
+//# sourceMappingURL=index.d.ts.map

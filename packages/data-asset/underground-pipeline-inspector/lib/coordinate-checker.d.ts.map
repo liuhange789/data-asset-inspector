@@ -1,0 +1,1 @@
+{"version":3,"file":"coordinate-checker.d.ts","sourceRoot":"","sources":["../src/coordinate-checker.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EACV,eAAe,EACf,wBAAwB,EACxB,qBAAqB,EACrB,kBAAkB,EACnB,MAAM,YAAY,CAAA;AAEnB,qBAAa,iBAAiB;IAC5B,KAAK,CACH,OAAO,EAAE,eAAe,EACxB,MAAM,EAAE,wBAAwB,GAC/B;QAAE,gBAAgB,EAAE,qBAAqB,CAAC;QAAC,YAAY,EAAE,kBAAkB,EAAE,CAAA;KAAE;CA6CnF"}

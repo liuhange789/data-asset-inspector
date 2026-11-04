@@ -1,0 +1,1 @@
+{"version":3,"file":"topology-checker.d.ts","sourceRoot":"","sources":["../src/topology-checker.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EACV,eAAe,EACf,wBAAwB,EACxB,mBAAmB,EACnB,kBAAkB,EACnB,MAAM,YAAY,CAAA;AAEnB,qBAAa,eAAe;IAC1B,KAAK,CACH,OAAO,EAAE,eAAe,EACxB,MAAM,EAAE,wBAAwB,GAC/B;QAAE,cAAc,EAAE,mBAAmB,CAAC;QAAC,YAAY,EAAE,kBAAkB,EAAE,CAAA;KAAE;CA0H/E"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"spatial-reference-checker.d.ts","sourceRoot":"","sources":["../src/spatial-reference-checker.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EACV,eAAe,EACf,wBAAwB,EACxB,2BAA2B,EAC3B,kBAAkB,EACnB,MAAM,YAAY,CAAA;AAEnB,qBAAa,uBAAuB;IAClC,KAAK,CACH,OAAO,EAAE,eAAe,EACxB,MAAM,EAAE,wBAAwB,GAC/B;QAAE,sBAAsB,EAAE,2BAA2B,CAAC;QAAC,YAAY,EAAE,kBAAkB,EAAE,CAAA;KAAE;CAkD/F"}

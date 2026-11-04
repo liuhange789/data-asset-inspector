@@ -1,0 +1,1 @@
+{"version":3,"file":"flow-direction-checker.d.ts","sourceRoot":"","sources":["../src/flow-direction-checker.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EACV,eAAe,EACf,uBAAuB,EACvB,wBAAwB,EACxB,kBAAkB,EACnB,MAAM,YAAY,CAAA;AAEnB,qBAAa,oBAAoB;IAC/B,KAAK,CACH,OAAO,EAAE,eAAe,EACxB,MAAM,EAAE,uBAAuB,GAC9B;QAAE,mBAAmB,EAAE,wBAAwB,CAAC;QAAC,YAAY,EAAE,kBAAkB,EAAE,CAAA;KAAE;CAwEzF"}
