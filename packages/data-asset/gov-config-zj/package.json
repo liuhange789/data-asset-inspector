@@ -1,12 +1,21 @@
 {
   "name": "@liuhange/gov-config-zj",
-  "version": "2026.1.3",
-  "description": "浙江省政务数据巡检配置包 — 含浙政办/浙委改等浙江省地方政策依据与标准词表",
+  "version": "2026.1.4",
+  "description": "浙江省政务数据巡检配置包 — 含浙政办/浙委改等浙江省地方政策依据与标准词表，提供配置加载与校验运行时",
   "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
   "exports": {
-    ".": "./config-pack.json"
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./config-pack.json": "./config-pack.json",
+    "./package.json": "./package.json"
   },
   "files": [
+    "lib/**/*.js",
+    "lib/types/**/*.d.ts",
     "config-pack.json",
     "cordis.patch.yml"
   ],
@@ -40,11 +49,8 @@
     "dsh",
     "data-asset",
     "data-governance",
-    "compliance",
     "government-data",
-    "public-data",
     "plugin",
-    "typescript",
     "nodejs",
     "data-quality",
     "data-management",
@@ -60,7 +66,9 @@
     "valuation"
   ],
   "scripts": {
-    "test": "node -e \"JSON.parse(require('fs').readFileSync('config-pack.json','utf8')); console.log('config-pack.json OK')\""
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc"
   },
   "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
 }
