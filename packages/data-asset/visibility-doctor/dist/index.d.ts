@@ -1,3 +1,5 @@
+export declare const name = "@liuhange/dsh-visibility-doctor";
+export declare const inject: readonly ["tools"];
 import { NpmRegistryAdapter } from './adapters/npm-registry-adapter.js';
 import { ProbeSimulatorAdapter } from './adapters/probe-simulator-adapter.js';
 import { MarketStoreAdapter } from './adapters/market-store-adapter.js';
@@ -18,4 +20,9 @@ export declare function boostExposure(options: BoostOptions): Promise<BoostResul
 export declare function verifyAdoption(options: VerifyOptions): Promise<VerifyResult>;
 export { NpmRegistryAdapter, ProbeSimulatorAdapter, MarketStoreAdapter, GitHubApiAdapter, ScoringCalculator, DiagnoseEngine, RootCauseAnalyzer, ExposureBooster, AdoptionVerifier, ReportGenerator, PatchGenerator, GuidanceGenerator, runCli, };
 export * from './types/index.js';
+export declare function apply(ctx: {
+    tools: {
+        register: (tool: unknown) => void;
+    };
+}): void;
 //# sourceMappingURL=index.d.ts.map

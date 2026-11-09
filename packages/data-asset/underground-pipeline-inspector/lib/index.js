@@ -30,17 +30,23 @@ export function apply(ctx) {
             },
             required: ['datasetFilePath'],
         },
+        output: {
+            schema: { type: 'object', additionalProperties: true },
+            render: (_args, value) => [
+                { type: 'text', text: JSON.stringify(value, null, 2) },
+            ],
+        },
         async execute(args) {
             try {
                 if (!args || typeof args !== 'object') {
-                    return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: '参数不能为空' });
+                    return { error: ERROR_CODES.INPUT_INVALID, message: '参数不能为空' };
                 }
                 const datasetFilePath = args.datasetFilePath;
                 if (!datasetFilePath || typeof datasetFilePath !== 'string') {
-                    return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: 'datasetFilePath 为必填字段' });
+                    return { error: ERROR_CODES.INPUT_INVALID, message: 'datasetFilePath 为必填字段' };
                 }
                 if (!existsSync(datasetFilePath)) {
-                    return JSON.stringify({ error: ERROR_CODES.FILE_NOT_FOUND, message: `文件不存在 - ${datasetFilePath}` });
+                    return { error: ERROR_CODES.FILE_NOT_FOUND, message: `文件不存在 - ${datasetFilePath}` };
                 }
                 const datasetFileRaw = readFileSync(datasetFilePath, 'utf-8');
                 let datasetFileData;
@@ -48,7 +54,7 @@ export function apply(ctx) {
                     datasetFileData = JSON.parse(datasetFileRaw);
                 }
                 catch {
-                    return JSON.stringify({ error: ERROR_CODES.CONFIG_INVALID, message: '数据集文件 JSON 解析失败' });
+                    return { error: ERROR_CODES.CONFIG_INVALID, message: '数据集文件 JSON 解析失败' };
                 }
                 const configLoader = new PipelineConfigLoader();
                 const configLoadResult = configLoader.load();
@@ -56,11 +62,11 @@ export function apply(ctx) {
                 const inputValidator = new InputValidator();
                 const { dataset, errors: validationErrors } = inputValidator.validateDataset(datasetFileData);
                 if (dataset === null) {
-                    return JSON.stringify({
+                    return {
                         error: ERROR_CODES.DATASET_EMPTY,
                         message: '数据集无效，无法执行巡检',
                         validationErrors,
-                    });
+                    };
                 }
                 const allCheckResults = [];
                 const allWarnings = [...configLoadResult.warnings];
@@ -143,10 +149,10 @@ export function apply(ctx) {
                     legalDisclaimer: LEGAL_DISCLAIMER,
                     reportPaths: { json: jsonPath, markdown: markdownPath },
                 };
-                return JSON.stringify(result, null, 2);
+                return result;
             }
             catch (e) {
-                return JSON.stringify({ error: ERROR_CODES.UNKNOWN_ERROR, message: e.message });
+                return { error: ERROR_CODES.UNKNOWN_ERROR, message: e.message };
             }
         },
     });
@@ -164,10 +170,16 @@ export function apply(ctx) {
             },
             required: ['objectId', 'overrideConclusion', 'overrideReason', 'operator', 'inspectionReportPath'],
         },
+        output: {
+            schema: { type: 'object', additionalProperties: true },
+            render: (_args, value) => [
+                { type: 'text', text: JSON.stringify(value, null, 2) },
+            ],
+        },
         async execute(args) {
             try {
                 if (!args || typeof args !== 'object') {
-                    return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: '参数不能为空' });
+                    return { error: ERROR_CODES.INPUT_INVALID, message: '参数不能为空' };
                 }
                 const objectId = args.objectId;
                 const overrideConclusion = args.overrideConclusion;
@@ -175,22 +187,22 @@ export function apply(ctx) {
                 const operator = args.operator;
                 const inspectionReportPath = args.inspectionReportPath;
                 if (!objectId || typeof objectId !== 'string') {
-                    return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: 'objectId 为必填字段' });
+                    return { error: ERROR_CODES.INPUT_INVALID, message: 'objectId 为必填字段' };
                 }
                 if (!overrideConclusion || typeof overrideConclusion !== 'string') {
-                    return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: 'overrideConclusion 为必填字段' });
+                    return { error: ERROR_CODES.INPUT_INVALID, message: 'overrideConclusion 为必填字段' };
                 }
                 if (!overrideReason || typeof overrideReason !== 'string') {
-                    return JSON.stringify({ error: ERROR_CODES.REASON_REQUIRED, message: '覆盖理由不可为空' });
+                    return { error: ERROR_CODES.REASON_REQUIRED, message: '覆盖理由不可为空' };
                 }
                 if (!operator || typeof operator !== 'string') {
-                    return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: 'operator 为必填字段' });
+                    return { error: ERROR_CODES.INPUT_INVALID, message: 'operator 为必填字段' };
                 }
                 if (!inspectionReportPath || typeof inspectionReportPath !== 'string') {
-                    return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: 'inspectionReportPath 为必填字段' });
+                    return { error: ERROR_CODES.INPUT_INVALID, message: 'inspectionReportPath 为必填字段' };
                 }
                 if (!existsSync(inspectionReportPath)) {
-                    return JSON.stringify({ error: ERROR_CODES.FILE_NOT_FOUND, message: `巡检报告文件不存在 - ${inspectionReportPath}` });
+                    return { error: ERROR_CODES.FILE_NOT_FOUND, message: `巡检报告文件不存在 - ${inspectionReportPath}` };
                 }
                 const reportRaw = readFileSync(inspectionReportPath, 'utf-8');
                 let reportData;
@@ -198,7 +210,7 @@ export function apply(ctx) {
                     reportData = JSON.parse(reportRaw);
                 }
                 catch {
-                    return JSON.stringify({ error: ERROR_CODES.CONFIG_INVALID, message: '巡检报告文件 JSON 解析失败' });
+                    return { error: ERROR_CODES.CONFIG_INVALID, message: '巡检报告文件 JSON 解析失败' };
                 }
                 const existingObjectIds = new Set();
                 for (const item of reportData.checkResults) {
@@ -207,7 +219,7 @@ export function apply(ctx) {
                 const overrideRecorder = new ReviewOverrideRecorder();
                 const validation = overrideRecorder.validateOverrideInstruction(objectId, overrideConclusion, overrideReason, existingObjectIds);
                 if (!validation.valid) {
-                    return JSON.stringify({ error: validation.error, message: validation.message });
+                    return { error: validation.error, message: validation.message };
                 }
                 const originalConclusion = findOriginalConclusion(reportData, objectId);
                 const overrideRecord = {
@@ -229,10 +241,10 @@ export function apply(ctx) {
                     overrideTime: overrideRecord.overrideTime,
                     message: '人工复核覆盖已记录',
                 };
-                return JSON.stringify(result, null, 2);
+                return result;
             }
             catch (e) {
-                return JSON.stringify({ error: ERROR_CODES.UNKNOWN_ERROR, message: e.message });
+                return { error: ERROR_CODES.UNKNOWN_ERROR, message: e.message };
             }
         },
     });

@@ -40,19 +40,25 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
       },
       required: ['datasetFilePath'],
     },
+    output: {
+      schema: { type: 'object', additionalProperties: true },
+      render: (_args: Record<string, unknown>, value: unknown) => [
+        { type: 'text', text: JSON.stringify(value, null, 2) },
+      ],
+    },
     async execute(args: Record<string, unknown>) {
       try {
         if (!args || typeof args !== 'object') {
-          return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: '参数不能为空' })
+          return { error: ERROR_CODES.INPUT_INVALID, message: '参数不能为空' }
         }
 
         const datasetFilePath = args.datasetFilePath
         if (!datasetFilePath || typeof datasetFilePath !== 'string') {
-          return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: 'datasetFilePath 为必填字段' })
+          return { error: ERROR_CODES.INPUT_INVALID, message: 'datasetFilePath 为必填字段' }
         }
 
         if (!existsSync(datasetFilePath)) {
-          return JSON.stringify({ error: ERROR_CODES.FILE_NOT_FOUND, message: `文件不存在 - ${datasetFilePath}` })
+          return { error: ERROR_CODES.FILE_NOT_FOUND, message: `文件不存在 - ${datasetFilePath}` }
         }
 
         const datasetFileRaw = readFileSync(datasetFilePath, 'utf-8')
@@ -60,7 +66,7 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
         try {
           datasetFileData = JSON.parse(datasetFileRaw)
         } catch {
-          return JSON.stringify({ error: ERROR_CODES.CONFIG_INVALID, message: '数据集文件 JSON 解析失败' })
+          return { error: ERROR_CODES.CONFIG_INVALID, message: '数据集文件 JSON 解析失败' }
         }
 
         const configLoader = new PipelineConfigLoader()
@@ -71,11 +77,11 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
         const { dataset, errors: validationErrors } = inputValidator.validateDataset(datasetFileData)
 
         if (dataset === null) {
-          return JSON.stringify({
+          return {
             error: ERROR_CODES.DATASET_EMPTY,
             message: '数据集无效，无法执行巡检',
             validationErrors,
-          })
+          }
         }
 
         const allCheckResults: QualityCheckResult[] = []
@@ -184,9 +190,9 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
           reportPaths: { json: jsonPath, markdown: markdownPath },
         }
 
-        return JSON.stringify(result, null, 2)
+        return result
       } catch (e) {
-        return JSON.stringify({ error: ERROR_CODES.UNKNOWN_ERROR as ErrorCode, message: (e as Error).message })
+        return { error: ERROR_CODES.UNKNOWN_ERROR as ErrorCode, message: (e as Error).message }
       }
     },
   })
@@ -205,10 +211,16 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
       },
       required: ['objectId', 'overrideConclusion', 'overrideReason', 'operator', 'inspectionReportPath'],
     },
+    output: {
+      schema: { type: 'object', additionalProperties: true },
+      render: (_args: Record<string, unknown>, value: unknown) => [
+        { type: 'text', text: JSON.stringify(value, null, 2) },
+      ],
+    },
     async execute(args: Record<string, unknown>) {
       try {
         if (!args || typeof args !== 'object') {
-          return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: '参数不能为空' })
+          return { error: ERROR_CODES.INPUT_INVALID, message: '参数不能为空' }
         }
 
         const objectId = args.objectId
@@ -218,23 +230,23 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
         const inspectionReportPath = args.inspectionReportPath
 
         if (!objectId || typeof objectId !== 'string') {
-          return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: 'objectId 为必填字段' })
+          return { error: ERROR_CODES.INPUT_INVALID, message: 'objectId 为必填字段' }
         }
         if (!overrideConclusion || typeof overrideConclusion !== 'string') {
-          return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: 'overrideConclusion 为必填字段' })
+          return { error: ERROR_CODES.INPUT_INVALID, message: 'overrideConclusion 为必填字段' }
         }
         if (!overrideReason || typeof overrideReason !== 'string') {
-          return JSON.stringify({ error: ERROR_CODES.REASON_REQUIRED, message: '覆盖理由不可为空' })
+          return { error: ERROR_CODES.REASON_REQUIRED, message: '覆盖理由不可为空' }
         }
         if (!operator || typeof operator !== 'string') {
-          return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: 'operator 为必填字段' })
+          return { error: ERROR_CODES.INPUT_INVALID, message: 'operator 为必填字段' }
         }
         if (!inspectionReportPath || typeof inspectionReportPath !== 'string') {
-          return JSON.stringify({ error: ERROR_CODES.INPUT_INVALID, message: 'inspectionReportPath 为必填字段' })
+          return { error: ERROR_CODES.INPUT_INVALID, message: 'inspectionReportPath 为必填字段' }
         }
 
         if (!existsSync(inspectionReportPath)) {
-          return JSON.stringify({ error: ERROR_CODES.FILE_NOT_FOUND, message: `巡检报告文件不存在 - ${inspectionReportPath}` })
+          return { error: ERROR_CODES.FILE_NOT_FOUND, message: `巡检报告文件不存在 - ${inspectionReportPath}` }
         }
 
         const reportRaw = readFileSync(inspectionReportPath, 'utf-8')
@@ -242,7 +254,7 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
         try {
           reportData = JSON.parse(reportRaw) as InspectionReport
         } catch {
-          return JSON.stringify({ error: ERROR_CODES.CONFIG_INVALID, message: '巡检报告文件 JSON 解析失败' })
+          return { error: ERROR_CODES.CONFIG_INVALID, message: '巡检报告文件 JSON 解析失败' }
         }
 
         const existingObjectIds = new Set<string>()
@@ -259,7 +271,7 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
         )
 
         if (!validation.valid) {
-          return JSON.stringify({ error: validation.error, message: validation.message })
+          return { error: validation.error, message: validation.message }
         }
 
         const originalConclusion = findOriginalConclusion(reportData, objectId)
@@ -286,9 +298,9 @@ export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
           message: '人工复核覆盖已记录',
         }
 
-        return JSON.stringify(result, null, 2)
+        return result
       } catch (e) {
-        return JSON.stringify({ error: ERROR_CODES.UNKNOWN_ERROR as ErrorCode, message: (e as Error).message })
+        return { error: ERROR_CODES.UNKNOWN_ERROR as ErrorCode, message: (e as Error).message }
       }
     },
   })

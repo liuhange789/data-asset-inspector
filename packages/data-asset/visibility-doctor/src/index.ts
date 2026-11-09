@@ -1,3 +1,6 @@
+export const name = '@liuhange/dsh-visibility-doctor'
+export const inject = ['tools'] as const
+
 import { NpmRegistryAdapter } from './adapters/npm-registry-adapter.js';
 import { ProbeSimulatorAdapter } from './adapters/probe-simulator-adapter.js';
 import { MarketStoreAdapter } from './adapters/market-store-adapter.js';
@@ -81,3 +84,72 @@ export {
 };
 
 export * from './types/index.js';
+export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
+  ctx.tools.register({
+    name: 'diagnose_visibility',
+    description: 'DSH 插件曝光度诊断 — 检测插件在 npm/DSH Market 中的可发现性、安装可达性、文档完整度，输出曝光度评分与改进建议',
+    parameters: {
+      type: 'object',
+      properties: {
+        workspacePath: { type: 'string', description: '工作区路径（DSH 插件项目根目录）' },
+        packageNames: { type: 'array', items: { type: 'string' }, description: '待诊断的 npm 包名列表' },
+        repoFullName: { type: 'string', description: 'GitHub 仓库全名（owner/repo）' },
+        outputDir: { type: 'string', description: '报告输出目录（默认 ./reports）' },
+      },
+      required: ['workspacePath', 'packageNames', 'repoFullName'],
+    },
+    output: {
+      schema: { type: 'object', additionalProperties: true },
+      render: (_args: Record<string, unknown>, value: unknown) => [
+        { type: 'text', text: JSON.stringify(value, null, 2) },
+      ],
+    },
+    async execute(args: Record<string, unknown>) {
+      try {
+        const result = await diagnose({
+          workspacePath: args.workspacePath as string,
+          packageNames: args.packageNames as readonly string[],
+          repoFullName: args.repoFullName as string,
+          outputDir: (args.outputDir as string | undefined) ?? null,
+        });
+        return result;
+      } catch (e) {
+        return { error: 'VISIBILITY_DOCTOR_ERROR', message: (e as Error).message };
+      }
+    },
+  });
+
+  ctx.tools.register({
+    name: 'boost_exposure',
+    description: 'DSH 插件曝光度提升 — 自动生成 README 补丁、关键词优化建议、DSH Market 注册引导',
+    parameters: {
+      type: 'object',
+      properties: {
+        workspacePath: { type: 'string', description: '工作区路径' },
+        packageNames: { type: 'array', items: { type: 'string' }, description: 'npm 包名列表' },
+        repoFullName: { type: 'string', description: 'GitHub 仓库全名（owner/repo）' },
+        outputDir: { type: 'string', description: '报告输出目录' },
+      },
+      required: ['workspacePath', 'packageNames', 'repoFullName'],
+    },
+    output: {
+      schema: { type: 'object', additionalProperties: true },
+      render: (_args: Record<string, unknown>, value: unknown) => [
+        { type: 'text', text: JSON.stringify(value, null, 2) },
+      ],
+    },
+    async execute(args: Record<string, unknown>) {
+      try {
+        const result = await boostExposure({
+          workspacePath: args.workspacePath as string,
+          packageNames: args.packageNames as readonly string[],
+          repoFullName: args.repoFullName as string,
+          outputDir: (args.outputDir as string | undefined) ?? null,
+        });
+        return result;
+      } catch (e) {
+        return { error: 'BOOST_ERROR', message: (e as Error).message };
+      }
+    },
+  });
+}
