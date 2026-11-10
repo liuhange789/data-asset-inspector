@@ -8,6 +8,8 @@
   "exports": {
     ".": {
       "types": "./lib/types/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./config-pack.json",
       "default": "./lib/index.js"
     },
     "./config-pack.json": "./config-pack.json",

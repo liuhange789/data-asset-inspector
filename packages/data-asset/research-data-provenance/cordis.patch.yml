@@ -1,9 +1,4 @@
 # Cordis Framework Patch Declaration for @liuhange/dsh-research-data-provenance
-# This file declares the plugin's runtime patch for the Cordis framework.
-# Used by DSH plugin manager to apply framework-level patches during installation.
-plugin: @liuhange/dsh-research-data-provenance
-version: "3.1.3"
-patch:
-  - target: tools
-    action: register
-    description: Register plugin tools into Cordis runtime
+- insert:
+    - id: "@liuhange/dsh-research-data-provenance"
+      name: "@liuhange/dsh-research-data-provenance"

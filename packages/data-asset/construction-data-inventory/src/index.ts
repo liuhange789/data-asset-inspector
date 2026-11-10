@@ -94,7 +94,37 @@ function buildClassificationEncodingList(assets: UnifiedAssetItem[]): Classifica
   return list
 }
 
-export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
+/**
+ * DSH 工具契约要求 execute 返回对象、output.render 是函数。
+ * 这里只做形状适配：工具名、入参、判定逻辑与返回文本全部原样保留，统一收进 { report }。
+ */
+type ReportToolLike = {
+  name: string
+  description: string
+  parameters: Record<string, unknown>
+  execute: (...args: any[]) => Promise<unknown>
+}
+
+function withReportShape<T extends ReportToolLike>(definition: T) {
+  return {
+    ...definition,
+    output: {
+      schema: {
+        type: 'object',
+        properties: { report: { type: 'string' } },
+        required: ['report'],
+      },
+      render: (_args: unknown, value: { report: string }) => [{ type: 'text' as const, text: value.report }],
+    },
+    async execute(args: Record<string, unknown>) {
+      const result = await definition.execute(args)
+      return { report: typeof result === 'string' ? result : JSON.stringify(result) }
+    },
+  }
+}
+
+export function apply(rawCtx: { tools: { register: (tool: unknown) => void } }) {
+  const ctx = { tools: { register: (tool: Parameters<typeof withReportShape>[0] & Record<string, unknown>) => rawCtx.tools.register(withReportShape(tool)) } }
   const configLoader = new ConstructionConfigLoader()
   const inputValidator = new InputValidator()
   const merger = new UnifiedAssetMerger()

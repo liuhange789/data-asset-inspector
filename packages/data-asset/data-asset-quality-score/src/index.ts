@@ -3,7 +3,9 @@ export const inject = ['tools'] as const
 
 import { loadJsonConfig } from '@liuhange/dsh-data-asset-shared'
 
-export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
+export function apply(rawCtx: { tools: { register: (tool: unknown) => void } }) {
+  // 只做工具形状适配（execute 返回对象、render 是函数），业务判定逻辑一行未动。
+  const ctx = { tools: { register: (tool: Parameters<typeof withReportShape>[0] & Record<string, unknown>) => rawCtx.tools.register(withReportShape(tool)) } }
   ctx.tools.register({
     name: 'score_data_quality',
     description: '数据质量量化评分：六维（规范性+完整性+准确性+一致性+时效性+可访问性）0-100分',
@@ -201,4 +203,25 @@ function scoreAccessibility(data: unknown[], config: { readTimeoutMs: number; mi
     issues.push(`可访问率${accessibleRate} < ${config.minAccessibleRate}`)
   }
   return { score: accessibleRate >= config.minAccessibleRate ? 100 : 50, issues }
+}
+/**
+ * DSH 的工具契约：execute 必须返回对象，output.render 必须是函数。
+ * 这里只做形状适配 —— 判定逻辑与文案原样保留，统一收进 { report }。
+ */
+function withReportShape<T extends { execute: (args: Record<string, unknown>) => Promise<string> }>(definition: T) {
+  return {
+    ...definition,
+    output: {
+      schema: {
+        type: 'object',
+        properties: { report: { type: 'string' } },
+        required: ['report'],
+        additionalProperties: false,
+      },
+      render: (_args: unknown, value: { report: string }) => [{ type: 'text' as const, text: value.report }],
+    },
+    async execute(args: Record<string, unknown>) {
+      return { report: await definition.execute(args) }
+    },
+  }
 }

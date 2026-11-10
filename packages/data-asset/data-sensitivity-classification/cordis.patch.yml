@@ -1,18 +1,4 @@
 # Cordis Framework Patch Declaration for @liuhange/dsh-data-sensitivity-classification
-- target: loaders.web
-  action: insert
-  entry:
-    id: "@liuhange/dsh-data-sensitivity-classification"
-    name: "@liuhange/dsh-data-sensitivity-classification"
-    version: "2.0.7"
-- target: loaders.headless
-  action: insert
-  entry:
-    id: "@liuhange/dsh-data-sensitivity-classification"
-    name: "@liuhange/dsh-data-sensitivity-classification"
-    version: "2.0.7"
-- target: tools
-  action: register
-  description: Register plugin tools into Cordis runtime
-  plugin: "@liuhange/dsh-data-sensitivity-classification"
-  version: "2.0.7"
+- insert:
+    - id: "@liuhange/dsh-data-sensitivity-classification"
+      name: "@liuhange/dsh-data-sensitivity-classification"

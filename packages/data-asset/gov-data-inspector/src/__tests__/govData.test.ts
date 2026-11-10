@@ -52,11 +52,11 @@ describe('gov-data-inspector 回归测试', () => {
     expect(props.classification).toBeDefined()
   })
 
-  it('P0-3: output.render.type为json', async () => {
+  it('P0-3: output.render 是函数（DSH 要求 render 为函数，不能是 { type: "json" }）', async () => {
     const mod = await import('../index.js')
     const tools: unknown[] = []
     mod.apply({ tools: { register: (t: unknown) => tools.push(t) } })
-    const tool = tools[0] as { output: { render: { type: string } } }
-    expect(tool.output.render.type).toBe('json')
+    const tool = tools[0] as { output: { render: unknown } }
+    expect(typeof tool.output.render).toBe('function')
   })
 })

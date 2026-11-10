@@ -15,7 +15,9 @@ import { RegulationKnowledgeBaseLoader } from './regulationKnowledgeBaseLoader.j
 import { extractRulesFromKnowledgeBase } from './ruleExtractor.js'
 import type { ErrorCode, KnowledgeBase, StandardRule, DataSourceStatus, Warning, RegulationKnowledgeBase, ExtractedRule } from './types.js'
 
-export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
+export function apply(rawCtx: { tools: { register: (tool: unknown) => void } }) {
+  // 只做工具形状适配（execute 返回对象、render 是函数），业务判定逻辑一行未动。
+  const ctx = { tools: { register: (tool: Parameters<typeof withJsonOutput>[0] & Record<string, unknown>) => rawCtx.tools.register(withJsonOutput(tool)) } }
   ctx.tools.register({
     name: 'inspect_gov_data',
     description: '政务数据专项巡检，含办事指南质量检查（漏项/语义/逻辑/格式五维检测）和公共数据资产分类',
@@ -286,5 +288,29 @@ function classifyGovData(data: unknown[], gbtMapping: Record<string, string>): R
     dataAssetCode: gbtMapping[codeKey] ?? 'A00',
     categoryLevel: dominant,
     specificType: '政务数据',
+  }
+}
+/**
+ * 与 withReportShape 同源：execute 返回对象、render 是函数。
+ * 该工具本来就把整份报告序列化成 JSON 字符串，这里只做「字符串 → 对象」的还原，
+ * 并把 required 放宽为空 —— 错误分支返回的是 { error, message }，不应被判为不符合 schema。
+ */
+function withJsonOutput<T extends { output: { schema: Record<string, unknown>; [key: string]: unknown }; execute: (args: Record<string, unknown>) => Promise<string> }>(definition: T) {
+  return {
+    ...definition,
+    output: {
+      ...definition.output,
+      schema: { ...definition.output.schema, required: [] },
+      render: (_args: unknown, value: unknown) => [{ type: 'text' as const, text: JSON.stringify(value, null, 2) }],
+    },
+    async execute(args: Record<string, unknown>) {
+      const text = await definition.execute(args)
+      try {
+        const parsed: unknown = JSON.parse(text)
+        return typeof parsed === 'object' && parsed !== null ? parsed : { report: text }
+      } catch {
+        return { report: text }
+      }
+    },
   }
 }

@@ -21,7 +21,9 @@ import type {
   ConfigVersionSet,
 } from './types.js'
 
-export function apply(ctx: { tools: { register: (tool: unknown) => void } }) {
+export function apply(rawCtx: { tools: { register: (tool: unknown) => void } }) {
+  // 只做工具形状适配（execute 返回对象、render 是函数），业务判定逻辑一行未动。
+  const ctx = { tools: { register: (tool: Parameters<typeof withReportShape>[0] & Record<string, unknown>) => rawCtx.tools.register(withReportShape(tool)) } }
   ctx.tools.register({
     name: 'assess_circulation',
     description: '对金融交易数据进行反洗钱大额交易合规巡检，输出应报/豁免/逾期清单与政策依据',
@@ -291,4 +293,25 @@ function findOriginalConclusion(report: InspectionReport, transactionId: string)
     if (item.transactionId === transactionId) return '逾期'
   }
   return '未知'
+}
+/**
+ * DSH 的工具契约：execute 必须返回对象，output.render 必须是函数。
+ * 这里只做形状适配 —— 判定逻辑与文案原样保留，统一收进 { report }。
+ */
+function withReportShape<T extends { execute: (args: Record<string, unknown>) => Promise<string> }>(definition: T) {
+  return {
+    ...definition,
+    output: {
+      schema: {
+        type: 'object',
+        properties: { report: { type: 'string' } },
+        required: ['report'],
+        additionalProperties: false,
+      },
+      render: (_args: unknown, value: { report: string }) => [{ type: 'text' as const, text: value.report }],
+    },
+    async execute(args: Record<string, unknown>) {
+      return { report: await definition.execute(args) }
+    },
+  }
 }

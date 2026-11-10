@@ -245,6 +245,7 @@ describe('四城回归（fourCityRegression）', () => {
       const log = r.errorDetails.filter(e => e.errorType === 'logical').length
       const fmt = r.formatIssues.length
       console.log(`\n=== 开封 (${kaifengSamples.length}样本) miss=${miss} log=${log} fmt=${fmt} ===`)
+
       for (const e of r.errorDetails.filter(e => e.errorType === 'missing')) {
         console.log(`  [missing] ${e.guideId} | ${e.field} | ${e.ruleId}`)
       }
@@ -263,6 +264,7 @@ describe('四城回归（fourCityRegression）', () => {
       const core = r.errorDetails.filter(e => e.errorType !== 'warning' && e.errorType !== 'info')
       const fmt = r.formatIssues.length
       console.log(`\n=== 苏州 (${suzhouSamples.length}样本) core=${core.length} fmt=${fmt} ===`)
+
       for (const e of core) {
         console.log(`  [${e.errorType}] ${e.guideId} | ${e.field} | ${e.ruleId} | ${e.description?.substring(0, 80)}`)
       }

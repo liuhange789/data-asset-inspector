@@ -1,18 +1,4 @@
 # Cordis Framework Patch Declaration for @liuhange/dsh-ai-dataset-inspector
-- target: loaders.web
-  action: insert
-  entry:
-    id: "@liuhange/dsh-ai-dataset-inspector"
-    name: "@liuhange/dsh-ai-dataset-inspector"
-    version: "3.1.6"
-- target: loaders.headless
-  action: insert
-  entry:
-    id: "@liuhange/dsh-ai-dataset-inspector"
-    name: "@liuhange/dsh-ai-dataset-inspector"
-    version: "3.1.6"
-- target: tools
-  action: register
-  description: Register plugin tools into Cordis runtime
-  plugin: "@liuhange/dsh-ai-dataset-inspector"
-  version: "3.1.6"
+- insert:
+    - id: "@liuhange/dsh-ai-dataset-inspector"
+      name: "@liuhange/dsh-ai-dataset-inspector"

@@ -30,8 +30,9 @@ async function getExecute() {
   const mod = await import('../index.js')
   const tools: unknown[] = []
   mod.apply({ tools: { register: (t: unknown) => tools.push(t) } })
-  const tool = tools[0] as { execute: (args: Record<string, unknown>) => Promise<string> }
-  return tool.execute
+  const tool = tools[0] as { execute: (args: Record<string, unknown>) => Promise<unknown> }
+  // execute 现在按 DSH 契约返回对象，测试仍以文本断言，这里重新序列化，保持原有用例不变
+  return async (args: Record<string, unknown>) => JSON.stringify(await tool.execute(args))
 }
 
 describe('异常输入处理', () => {
