@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-compliance-check",
   "description": "数据资产合规检查插件 — 检查来源合规性、处理合规性、使用合规性",
-  "version": "3.1.8",
+  "version": "3.1.9",
   "publishConfig": {
     "access": "public"
   },
@@ -11,10 +11,10 @@
   },
   "type": "module",
   "main": "lib/index.js",
-  "types": "lib/types/index.d.ts",
+  "types": "lib/index.d.ts",
   "exports": {
     ".": {
-      "types": "./lib/types/index.d.ts",
+      "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
     "./src/*": "./src/*",
@@ -22,7 +22,7 @@
   },
   "files": [
     "lib/**/*.js",
-    "lib/types/**/*.d.ts",
+    "lib/**/*.d.ts",
     "cordis.patch.yml"
   ],
   "license": "MIT",

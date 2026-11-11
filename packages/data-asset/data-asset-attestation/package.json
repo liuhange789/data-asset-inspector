@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-data-asset-attestation",
   "description": "数据资产认证报告插件 — 生成带证据链的认证级数据质量报告",
-  "version": "3.1.7",
+  "version": "3.1.8",
   "publishConfig": {
     "access": "public"
   },
@@ -11,10 +11,10 @@
   },
   "type": "module",
   "main": "lib/index.js",
-  "types": "lib/types/index.d.ts",
+  "types": "lib/index.d.ts",
   "exports": {
     ".": {
-      "types": "./lib/types/index.d.ts",
+      "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
     "./src/*": "./src/*",
@@ -22,7 +22,7 @@
   },
   "files": [
     "lib/**/*.js",
-    "lib/types/**/*.d.ts",
+    "lib/**/*.d.ts",
     "cordis.patch.yml"
   ],
   "license": "MIT",
