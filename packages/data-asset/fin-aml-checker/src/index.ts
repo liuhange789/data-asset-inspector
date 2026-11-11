@@ -25,7 +25,7 @@ export function apply(rawCtx: { tools: { register: (tool: unknown) => void } }) 
   // 只做工具形状适配（execute 返回对象、render 是函数），业务判定逻辑一行未动。
   const ctx = { tools: { register: (tool: Parameters<typeof withReportShape>[0] & Record<string, unknown>) => rawCtx.tools.register(withReportShape(tool)) } }
   ctx.tools.register({
-    name: 'assess_circulation',
+    name: 'assess_aml_circulation',
     description: '对金融交易数据进行反洗钱大额交易合规巡检，输出应报/豁免/逾期清单与政策依据',
     parameters: {
       type: 'object',
@@ -174,7 +174,7 @@ export function apply(rawCtx: { tools: { register: (tool: unknown) => void } }) 
   })
 
   ctx.tools.register({
-    name: 'submit_review_override',
+    name: 'fin_submit_review_override',
     description: '提交人工复核覆盖指令，对自动判定结果进行人工覆盖并记录覆盖理由',
     parameters: {
       type: 'object',

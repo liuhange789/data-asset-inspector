@@ -157,7 +157,7 @@ export function apply(ctx) {
         },
     });
     ctx.tools.register({
-        name: 'submit_review_override',
+        name: 'underground_submit_review_override',
         description: '提交人工复核覆盖指令，对自动判定结果进行人工覆盖并记录覆盖理由',
         parameters: {
             type: 'object',

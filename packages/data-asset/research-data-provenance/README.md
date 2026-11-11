@@ -19,7 +19,7 @@ dsh plugin --profile web add @liuhange/dsh-research-data-provenance
 
 ## 工具
 
-### attest_data_quality
+### attest_research_provenance
 
 对科研数据集进行溯源审计，检测数据血缘完整性、可复现性与六维质量，输出审计报告与整改建议。
 
@@ -33,7 +33,7 @@ dsh plugin --profile web add @liuhange/dsh-research-data-provenance
 | qualityRecordsPath | string | 否 | 六维度质量检测输入记录文件路径（JSON格式） |
 | outputPathDir | string | 否 | 报告输出目录（默认元数据文件所在目录） |
 
-### submit_review_override
+### research_submit_review_override
 
 提交人工复核覆盖指令，对自动检测结果进行人工覆盖并记录覆盖理由。
 

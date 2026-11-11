@@ -170,9 +170,9 @@ describe('e2e geo data quality inspection', () => {
     expect(result.error).toBe('FILE_NOT_FOUND')
   })
 
-  it('submit_review_override 工具注册', async () => {
+  it('geo_submit_review_override 工具注册', async () => {
     const tools = await loadPlugin()
-    const overrideTool = tools.find((t) => t.name === 'submit_review_override')
+    const overrideTool = tools.find((t) => t.name === 'geo_submit_review_override')
     expect(overrideTool).toBeDefined()
   })
 })

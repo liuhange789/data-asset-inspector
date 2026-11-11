@@ -97,7 +97,7 @@ export function apply(ctx: Context) {
 
   ctx.tools.register(
     defineTool({
-      name: 'score_data_quality',
+      name: 'score_data_quality_by_rules',
       description: '对数据文件进行多维度质量评分（完整性/准确性/一致性/时效性），生成质量评分报告',
       parameters: {
         filePath: { type: 'string', required: true, description: '待评分数据文件的路径' },

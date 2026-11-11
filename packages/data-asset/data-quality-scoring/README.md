@@ -11,7 +11,7 @@ dsh plugin --profile web add @liuhange/dsh-data-quality-scoring
 
 ## Tool 接口
 
-### `score_data_quality`
+### `score_data_quality_by_rules`
 
 对数据文件进行多维度质量评分，生成 JSON + Markdown 双格式报告。
 

@@ -58,10 +58,10 @@ describe('e2e-pipeline-inspection', () => {
     ],
   })
 
-  it('注册两个工具 inspect_underground_pipeline 和 submit_review_override', () => {
+  it('注册两个工具 inspect_underground_pipeline 和 underground_submit_review_override', () => {
     const toolNames = tools.map((t) => t.name)
     expect(toolNames).toContain('inspect_underground_pipeline')
-    expect(toolNames).toContain('submit_review_override')
+    expect(toolNames).toContain('underground_submit_review_override')
   })
 
   it('完整巡检流程生成报告', async () => {
@@ -127,7 +127,7 @@ describe('e2e-pipeline-inspection', () => {
     const inspectTool = tools.find((t) => t.name === 'inspect_underground_pipeline')!
     await inspectTool.execute({ datasetFilePath: datasetPath, outputPathDir: testDir })
 
-    const overrideTool = tools.find((t) => t.name === 'submit_review_override')!
+    const overrideTool = tools.find((t) => t.name === 'underground_submit_review_override')!
     const overrideResultRaw = await overrideTool.execute({
       objectId: 'S-001',
       overrideConclusion: '误判',

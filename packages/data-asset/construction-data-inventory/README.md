@@ -22,7 +22,7 @@ dsh plugin --profile web add @liuhange/dsh-construction-data-inventory
 
 ## 工具
 
-### inspect_ai_dataset
+### inspect_construction_data
 
 对建筑工程项目多源异构数据进行资产化盘点，按 GB/T 51269 标准生成分类编码与资产台账。
 
@@ -35,7 +35,7 @@ dsh plugin --profile web add @liuhange/dsh-construction-data-inventory
 | changeDataPath | string | 否 | 变更单数据文件路径 |
 | outputPathDir | string | 否 | 报告输出目录 |
 
-### submit_review_override
+### construction_submit_review_override
 
 提交人工复核覆盖指令，对自动分类与编码结果进行人工覆盖并记录覆盖理由。
 

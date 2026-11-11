@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.6
+
+- fix: 工具名去重（消除多包同 Context 装载时的注册冲突）
+  - `attest_data_quality` 重命名为 `attest_research_provenance`（原名与 @liuhange/dsh-data-asset-attestation 冲突）
+  - `submit_review_override` 重命名为 `research_submit_review_override`（原名与另外 4 个包冲突）
+  - 入参、输出结构、业务判定与配置键均未改动
+
 ## 3.1.0
 
 - feat: 初始化科研数据溯源审计插件

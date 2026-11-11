@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.2.6
+
+### fix: 工具名去重（消除多包同 Context 装载时的注册冲突）
+
+- `inspect_ai_dataset` 重命名为 `inspect_construction_data`（原名与 @liuhange/dsh-ai-dataset-inspector 冲突）
+- `submit_review_override` 重命名为 `construction_submit_review_override`（原名与另外 4 个包冲突）
+- 入参、输出结构、业务判定与配置键均未改动
+
 ## 3.1.0
 
 ### feat: 初始化建筑工程项目数据资产盘点插件

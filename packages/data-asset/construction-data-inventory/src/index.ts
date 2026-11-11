@@ -138,7 +138,7 @@ export function apply(rawCtx: { tools: { register: (tool: unknown) => void } }) 
   const policyBasisBuilder = new PolicyBasisBuilder()
 
   ctx.tools.register({
-    name: 'inspect_ai_dataset',
+    name: 'inspect_construction_data',
     description: '对建筑工程项目多源异构数据进行资产化盘点，按GB/T 51269标准生成分类编码与资产台账',
     parameters: {
       type: 'object',
@@ -336,7 +336,7 @@ export function apply(rawCtx: { tools: { register: (tool: unknown) => void } }) 
   })
 
   ctx.tools.register({
-    name: 'submit_review_override',
+    name: 'construction_submit_review_override',
     description: '提交人工复核覆盖指令，对自动分类与编码结果进行人工覆盖并记录覆盖理由',
     parameters: {
       type: 'object',

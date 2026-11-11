@@ -39,7 +39,7 @@ export function apply(rawCtx: { tools: { register: (tool: unknown) => void } }) 
   // 只做工具形状适配（execute 返回对象、render 是函数），业务判定逻辑一行未动。
   const ctx = { tools: { register: (tool: Parameters<typeof withReportShape>[0] & Record<string, unknown>) => rawCtx.tools.register(withReportShape(tool)) } }
   ctx.tools.register({
-    name: 'attest_data_quality',
+    name: 'attest_research_provenance',
     description: '对科研数据集进行溯源审计，检测数据血缘完整性、可复现性与六维质量，输出审计报告与整改建议',
     parameters: {
       type: 'object',
@@ -139,7 +139,7 @@ export function apply(rawCtx: { tools: { register: (tool: unknown) => void } }) 
   })
 
   ctx.tools.register({
-    name: 'submit_review_override',
+    name: 'research_submit_review_override',
     description: '提交人工复核覆盖指令，对自动检测结果进行人工覆盖并记录覆盖理由',
     parameters: {
       type: 'object',
