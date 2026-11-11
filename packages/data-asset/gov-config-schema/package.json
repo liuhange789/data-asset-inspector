@@ -1,6 +1,9 @@
 {
   "name": "@liuhange/gov-config-schema",
-  "version": "2026.1.3",
+  "version": "2026.1.4",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "政务数据巡检配置包 JSON Schema — 供配置包维护者离线校验配置包内容，提供 Schema 加载与校验运行时",
   "type": "module",
   "main": "lib/index.js",

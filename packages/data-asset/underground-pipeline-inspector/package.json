@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-underground-pipeline-inspector",
   "description": "地下管线数据质量检查插件 — 检测覆盖率、接边精度、流向合理性，输出质量评分",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "publishConfig": {
     "access": "public"
   },
@@ -11,10 +11,10 @@
   },
   "type": "module",
   "main": "lib/index.js",
-  "types": "lib/types/index.d.ts",
+  "types": "lib/index.d.ts",
   "exports": {
     ".": {
-      "types": "./lib/types/index.d.ts",
+      "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
     "./src/*": "./src/*",
@@ -22,7 +22,7 @@
   },
   "files": [
     "lib/**/*.js",
-    "lib/types/**/*.d.ts",
+    "lib/**/*.d.ts",
     "config/*.json",
     "cordis.patch.yml"
   ],
