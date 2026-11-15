@@ -8,7 +8,7 @@ interface RegisteredTool {
   name: string
   description: string
   parameters: Record<string, unknown>
-  execute: (args: Record<string, unknown>) => Promise<string>
+  execute: (args: Record<string, unknown>) => Promise<Record<string, unknown>>
 }
 
 describe('e2e-pipeline-inspection', () => {
@@ -69,7 +69,7 @@ describe('e2e-pipeline-inspection', () => {
 
     const inspectTool = tools.find((t) => t.name === 'inspect_underground_pipeline')!
     const resultRaw = await inspectTool.execute({ datasetFilePath: datasetPath, outputPathDir: testDir })
-    const result = JSON.parse(resultRaw) as Record<string, unknown>
+    const result = resultRaw as Record<string, unknown>
 
     expect(result.reportId).toBeTruthy()
     expect(result.inspectionTime).toBeTruthy()
@@ -135,7 +135,7 @@ describe('e2e-pipeline-inspection', () => {
       operator: 'quality-officer-001',
       inspectionReportPath: reportJsonPath,
     })
-    const overrideResult = JSON.parse(overrideResultRaw) as Record<string, unknown>
+    const overrideResult = overrideResultRaw as Record<string, unknown>
 
     expect(overrideResult.success).toBe(true)
     expect(overrideResult.objectId).toBe('S-001')
@@ -146,14 +146,14 @@ describe('e2e-pipeline-inspection', () => {
   it('文件不存在时返回FILE_NOT_FOUND错误', async () => {
     const inspectTool = tools.find((t) => t.name === 'inspect_underground_pipeline')!
     const resultRaw = await inspectTool.execute({ datasetFilePath: '/nonexistent/path.json' })
-    const result = JSON.parse(resultRaw) as Record<string, unknown>
+    const result = resultRaw as Record<string, unknown>
     expect(result.error).toBe('FILE_NOT_FOUND')
   })
 
   it('参数缺失时返回INPUT_INVALID错误', async () => {
     const inspectTool = tools.find((t) => t.name === 'inspect_underground_pipeline')!
     const resultRaw = await inspectTool.execute({})
-    const result = JSON.parse(resultRaw) as Record<string, unknown>
+    const result = resultRaw as Record<string, unknown>
     expect(result.error).toBe('INPUT_INVALID')
   })
 

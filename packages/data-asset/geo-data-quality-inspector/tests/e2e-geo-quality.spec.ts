@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 
 interface RegisteredTool {
   name: string
-  execute: (args: Record<string, unknown>) => Promise<string>
+  execute: (args: Record<string, unknown>) => Promise<{ report: string }>
 }
 
 describe('e2e geo data quality inspection', () => {
@@ -79,7 +79,7 @@ describe('e2e geo data quality inspection', () => {
       datasetFilePath: datasetPath,
       outputPathDir: testDir,
     })
-    const result = JSON.parse(resultRaw) as Record<string, unknown>
+    const result = JSON.parse(resultRaw.report) as Record<string, unknown>
 
     expect(result.error).toBeUndefined()
     expect(result.reportId).toBeDefined()
@@ -112,7 +112,7 @@ describe('e2e geo data quality inspection', () => {
       datasetFilePath: datasetPath,
       outputPathDir: testDir,
     })
-    const result = JSON.parse(resultRaw) as Record<string, unknown>
+    const result = JSON.parse(resultRaw.report) as Record<string, unknown>
 
     expect(result.error).toBeUndefined()
     const summary = result.summary as Record<string, unknown>
@@ -145,7 +145,7 @@ describe('e2e geo data quality inspection', () => {
       datasetFilePath: datasetPath,
       outputPathDir: testDir,
     })
-    const result = JSON.parse(resultRaw) as Record<string, unknown>
+    const result = JSON.parse(resultRaw.report) as Record<string, unknown>
 
     expect(result.error).toBeUndefined()
     const summary = result.summary as Record<string, unknown>
@@ -156,7 +156,7 @@ describe('e2e geo data quality inspection', () => {
     const tools = await loadPlugin()
     const inspectTool = tools.find((t) => t.name === 'inspect_geo_data_quality')
     const resultRaw = await inspectTool!.execute({})
-    const result = JSON.parse(resultRaw) as Record<string, unknown>
+    const result = JSON.parse(resultRaw.report) as Record<string, unknown>
     expect(result.error).toBe('INPUT_INVALID')
   })
 
@@ -166,7 +166,7 @@ describe('e2e geo data quality inspection', () => {
     const resultRaw = await inspectTool!.execute({
       datasetFilePath: '/nonexistent/path.json',
     })
-    const result = JSON.parse(resultRaw) as Record<string, unknown>
+    const result = JSON.parse(resultRaw.report) as Record<string, unknown>
     expect(result.error).toBe('FILE_NOT_FOUND')
   })
 
