@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-underground-pipeline-inspector",
   "description": "地下管线数据质量检查插件 — 检测覆盖率、接边精度、流向合理性，输出质量评分",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "publishConfig": {
     "access": "public"
   },
@@ -42,6 +42,10 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": []
     }
   },
   "keywords": [
@@ -84,5 +88,8 @@
     "registration",
     "valuation"
   ],
-  "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
+  "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md",
+  "engines": {
+    "dsh": ">=0.0.1-rc.1"
+  }
 }

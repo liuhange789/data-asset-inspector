@@ -1,7 +1,7 @@
 {
   "name": "@liuhange/dsh-gov-data-inspector",
   "description": "政务办事指南巡检插件 — 检测漏项/语义/逻辑/格式错误，输出合规审计报告，516测试全通过，v3.8.1新城市白名单补全+网办深度枚举配置化+表格下载实质内容豁免",
-  "version": "3.8.4",
+  "version": "3.8.5",
   "publishConfig": {
     "access": "public"
   },
@@ -44,6 +44,10 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": []
     }
   },
   "keywords": [
@@ -96,5 +100,8 @@
     "registration",
     "valuation"
   ],
-  "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md"
+  "homepage": "https://github.com/liuhange789/data-asset-inspector/blob/main/PACKAGES.md",
+  "engines": {
+    "dsh": ">=0.2.0-rc.2"
+  }
 }
